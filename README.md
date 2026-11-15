@@ -1,5 +1,7 @@
 # Orthodoxy in Kurdistan — frontend
 
+English is available in the three-language selector, including navigation, administration, AI answers and the eight starter prayers. Open `/?lang=en#admin` to force English for testing; the language preference is also saved locally. Sorani remains the default. Admin editors offer optional English title/text fields for prayers and English text for quotations. Custom records without English display a missing-translation message instead of silently showing Kurdish as English.
+
 Prayers are available at `/#prayers`, with search, topic filtering and expandable Sorani/Kurmanji text. The header has a visible sign-in link to `/#admin`. Only the single owner can manage quotes, prayers and approved AI sources. Run the backend's latest SQL migration and owner setup before using these editors. Public registration is not offered. Database and AI setup errors are translated into both interface languages.
 
 React 19 + Vite. A responsive Kurdish educational application with Sorani (default, RTL) and Kurmanji (LTR), a persistent language switch, Bible editions, searchable Church Fathers quotations, cited Orthodox AI answers, and protected administration.

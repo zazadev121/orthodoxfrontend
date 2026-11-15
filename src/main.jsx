@@ -59,9 +59,12 @@ function Cross({ className = "" }) {
   );
 }
 function App() {
-  const [language, setLanguage] = useState(() =>
-    localStorage.getItem("language") === "kmr" ? "kmr" : "ckb",
-  );
+  const [language, setLanguage] = useState(() => {
+    const requested =
+      new URLSearchParams(location.search).get("lang") ||
+      localStorage.getItem("language");
+    return Object.hasOwn(copy, requested) ? requested : "ckb";
+  });
   const [page, setPage] = useState(() => location.hash.slice(1) || "home");
   const [menu, setMenu] = useState(false);
   const t = copy[language];
@@ -134,19 +137,21 @@ function App() {
             <LogIn size={16} />
             <span>{t.signIn}</span>
           </a>
-          <button
+          <select
             className="language"
-            onClick={() => setLanguage(language === "ckb" ? "kmr" : "ckb")}
-            aria-label={
-              language === "ckb" ? "Switch to Kurmanji" : "گۆڕین بۆ سۆرانی"
-            }
+            aria-label={t.chooseLanguage || "Language / زمان"}
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
           >
-            <Globe size={16} />
-            {language === "ckb" ? "Kurmancî" : "سۆرانی"}
-          </button>
+            <option value="ckb">سۆرانی</option>
+            <option value="kmr">Kurmancî</option>
+            <option value="en">English</option>
+          </select>
           <button
             className="mobile-menu icon-button"
-            aria-label={menu ? "Close menu" : "Open menu"}
+            aria-label={
+              menu ? t.closeMenu || "Close menu" : t.openMenu || "Open menu"
+            }
             aria-expanded={menu}
             onClick={() => setMenu(!menu)}
           >
@@ -166,7 +171,7 @@ function App() {
         ) : page === "ai" ? (
           <Chat key={language} t={t} language={language} />
         ) : page === "admin" ? (
-          <Admin t={t} />
+          <Admin t={t} language={language} />
         ) : page === "sources" ? (
           <Sources t={t} />
         ) : (
@@ -350,7 +355,7 @@ function Fathers({ t, language }) {
   const filtered = quotes.filter(
     (q) =>
       (!topic || q.topic === topic) &&
-      `${q.father} ${q.topic} ${q.text_ckb} ${q.text_kmr}`
+      `${q.father} ${q.topic} ${q.text_ckb} ${q.text_kmr} ${q.text_en || ""}`
         .toLocaleLowerCase()
         .includes(search.toLocaleLowerCase()),
   );
@@ -398,7 +403,11 @@ function Fathers({ t, language }) {
           {filtered.map((q) => (
             <article className="quote" key={q.id}>
               <span className="quote-mark">“</span>
-              <blockquote>{q[`text_${language}`]}</blockquote>
+              <blockquote>
+                {q[`text_${language}`] ||
+                  t.missingEnglish ||
+                  copy.en.missingEnglish}
+              </blockquote>
               <h3>{q.father}</h3>
               <p>{q.topic}</p>
               <a href={q.source_url} target="_blank" rel="noreferrer">
@@ -444,7 +453,7 @@ function Prayers({ t, language }) {
   const filtered = items.filter(
     (p) =>
       (!topic || p.topic === topic) &&
-      `${p.title_ckb} ${p.title_kmr} ${p.text_ckb} ${p.text_kmr} ${p.topic}`
+      `${p.title_ckb} ${p.title_kmr} ${p.title_en || ""} ${p.text_en || ""} ${p.text_ckb} ${p.text_kmr} ${p.topic}`
         .toLocaleLowerCase()
         .includes(search.toLocaleLowerCase()),
   );
@@ -472,7 +481,11 @@ function Prayers({ t, language }) {
         >
           <option value="">{t.all}</option>
           {[...new Set(items.map((p) => p.topic))].map((v) => (
-            <option key={v}>{v}</option>
+            <option key={v} value={v}>
+              {language === "en"
+                ? items.find((p) => p.topic === v)?.topic_en || v
+                : v}
+            </option>
           ))}
         </select>
       </div>
@@ -493,10 +506,16 @@ function Prayers({ t, language }) {
           {filtered.map((p) => (
             <details className="prayer" key={p.id}>
               <summary>
-                <h2>{p[`title_${language}`]}</h2>
-                <span>{p.topic}</span>
+                <h2>{p[`title_${language}`] || p.title_kmr}</h2>
+                <span>
+                  {language === "en" ? p.topic_en || p.topic : p.topic}
+                </span>
               </summary>
-              <p className="prayer-text">{p[`text_${language}`]}</p>
+              <p className="prayer-text">
+                {p[`text_${language}`] ||
+                  t.missingEnglish ||
+                  copy.en.missingEnglish}
+              </p>
               <a
                 className="text-link"
                 href={p.source_url}
@@ -675,6 +694,7 @@ function Sources({ t }) {
   );
 }
 const blankQuote = {
+  text_en: "",
   father: "",
   text_ckb: "",
   text_kmr: "",
@@ -694,6 +714,8 @@ const blankSource = {
   approved: false,
 };
 const blankPrayer = {
+  title_en: "",
+  text_en: "",
   title_ckb: "",
   title_kmr: "",
   text_ckb: "",
@@ -703,7 +725,7 @@ const blankPrayer = {
   topic: "",
   published: false,
 };
-function Admin({ t }) {
+function Admin({ t, language }) {
   const [session, setSession] = useState(null),
     [checking, setChecking] = useState(true),
     [allowed, setAllowed] = useState(false),
@@ -830,6 +852,7 @@ function Admin({ t }) {
           ["father", t.father],
           ["text_ckb", t.textCkb, "textarea"],
           ["text_kmr", t.textKmr, "textarea"],
+          ["text_en", t.textEn || copy.en.textEn, "textarea"],
           ["reference", t.ref],
           ["source_url", t.url, "url"],
           ["topic", t.topic],
@@ -838,8 +861,10 @@ function Admin({ t }) {
         ? [
             ["title_ckb", t.titleCkb],
             ["title_kmr", t.titleKmr],
+            ["title_en", t.titleEn || copy.en.titleEn],
             ["text_ckb", t.textCkb, "textarea"],
             ["text_kmr", t.textKmr, "textarea"],
+            ["text_en", t.textEn || copy.en.textEn, "textarea"],
             ["reference", t.ref],
             ["source_url", t.url, "url"],
             ["topic", t.topic],
@@ -935,13 +960,15 @@ function Admin({ t }) {
                       {label}
                       {type === "textarea" ? (
                         <textarea
-                          required
+                          required={!["text_en", "title_en"].includes(key)}
                           rows={key === "content" ? 7 : 4}
                           value={editing[key] || ""}
                           dir={
                             key === "text_ckb" || key === "content_ckb"
                               ? "rtl"
-                              : key === "text_kmr" || key === "content_kmr"
+                              : key === "text_kmr" ||
+                                  key === "content_kmr" ||
+                                  key.endsWith("_en")
                                 ? "ltr"
                                 : undefined
                           }
@@ -959,9 +986,9 @@ function Admin({ t }) {
                         />
                       ) : (
                         <input
-                          required
+                          required={!["text_en", "title_en"].includes(key)}
                           type={type || "text"}
-                          value={editing[key]}
+                          value={editing[key] || ""}
                           dir={type === "url" ? "ltr" : undefined}
                           maxLength={
                             key === "father"
@@ -1029,10 +1056,16 @@ function Admin({ t }) {
                         <article key={item.id}>
                           <div>
                             <strong>
-                              {item.father || item.title || item.title_ckb}
+                              {item.father ||
+                                item.title ||
+                                item[`title_${language}`] ||
+                                item.title_ckb}
                             </strong>
                             <p className="record-preview">
-                              {item.text_ckb || item.content}
+                              {item[`text_${language}`] ||
+                                item.content ||
+                                t.missingEnglish ||
+                                copy.en.missingEnglish}
                             </p>
                             <span
                               className={

@@ -21,7 +21,7 @@ html[lang="ckb"] {
   font-family: "Noto Naskh Arabic", serif;
   font-size: 18px;
 }
-html[lang="kmr"] {
+:is(html[lang="kmr"], html[lang="en"]) {
   font-size: 15px;
 }
 button,
@@ -1190,21 +1190,21 @@ label:not(.search):not(.checkbox) {
     transform: rotate(360deg);
   }
 }
-html[lang="kmr"] .hero h1 {
+:is(html[lang="kmr"], html[lang="en"]) .hero h1 {
   font-family: Georgia, serif;
   font-size: clamp(2.5rem, 4.4vw, 4rem);
   line-height: 1.18;
 }
-html[lang="kmr"] .hero-text {
+:is(html[lang="kmr"], html[lang="en"]) .hero-text {
   padding: 60px 9% 45px 12%;
 }
-html[lang="kmr"] .section-heading h2 {
+:is(html[lang="kmr"], html[lang="en"]) .section-heading h2 {
   font-family: Georgia, serif;
 }
-html[lang="kmr"] .brand {
+:is(html[lang="kmr"], html[lang="en"]) .brand {
   font-size: 0.95rem;
 }
-html[lang="kmr"] .page-heading h1 {
+:is(html[lang="kmr"], html[lang="en"]) .page-heading h1 {
   font-family: Georgia, serif;
 }
 @media (min-width: 1450px) {
@@ -1657,10 +1657,10 @@ html[lang="kmr"] .page-heading h1 {
   .source-list h2 {
     font-size: 1rem;
   }
-  html[lang="kmr"] .hero-text {
+  :is(html[lang="kmr"], html[lang="en"]) .hero-text {
     padding: 38px 28px 30px;
   }
-  html[lang="kmr"] .hero h1 {
+  :is(html[lang="kmr"], html[lang="en"]) .hero h1 {
     font-size: 3rem;
   }
   .navigation a {
