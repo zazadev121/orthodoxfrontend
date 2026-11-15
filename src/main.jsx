@@ -29,8 +29,11 @@ import { copy } from "./i18n";
 import { api, auth } from "./api";
 import { useAccount } from "./use-account";
 import { themes, initialTheme, initialReaderSize } from "./themes.js";
+import { FontPicker } from "./font-picker.jsx";
+import { initialReaderFont, readerFontFor } from "./reader-fonts.js";
 import { DailyVerse, BibleReader } from "./scripture.jsx";
 import "./style.css";
+import "./reader-fonts.css";
 function errorMessage(error, t) {
   return (
     {
@@ -68,6 +71,21 @@ function App() {
   const account = useAccount();
   const [theme, setTheme] = useState(initialTheme);
   const [readerSize, setReaderSize] = useState(initialReaderSize);
+  const [readerFont, setReaderFont] = useState(initialReaderFont);
+  const [fontStatus, setFontStatus] = useState("loading");
+  const [fontAttempt, setFontAttempt] = useState(0);
+  useEffect(() => {
+    const font = readerFontFor(readerFont);
+    document.documentElement.dataset.readerFont = font.id;
+    try { localStorage.setItem("readerFont", font.id); } catch {}
+    let active = true;
+    setFontStatus("loading");
+    if (!document.fonts) { setFontStatus("error"); return; }
+    document.fonts.load(`20px "${font.family}"`, "دڵێکی پڕ لە خۆشەویستی")
+      .then(faces => { if (active) setFontStatus(faces.length ? "loaded" : "error"); })
+      .catch(() => { if (active) setFontStatus("error"); });
+    return () => { active = false; };
+  }, [readerFont, fontAttempt]);
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     try { localStorage.setItem("theme", theme); } catch {}
@@ -201,7 +219,9 @@ function App() {
       <main id="main" tabIndex={-1}>
         {page === "appearance" ? (
           <Appearance t={t} theme={theme} setTheme={setTheme}
-            readerSize={readerSize} setReaderSize={setReaderSize} />
+            readerSize={readerSize} setReaderSize={setReaderSize}
+            readerFont={readerFont} setReaderFont={setReaderFont} fontStatus={fontStatus}
+            retryFont={() => setFontAttempt(value => value + 1)} />
         ) : page === "home" ? (
           <Home t={t} language={language} />
         ) : page === "bible" ? (
@@ -262,7 +282,7 @@ function App() {
     </>
   );
 }
-function Appearance({ t, theme, setTheme, readerSize, setReaderSize }) {
+function Appearance({ t, theme, setTheme, readerSize, setReaderSize, readerFont, setReaderFont, fontStatus, retryFont }) {
   return (
     <div className="page appearance-page">
       <div className="appearance-heading">
@@ -284,6 +304,7 @@ function Appearance({ t, theme, setTheme, readerSize, setReaderSize }) {
         </div>
         <p className="settings-caption" role="status">{t.savedOnDevice}</p>
       </section>
+      <FontPicker t={t} selected={readerFont} onChange={setReaderFont} status={fontStatus} onRetry={retryFont} />
       <section className="appearance-section" aria-labelledby="reader-heading">
         <h2 id="reader-heading"><BookOpen size={21} />{t.reading}</h2>
         <div className="reading-panel">

@@ -1,0 +1,86 @@
+[
+  {
+    "id": "kufi",
+    "sourceFamily": "Noto Kufi Arabic",
+    "sourceUrl": "https://fonts.gstatic.com/s/notokufiarabic/v27/CSRp4ydQnPyaDxEXLFF6LZVLKrodhu8t57o1kDc5Wh5v34bP.ttf",
+    "file": "kufi.woff",
+    "missing": ""
+  },
+  {
+    "id": "naskh",
+    "sourceFamily": "Noto Naskh Arabic",
+    "sourceUrl": "https://fonts.gstatic.com/s/notonaskharabic/v44/RrQ5bpV-9Dd1b1OAGA6M9PkyDuVBePeKNaxcsss0Y7bwvc5krA.ttf",
+    "file": "naskh.woff",
+    "missing": ""
+  },
+  {
+    "id": "nastaliq",
+    "sourceFamily": "Noto Nastaliq Urdu",
+    "sourceUrl": "https://fonts.gstatic.com/s/notonastaliqurdu/v23/LhWNMUPbN-oZdNFcBy1-DJYsEoTq5pudQ9L940pGPkB3Qt_-DK0.ttf",
+    "file": "nastaliq.woff",
+    "missing": "ڕڵ"
+  },
+  {
+    "id": "sans",
+    "sourceFamily": "Noto Sans Arabic",
+    "sourceUrl": "https://fonts.gstatic.com/s/notosansarabic/v33/nwpxtLGrOAZMl5nJ_wfgRg3DrWFZWsnVBJ_sS6tlqHHFlhQ5l3sQWIHPqzCfyGyvuw.ttf",
+    "file": "sans.woff",
+    "missing": ""
+  },
+  {
+    "id": "readex",
+    "sourceFamily": "Readex Pro",
+    "sourceUrl": "https://fonts.gstatic.com/s/readexpro/v27/SLXnc1bJ7HE5YDoGPuzj_dh8uc7wUy8ZQQyX2KY8TL0kGZN6blTC4USmgg.ttf",
+    "file": "readex.woff",
+    "missing": "پچڕژکگڵھەۆیێ"
+  },
+  {
+    "id": "vazir",
+    "sourceFamily": "Vazirmatn",
+    "sourceUrl": "https://fonts.gstatic.com/s/vazirmatn/v16/Dxx78j6PP2D_kU2muijPEe1n2vVbfJRklWgzORc.ttf",
+    "file": "vazir.woff",
+    "missing": ""
+  },
+  {
+    "id": "bukra",
+    "sourceFamily": "Nizar Bukra Regular",
+    "sourceUrl": "https://raw.githubusercontent.com/chiasabah/kurdish-fonts-collection-sorani-central/b5b105e3299eeb869d276a10b15691c47d02cf33/nizar-kurdish-unicode-fonts/Nizar%20Bukra%20Regular/NizarBukraRegular.woff",
+    "file": "bukra.woff",
+    "missing": ""
+  },
+  {
+    "id": "nrt",
+    "sourceFamily": "NRT Regular",
+    "sourceUrl": "https://raw.githubusercontent.com/chiasabah/kurdish-fonts-collection-sorani-central/b5b105e3299eeb869d276a10b15691c47d02cf33/nrt-tv-fonts/NRT%20Regular/NRT-Reg.woff",
+    "file": "nrt.woff",
+    "missing": ""
+  },
+  {
+    "id": "rabar",
+    "sourceFamily": "Rabar 001",
+    "sourceUrl": "https://raw.githubusercontent.com/chiasabah/kurdish-fonts-collection-sorani-central/b5b105e3299eeb869d276a10b15691c47d02cf33/rabar-kurdish-unicode-fonts/Rabar_001/Rabar_001.woff",
+    "file": "rabar.woff",
+    "missing": ""
+  },
+  {
+    "id": "rudaw",
+    "sourceFamily": "Rudaw Regular",
+    "sourceUrl": "https://raw.githubusercontent.com/chiasabah/kurdish-fonts-collection-sorani-central/b5b105e3299eeb869d276a10b15691c47d02cf33/rudaw-fonts/Rudaw%20Regular/rudawregular2.woff",
+    "file": "rudaw.woff",
+    "missing": ""
+  },
+  {
+    "id": "speda",
+    "sourceFamily": "Speda Normal",
+    "sourceUrl": "https://raw.githubusercontent.com/chiasabah/kurdish-fonts-collection-sorani-central/b5b105e3299eeb869d276a10b15691c47d02cf33/speda-tv-fonts/Speda%20Font%20Normal/Speda.woff",
+    "file": "speda.woff",
+    "missing": ""
+  },
+  {
+    "id": "unikurd",
+    "sourceFamily": "Unikurd Web",
+    "sourceUrl": "https://raw.githubusercontent.com/chiasabah/kurdish-fonts-collection-sorani-central/b5b105e3299eeb869d276a10b15691c47d02cf33/unikurd-kurdish-fonts/Unikurd%20Web/Unikuweb.woff",
+    "file": "unikurd.woff",
+    "missing": ""
+  }
+]

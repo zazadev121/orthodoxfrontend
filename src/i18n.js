@@ -1,5 +1,11 @@
 export const copy = {
   en: {
+    readingFont: "Reading font",
+    fontDescription: "Choose a typeface for Bible verses, quotations, prayers, and reading text. Each card previews the real font.",
+    fontLoading: "Loading your selected font…",
+    fontError: "The font could not load. A readable fallback is being used. Try again.",
+    fontSaved: "Your reading font is saved on this device.",
+
     dailyVerse: "VERSE OF THE DAY",
     dailyTranslation: "Daily verse translation",
     dailyRefresh: "A new verse each day · your local time",
@@ -171,6 +177,12 @@ export const copy = {
     closeMenu: "Close menu",
   },
   ckb: {
+    readingFont: "فۆنتی خوێندنەوە",
+    fontDescription: "فۆنتێک بۆ ئایەتەکان، وتەکان، نوێژ و دەقی خوێندنەوە هەڵبژێرە. هەر کارتێک فۆنتە ڕاستەقینەکە پیشان دەدات.",
+    fontLoading: "فۆنتە هەڵبژێردراوەکەت بار دەکرێت…",
+    fontError: "فۆنتەکە بار نەبوو. فۆنتێکی جێگرەوە بەکاردێت. دووبارە هەوڵ بدەوە.",
+    fontSaved: "فۆنتی خوێندنەوەکەت لەسەر ئەم ئامێرە پاشەکەوت کرا.",
+
     dailyVerse: "ئایەتی ڕۆژ",
     dailyTranslation: "وەرگێڕانی ئایەتی ڕۆژ",
     dailyRefresh: "هەموو ڕۆژێک ئایەتێکی نوێ · بە کاتی ناوخۆیی",
@@ -331,6 +343,12 @@ export const copy = {
     back: "گەڕانەوە بۆ سەرەکی",
   },
   kmr: {
+    readingFont: "Fonta xwendinê",
+    fontDescription: "Ji bo ayet, gotin, dua û nivîsa xwendinê fontê hilbijêre. Her kart fonta rastîn nîşan dide.",
+    fontLoading: "Fonta te tê barkirin…",
+    fontError: "Font nehat barkirin. Fonta cîgir tê bikaranîn. Dîsa biceribîne.",
+    fontSaved: "Fonta te li ser vê amûrê hat tomarkirin.",
+
     dailyVerse: "AYETA ROJÊ",
     dailyTranslation: "Wergera ayeta rojê",
     dailyRefresh: "Her roj ayeteke nû · li gorî dema herêmî",
