@@ -66,7 +66,8 @@ export const copy = {
     emptyQuotes: "بەڕێوەبەر دەتوانێت وتە و وەرگێڕانە پشکنراوەکان زیاد بکات.",
     reference: "سەرچاوەی وتە",
     aiTitle: "بپرسە. بە تێگەیشتن نزیک ببەوە.",
-    aiIntro: "یارمەتیدەرێکی فێرکاری بۆ پرسیارەکانت دەربارەی باوەڕی ئۆرتۆدۆکس.",
+    aiIntro:
+      "پرسیارەکانت بپرسە؛ وەڵامەکان لە پوختە پەسەندکراوە کوردییەکانی سەرچاوە ئۆرتۆدۆکسەکان هەڵدەبژێردرێن.",
     prompt: "پرسیارەکەت بنووسە…",
     send: "ناردنی پرسیار",
     thinking: "لە ئامادەکردنی وەڵامدایە…",
@@ -184,7 +185,7 @@ export const copy = {
     reference: "Çavkaniya gotinê",
     aiTitle: "Bipirse. Bi fêmkirinê nêzîktir bibe.",
     aiIntro:
-      "Alîkarekî perwerdeyî ji bo pirsên te yên li ser baweriya Ortodoks.",
+      "Pirsên xwe bipirse; bersiv ji kurteyên Kurdî yên pejirandî yên çavkaniyên Ortodoks tên hilbijartin.",
     prompt: "Pirsa xwe binivîse…",
     send: "Pirsê bişîne",
     thinking: "Bersiv tê amadekirin…",

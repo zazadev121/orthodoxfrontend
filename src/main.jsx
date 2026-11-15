@@ -688,6 +688,8 @@ const blankSource = {
   publisher: "",
   url: "",
   content: "",
+  content_ckb: "",
+  content_kmr: "",
   keywords: "",
   approved: false,
 };
@@ -847,6 +849,8 @@ function Admin({ t }) {
             ["publisher", t.publisher],
             ["url", t.url, "url"],
             ["content", t.content, "textarea"],
+            ["content_ckb", t.textCkb, "textarea"],
+            ["content_kmr", t.textKmr, "textarea"],
             ["keywords", t.keywords, "textarea"],
           ];
   const toggle = tab === "sources" ? "approved" : "published";
@@ -933,16 +937,16 @@ function Admin({ t }) {
                         <textarea
                           required
                           rows={key === "content" ? 7 : 4}
-                          value={editing[key]}
+                          value={editing[key] || ""}
                           dir={
-                            key === "text_ckb"
+                            key === "text_ckb" || key === "content_ckb"
                               ? "rtl"
-                              : key === "text_kmr"
+                              : key === "text_kmr" || key === "content_kmr"
                                 ? "ltr"
                                 : undefined
                           }
                           maxLength={
-                            key === "content" ||
+                            key.startsWith("content") ||
                             (tab === "prayers" && key.startsWith("text_"))
                               ? 12000
                               : key === "keywords"
