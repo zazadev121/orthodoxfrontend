@@ -1827,3 +1827,64 @@ footer { background: var(--paper); border-color: var(--line); }
 @media (prefers-reduced-motion: reduce) { .path, .theme-card { transition: none; } .path:hover { transform: none; } }
 .brand-cross { mix-blend-mode: normal; }
 html[lang="en"] .appearance-page :is(h1, h2, .theme-name), html[lang="kmr"] .appearance-page :is(h1, h2, .theme-name) { font-family: Georgia, serif; }
+/* In-site Scripture reader and locally rotating daily verse. */
+.daily-verse { max-width: 1200px; margin: 30px auto 0; padding: 32px 40px; border: 1px solid color-mix(in srgb, var(--gold) 38%, var(--line)); border-radius: 24px; background: linear-gradient(120deg, color-mix(in srgb, var(--gold) 5%, var(--surface)), var(--surface)); }
+.daily-topline, .daily-bottomline, .daily-meta { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
+.daily-topline .eyebrow { margin: 0; }
+.daily-topline time { color: var(--muted); font-size: .75rem; }
+.daily-verse blockquote { font-size: calc(1.4rem * var(--reader-scale)); line-height: 1.9; margin: 26px 0; white-space: pre-wrap; }
+.daily-reference { font-size: .9rem; color: var(--gold); }
+.daily-bottomline .text-link { color: var(--gold); font-size: .85rem; }
+.daily-meta { margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: .7rem; }
+.daily-meta select { padding: 8px 11px; max-width: 100%; font-size: .75rem; }
+.scripture-attribution { margin-top: 28px; color: var(--muted); font-size: .7rem; line-height: 1.8; overflow-wrap: anywhere; }
+.scripture-attribution span { display: block; }
+.scripture-attribution a { color: var(--gold); text-decoration: underline; text-underline-offset: 3px; }
+.scripture-attribution.compact { margin-top: 15px; font-size: .63rem; }
+.reader-controls { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(85px, .4fr); gap: 18px; padding: 24px; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; }
+.reader-controls label { min-width: 0; color: var(--muted); }
+.reader-controls select { width: 100%; min-height: 48px; padding: 10px 12px; }
+.chapter-navigation { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-block: 25px; }
+.chapter-navigation > span { text-align: center; color: var(--gold); font-size: 1.1rem; }
+.chapter-navigation .button { font-size: .8rem; padding: 10px 16px; }
+[dir="rtl"] .chapter-navigation svg { transform: rotate(180deg); }
+.bible-reader-page { max-width: 1000px; padding-bottom: 60px; }
+.scripture-chapter { border: 1px solid var(--line); border-radius: 24px; background: var(--surface); padding: 38px 46px; }
+.chapter-title { text-align: center; margin-bottom: 32px; padding-bottom: 25px; border-bottom: 1px solid var(--line); }
+.chapter-title > span { color: var(--muted); font-size: .72rem; }
+.chapter-title h2 { margin: 12px 0 0; font-size: 1.8rem; }
+.scripture-chapter h3 { color: var(--gold); font-size: 1.1rem; margin: 30px 0 18px; }
+.scripture-verse { display: flex; align-items: baseline; gap: 12px; font-size: calc(1.15rem * var(--reader-scale)); line-height: 2; padding: 7px 12px; border-radius: 10px; margin: 0; scroll-margin-block: 130px; }
+.scripture-verse > span { white-space: pre-wrap; }
+.scripture-verse sup { color: var(--gold); min-width: 20px; font-size: .65em; direction: ltr; }
+.scripture-verse.highlighted { background: color-mix(in srgb, var(--gold) 14%, transparent); outline: 1px solid color-mix(in srgb, var(--gold) 35%, transparent); }
+.scripture-subtitle { color: var(--muted); font-style: italic; }
+.verse-notes { color: var(--muted); font-size: .72rem; padding: 0 44px 8px; }
+.verse-notes summary { cursor: pointer; }
+.verse-notes p { margin: 10px 0 0; white-space: pre-wrap; }
+.reader-language-note, .reader-scope { color: var(--muted); font-size: .8rem; }
+.reader-scope { margin-top: 22px; border-top: 1px solid var(--line); padding-top: 20px; }
+.reader-loading, .reader-error { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; min-height: 280px; text-align: center; padding: 30px; border: 1px solid var(--line); border-radius: 24px; background: var(--surface); }
+.reader-loading { color: var(--muted); }
+.reader-loading p, .reader-error p { margin: 0; }
+@media (max-width: 1250px) { .daily-verse { margin-inline: 24px; } }
+@media (max-width: 560px) {
+  .daily-verse { margin: 20px 16px 0; padding: 25px 23px; }
+  .daily-verse blockquote { font-size: calc(1.2rem * var(--reader-scale)); }
+  .daily-topline { gap: 12px; }
+  .reader-controls { grid-template-columns: minmax(0, 1fr) minmax(70px, .45fr); padding: 18px; gap: 15px; }
+  .reader-controls label:first-child { grid-column: 1 / -1; }
+  .chapter-navigation { gap: 8px; }
+  .chapter-navigation .button { padding: 10px; gap: 5px; font-size: .7rem; }
+  .chapter-navigation > span { font-size: .9rem; }
+  .scripture-chapter { padding: 25px 16px; }
+  .scripture-verse { padding: 6px; gap: 8px; font-size: calc(1.05rem * var(--reader-scale)); }
+  .verse-notes { padding-inline: 30px 12px; }
+}
+@media (max-width: 560px) {
+  .bible-reader-page { padding-top: 12px; margin-top: 12px; }
+  .bible-reader-page .page-heading { padding-top: 0; margin-bottom: 24px; }
+  .bible-reader-page .page-heading > svg { margin-bottom: 8px; }
+  .bible-reader-page .page-heading h1 { font-size: 1.55rem; margin-bottom: 10px; }
+  .bible-reader-page .page-heading p { font-size: .85rem; line-height: 1.8; }
+}

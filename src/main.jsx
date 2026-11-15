@@ -29,6 +29,7 @@ import { copy } from "./i18n";
 import { api, auth } from "./api";
 import { useAccount } from "./use-account";
 import { themes, initialTheme, initialReaderSize } from "./themes.js";
+import { DailyVerse, BibleReader } from "./scripture.jsx";
 import "./style.css";
 function errorMessage(error, t) {
   return (
@@ -81,12 +82,12 @@ function App() {
       localStorage.getItem("language");
     return Object.hasOwn(copy, requested) ? requested : "ckb";
   });
-  const [page, setPage] = useState(() => location.hash.slice(1) || "home");
+  const [page, setPage] = useState(() => location.hash.slice(1).split("?")[0] || "home");
   const [menu, setMenu] = useState(false);
   const t = copy[language];
   useEffect(() => {
     const handle = () => {
-      setPage(location.hash.slice(1) || "home");
+      setPage(location.hash.slice(1).split("?")[0] || "home");
       setMenu(false);
       window.scrollTo(0, 0);
     };
@@ -202,9 +203,9 @@ function App() {
           <Appearance t={t} theme={theme} setTheme={setTheme}
             readerSize={readerSize} setReaderSize={setReaderSize} />
         ) : page === "home" ? (
-          <Home t={t} />
+          <Home t={t} language={language} />
         ) : page === "bible" ? (
-          <Bible t={t} />
+          <BibleReader key={language} t={t} language={language} />
         ) : page === "fathers" ? (
           <Fathers t={t} language={language} />
         ) : page === "prayers" ? (
@@ -300,7 +301,7 @@ function Appearance({ t, theme, setTheme, readerSize, setReaderSize }) {
     </div>
   );
 }
-function Home({ t }) {
+function Home({ t, language }) {
   return (
     <>
       <section className="hero">
@@ -337,6 +338,7 @@ function Home({ t }) {
           />
         </div>
       </section>
+      <DailyVerse t={t} language={language} />
       <section className="explore-section">
         <div className="section-heading">
           <h2>{t.journey}</h2>
@@ -377,51 +379,6 @@ function PageHead({ icon: Icon, title, intro }) {
       <Icon size={25} />
       <h1>{title}</h1>
       {intro && <p>{intro}</p>}
-    </div>
-  );
-}
-function Bible({ t }) {
-  return (
-    <div className="page">
-      <PageHead icon={BookOpen} title={t.bibleTitle} intro={t.bibleIntro} />
-      <div className="bible-editions">
-        {[
-          [
-            t.soraniBible,
-            t.kss,
-            t.kssInfo,
-            "KSS",
-            "https://www.biblegateway.com/versions/Kurdi-Sorani-Standard-KSS-Bible",
-          ],
-          [
-            t.kurmanjiBible,
-            t.kurnt,
-            t.kurInfo,
-            "KURNT",
-            "https://www.bible.com/versions/251",
-          ],
-        ].map(([title, name, desc, code, url]) => (
-          <article className="edition" key={code}>
-            <div className="book-cover">
-              <Cross />
-              <span dir="ltr">{code}</span>
-            </div>
-            <div>
-              <h2>{title}</h2>
-              <h3>{name}</h3>
-              <p>{desc}</p>
-              <a className="button" href={url} target="_blank" rel="noreferrer">
-                {t.openBible}
-                <ExternalLink size={16} />
-              </a>
-            </div>
-          </article>
-        ))}
-      </div>
-      <aside className="notice">
-        <ShieldCheck size={22} />
-        <p>{t.bibleNotice}</p>
-      </aside>
     </div>
   );
 }
