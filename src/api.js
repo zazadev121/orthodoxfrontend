@@ -17,11 +17,14 @@ export async function api(path, { token, ...options } = {}) {
   });
   if (response.status === 204) return null;
   const data = await response.json().catch(() => ({}));
-  if (!response.ok)
-    throw new Error(
+  if (!response.ok) {
+    const error = new Error(
       data.details?.map((d) => `${d.field}: ${d.message}`).join(" · ") ||
         data.error ||
         `HTTP ${response.status}`,
     );
+    error.code = data.code;
+    throw error;
+  }
   return data;
 }

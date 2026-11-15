@@ -19,10 +19,23 @@ import {
   Globe,
   Check,
   LoaderCircle,
+  Heart,
+  LogIn,
 } from "lucide-react";
 import { copy } from "./i18n";
 import { api, auth } from "./api";
 import "./style.css";
+function errorMessage(error, t) {
+  return (
+    {
+      DATABASE_SCHEMA_MISSING: t.databaseSetup,
+      DATABASE_CREDENTIALS_INVALID: t.databaseKeyError,
+      AI_NOT_CONFIGURED: t.aiSetup,
+    }[error.code] ||
+    error.message ||
+    t.error
+  );
+}
 
 function Cross({ className = "" }) {
   return (
@@ -70,6 +83,7 @@ function App() {
     ["home", t.home],
     ["bible", t.bible],
     ["fathers", t.fathers],
+    ["prayers", t.prayers],
     ["ai", t.ai],
   ];
   return (
@@ -86,7 +100,13 @@ function App() {
       </a>
       <header className="header">
         <a href="#home" className="brand">
-          <img className="brand-cross" src="/kurdistan-cross.jpg" alt="" width="42" height="42" />
+          <img
+            className="brand-cross"
+            src="/kurdistan-cross.jpg"
+            alt=""
+            width="42"
+            height="42"
+          />
           <span>
             {t.name}
             <small lang="en" dir="ltr">
@@ -110,6 +130,10 @@ function App() {
           ))}
         </nav>
         <div className="header-actions">
+          <a className="admin-signin" href="#admin" aria-label={t.signIn}>
+            <LogIn size={16} />
+            <span>{t.signIn}</span>
+          </a>
           <button
             className="language"
             onClick={() => setLanguage(language === "ckb" ? "kmr" : "ckb")}
@@ -137,6 +161,8 @@ function App() {
           <Bible t={t} />
         ) : page === "fathers" ? (
           <Fathers t={t} language={language} />
+        ) : page === "prayers" ? (
+          <Prayers t={t} language={language} />
         ) : page === "ai" ? (
           <Chat key={language} t={t} language={language} />
         ) : page === "admin" ? (
@@ -152,7 +178,14 @@ function App() {
       <footer>
         <div className="footer-inner">
           <div className="footer-brand">
-            <img className="brand-cross" src="/kurdistan-cross.jpg" alt="" width="42" height="42" loading="lazy" />
+            <img
+              className="brand-cross"
+              src="/kurdistan-cross.jpg"
+              alt=""
+              width="42"
+              height="42"
+              loading="lazy"
+            />
             <div>
               <strong>{t.name}</strong>
               <p>{t.footer}</p>
@@ -197,7 +230,14 @@ function Home({ t }) {
           </div>
         </div>
         <div className="sacred-art kurdistan-art">
-          <img className="kurdistan-cross" src="/kurdistan-cross.jpg" alt="Kurdistan cross" width="960" height="960" fetchPriority="high" />
+          <img
+            className="kurdistan-cross"
+            src="/kurdistan-cross.jpg"
+            alt="Kurdistan cross"
+            width="960"
+            height="960"
+            fetchPriority="high"
+          />
         </div>
       </section>
       <section className="explore-section">
@@ -288,18 +328,23 @@ function Bible({ t }) {
   );
 }
 function Fathers({ t, language }) {
+  const [loadError, setLoadError] = useState(null);
   const [quotes, setQuotes] = useState([]),
     [status, setStatus] = useState("loading"),
     [search, setSearch] = useState(""),
     [topic, setTopic] = useState("");
   const load = () => {
     setStatus("loading");
+    setLoadError(null);
     api("/quotes")
       .then((d) => {
         setQuotes(d.quotes);
         setStatus("ready");
       })
-      .catch(() => setStatus("error"));
+      .catch((e) => {
+        setLoadError(e);
+        setStatus("error");
+      });
   };
   useEffect(load, []);
   const filtered = quotes.filter(
@@ -336,7 +381,10 @@ function Fathers({ t, language }) {
       {status === "loading" ? (
         <Empty icon={LoaderCircle} title={t.loading} />
       ) : status === "error" ? (
-        <Empty icon={Library} title={t.error}>
+        <Empty
+          icon={Library}
+          title={loadError ? errorMessage(loadError, t) : t.error}
+        >
           <button className="button" onClick={load}>
             {t.retry}
           </button>
@@ -373,6 +421,94 @@ function Empty({ icon: Icon, title, children }) {
     </div>
   );
 }
+function Prayers({ t, language }) {
+  const [items, setItems] = useState([]),
+    [status, setStatus] = useState("loading"),
+    [error, setError] = useState(null),
+    [search, setSearch] = useState(""),
+    [topic, setTopic] = useState("");
+  function load() {
+    setStatus("loading");
+    setError(null);
+    api("/prayers")
+      .then((d) => {
+        setItems(d.prayers);
+        setStatus("ready");
+      })
+      .catch((e) => {
+        setError(e);
+        setStatus("error");
+      });
+  }
+  useEffect(load, []);
+  const filtered = items.filter(
+    (p) =>
+      (!topic || p.topic === topic) &&
+      `${p.title_ckb} ${p.title_kmr} ${p.text_ckb} ${p.text_kmr} ${p.topic}`
+        .toLocaleLowerCase()
+        .includes(search.toLocaleLowerCase()),
+  );
+  return (
+    <div className="page">
+      <PageHead icon={Heart} title={t.prayersTitle} intro={t.prayersIntro} />
+      <div className="filters">
+        <label className="search">
+          <Search size={19} />
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            aria-label={t.prayerSearch}
+            placeholder={t.prayerSearch}
+          />
+        </label>
+        <select
+          aria-label={t.topic}
+          value={topic}
+          onChange={(e) => setTopic(e.target.value)}
+        >
+          <option value="">{t.all}</option>
+          {[...new Set(items.map((p) => p.topic))].map((v) => (
+            <option key={v}>{v}</option>
+          ))}
+        </select>
+      </div>
+      {status === "loading" ? (
+        <Empty icon={LoaderCircle} title={t.loading} />
+      ) : error ? (
+        <Empty icon={Heart} title={errorMessage(error, t)}>
+          <button className="button" onClick={load}>
+            {t.retry}
+          </button>
+        </Empty>
+      ) : !filtered.length ? (
+        <Empty icon={Heart} title={items.length ? t.noResults : t.noPrayers}>
+          <p>{!items.length && t.emptyPrayers}</p>
+        </Empty>
+      ) : (
+        <div className="prayer-list">
+          {filtered.map((p) => (
+            <details className="prayer" key={p.id}>
+              <summary>
+                <h2>{p[`title_${language}`]}</h2>
+                <span>{p.topic}</span>
+              </summary>
+              <p className="prayer-text">{p[`text_${language}`]}</p>
+              <a
+                className="text-link"
+                href={p.source_url}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {p.reference}
+                <ExternalLink size={15} />
+              </a>
+            </details>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 function Chat({ t, language }) {
   const [question, setQuestion] = useState(""),
     [messages, setMessages] = useState([]),
@@ -392,7 +528,7 @@ function Chat({ t, language }) {
       setMessages((m) => [...m, { question: q, ...result }]);
       setQuestion("");
     } catch (err) {
-      setError(err.message || t.error);
+      setError(errorMessage(err, t));
     } finally {
       setBusy(false);
     }
@@ -551,6 +687,16 @@ const blankSource = {
   keywords: "",
   approved: false,
 };
+const blankPrayer = {
+  title_ckb: "",
+  title_kmr: "",
+  text_ckb: "",
+  text_kmr: "",
+  reference: "",
+  source_url: "",
+  topic: "",
+  published: false,
+};
 function Admin({ t }) {
   const [session, setSession] = useState(null),
     [checking, setChecking] = useState(true),
@@ -576,9 +722,11 @@ function Admin({ t }) {
     });
     const { data } = auth.auth.onAuthStateChange((_event, s) => {
       setSession(s);
-      setAllowed(false);
-      setItems([]);
-      setEditing(null);
+      if (!s) {
+        setAllowed(false);
+        setItems([]);
+        setEditing(null);
+      }
     });
     return () => {
       active = false;
@@ -589,13 +737,14 @@ function Admin({ t }) {
   useEffect(() => {
     if (!token) return;
     let active = true;
+    setAllowed(false);
     setError("");
     api("/admin/me", { token })
       .then(() => {
         if (active) setAllowed(true);
       })
       .catch((e) => {
-        if (active) setError(e.message);
+        if (active) setError(errorMessage(e, t));
       });
     return () => {
       active = false;
@@ -607,7 +756,7 @@ function Admin({ t }) {
       const d = await api(`/admin/${tab}`, { token });
       setItems(d.items);
     } catch (e) {
-      setError(e.message);
+      setError(errorMessage(e, t));
     } finally {
       setListLoading(false);
     }
@@ -630,7 +779,7 @@ function Admin({ t }) {
       });
       if (error) throw error;
     } catch (e) {
-      setError(e.message);
+      setError(errorMessage(e, t));
     } finally {
       setBusy(false);
     }
@@ -650,7 +799,7 @@ function Admin({ t }) {
       setNotice(t.saved);
       await load();
     } catch (e) {
-      setError(e.message);
+      setError(errorMessage(e, t));
     } finally {
       setBusy(false);
     }
@@ -664,7 +813,7 @@ function Admin({ t }) {
       setNotice(t.deleted);
       await load();
     } catch (e) {
-      setError(e.message);
+      setError(errorMessage(e, t));
     } finally {
       setBusy(false);
     }
@@ -679,14 +828,24 @@ function Admin({ t }) {
           ["source_url", t.url, "url"],
           ["topic", t.topic],
         ]
-      : [
-          ["title", t.title],
-          ["publisher", t.publisher],
-          ["url", t.url, "url"],
-          ["content", t.content, "textarea"],
-          ["keywords", t.keywords, "textarea"],
-        ];
-  const toggle = tab === "quotes" ? "published" : "approved";
+      : tab === "prayers"
+        ? [
+            ["title_ckb", t.titleCkb],
+            ["title_kmr", t.titleKmr],
+            ["text_ckb", t.textCkb, "textarea"],
+            ["text_kmr", t.textKmr, "textarea"],
+            ["reference", t.ref],
+            ["source_url", t.url, "url"],
+            ["topic", t.topic],
+          ]
+        : [
+            ["title", t.title],
+            ["publisher", t.publisher],
+            ["url", t.url, "url"],
+            ["content", t.content, "textarea"],
+            ["keywords", t.keywords, "textarea"],
+          ];
+  const toggle = tab === "sources" ? "approved" : "published";
   return (
     <div className="page admin-page">
       <PageHead icon={ShieldCheck} title={t.manage} />
@@ -697,6 +856,7 @@ function Admin({ t }) {
       ) : !session ? (
         <form className="login-form" onSubmit={login}>
           <h2>{t.login}</h2>
+          <p className="owner-note">{t.ownerOnly}</p>
           <label>
             {t.email}
             <input
@@ -741,6 +901,12 @@ function Admin({ t }) {
             <>
               <div className="tabs">
                 <button
+                  className={tab === "prayers" ? "selected" : ""}
+                  onClick={() => setTab("prayers")}
+                >
+                  {t.prayers}
+                </button>
+                <button
                   className={tab === "quotes" ? "selected" : ""}
                   onClick={() => setTab("quotes")}
                 >
@@ -772,7 +938,8 @@ function Admin({ t }) {
                                 : undefined
                           }
                           maxLength={
-                            key === "content"
+                            key === "content" ||
+                            (tab === "prayers" && key.startsWith("text_"))
                               ? 12000
                               : key === "keywords"
                                 ? 1500
@@ -834,7 +1001,11 @@ function Admin({ t }) {
                     className="button"
                     onClick={() =>
                       setEditing({
-                        ...(tab === "quotes" ? blankQuote : blankSource),
+                        ...(tab === "quotes"
+                          ? blankQuote
+                          : tab === "prayers"
+                            ? blankPrayer
+                            : blankSource),
                       })
                     }
                   >
@@ -849,7 +1020,9 @@ function Admin({ t }) {
                       {items.map((item) => (
                         <article key={item.id}>
                           <div>
-                            <strong>{item.father || item.title}</strong>
+                            <strong>
+                              {item.father || item.title || item.title_ckb}
+                            </strong>
                             <p className="record-preview">
                               {item.text_ckb || item.content}
                             </p>

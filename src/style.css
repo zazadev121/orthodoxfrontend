@@ -188,6 +188,73 @@ html[lang="ckb"] .hero h1 {
   gap: 12px;
   align-items: center;
 }
+.admin-signin {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+.prayer-list {
+  display: grid;
+  gap: 20px;
+  max-width: 900px;
+}
+.prayer {
+  background: white;
+  border: 1px solid var(--line);
+  padding: 24px 30px;
+}
+.prayer summary {
+  cursor: pointer;
+  list-style-position: inside;
+}
+.prayer summary h2 {
+  display: inline;
+  font-size: 1.3rem;
+  line-height: 1.9;
+}
+.prayer summary span {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 6px;
+}
+.prayer[open] summary {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 18px;
+}
+.prayer-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 1.12rem;
+  line-height: 2.2;
+  margin-block: 24px;
+}
+.owner-note {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0;
+}
+@media (max-width: 560px) {
+  .admin-signin span {
+    display: none;
+  }
+  .admin-signin {
+    padding: 6px;
+  }
+  .brand-cross {
+    width: 32px;
+    height: 32px;
+  }
+  .prayer {
+    padding: 20px;
+  }
+  .tabs {
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+}
 .language {
   border: 1px solid var(--line);
   background: transparent;

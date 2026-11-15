@@ -6,6 +6,23 @@ export const copy = {
     fathers: "باوکانی کڵێسا",
     ai: "پرسیار و باوەڕ",
     admin: "بەڕێوەبردن",
+    prayers: "نوێژ و دوعا",
+    prayerSearch: "گەڕان بە ناونیشان، بابەت یان دەقی نوێژ…",
+    prayersTitle: "نوێژ و دوعا بە زمانی کوردی",
+    prayersIntro:
+      "دەقە پشکنراوەکانی نوێژ و دوعای ئۆرتۆدۆکس، بە سۆرانی و کورمانجی.",
+    noPrayers: "هێشتا نوێژێک بڵاو نەکراوەتەوە.",
+    emptyPrayers: "بەڕێوەبەر دەتوانێت دەق و وەرگێڕانە پشکنراوەکان زیاد بکات.",
+    titleCkb: "ناونیشان بە سۆرانی",
+    titleKmr: "ناونیشان بە کورمانجی",
+    ownerOnly:
+      "ئەم چوونەژوورەوەیە تەنها بۆ خاوەنی ماڵپەڕە. تۆمارکردنی گشتی نییە.",
+    databaseSetup:
+      "ڕێکخستنی بنکەدراوە تەواو نییە. بەڕێوەبەر دەبێت فایلی schema.sql لە Supabase جێبەجێ بکات.",
+    databaseKeyError:
+      "پەیوەندیی بنکەدراوە ڕێک نەخراوە. بەڕێوەبەر دەبێت کلیلی Supabase لە Render بپشکنێت.",
+    aiSetup:
+      "یارمەتیدەری زیرەک هێشتا چالاک نییە. بەڕێوەبەر دەبێت GROQ_API_KEY لە Render زیاد بکات.",
     hero: "∣باوەڕی ئۆرتۆدۆکسی ڕۆژهەڵاتی بە زمانی شیرینی کوردی سۆرانی ∣",
     intro:
       "دەرگایەک بۆ ناسینی باوەڕی مەسیحیی ئۆرتۆدۆکس؛ بە کوردیی سۆرانی و کورمانجی.",
@@ -106,6 +123,23 @@ export const copy = {
     fathers: "Bavên Dêrê",
     ai: "Pirs û bawerî",
     admin: "Rêveberî",
+    prayers: "Dua",
+    prayerSearch: "Li gor sernav, mijar an nivîsa duayê bigere…",
+    prayersTitle: "Dua bi zimanê Kurdî",
+    prayersIntro:
+      "Nivîsên kontrolkirî yên duayên Ortodoks bi Soranî û Kurmancî.",
+    noPrayers: "Hîn duayek nehatiye weşandin.",
+    emptyPrayers: "Rêveber dikare nivîs û wergerên kontrolkirî zêde bike.",
+    titleCkb: "Sernav bi Soranî",
+    titleKmr: "Sernav bi Kurmancî",
+    ownerOnly:
+      "Ev têketin tenê ji bo xwediyê malperê ye. Tomarbûna giştî tune ye.",
+    databaseSetup:
+      "Sazkirina danegehê ne temam e. Rêveber divê schema.sql di Supabase de bimeşîne.",
+    databaseKeyError:
+      "Girêdana danegehê ne amade ye. Rêveber divê mifteya Supabase li Render kontrol bike.",
+    aiSetup:
+      "Alîkara AI hîn ne çalak e. Rêveber divê GROQ_API_KEY li Render zêde bike.",
     hero: "Baweriyeke kevnar,\nbi zimanê dilê te.",
     intro:
       "Deriyek ji bo naskirina baweriya Xiristiyanî ya Ortodoks; bi Soranî û Kurmancî.",
