@@ -86,7 +86,7 @@ function App() {
       </a>
       <header className="header">
         <a href="#home" className="brand">
-          <Cross />
+          <img className="brand-cross" src="/kurdistan-cross.jpg" alt="" width="42" height="42" />
           <span>
             {t.name}
             <small lang="en" dir="ltr">
@@ -152,7 +152,7 @@ function App() {
       <footer>
         <div className="footer-inner">
           <div className="footer-brand">
-            <Cross />
+            <img className="brand-cross" src="/kurdistan-cross.jpg" alt="" width="42" height="42" loading="lazy" />
             <div>
               <strong>{t.name}</strong>
               <p>{t.footer}</p>
@@ -196,27 +196,8 @@ function Home({ t }) {
             {t.sourcePolicy}
           </div>
         </div>
-        <div className="sacred-art" aria-hidden="true">
-          <div className="art-grain" />
-          <div className="arch arch-outer">
-            <div className="arch arch-inner">
-              <div className="halo" />
-              <Cross className="art-cross" />
-              <div className="landscape mountain-one" />
-              <div className="landscape mountain-two" />
-              <div className="landscape mountain-three" />
-              <div className="church">
-                <div className="church-dome" />
-                <div className="church-body">
-                  <i />
-                </div>
-                <Cross />
-              </div>
-            </div>
-          </div>
-          <span className="art-caption" lang="en">
-            Faith. Rooted in eternity.
-          </span>
+        <div className="sacred-art kurdistan-art">
+          <img className="kurdistan-cross" src="/kurdistan-cross.jpg" alt="Kurdistan cross" width="960" height="960" fetchPriority="high" />
         </div>
       </section>
       <section className="explore-section">

@@ -123,6 +123,32 @@ h3 {
   height: 43px;
   color: #a4864a;
 }
+.brand-cross {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+.sacred-art.kurdistan-art {
+  background: #fff;
+  padding: 45px;
+}
+.sacred-art.kurdistan-art::before {
+  display: none;
+}
+.kurdistan-cross {
+  display: block;
+  width: 100%;
+  max-width: 460px;
+  height: auto;
+  object-fit: contain;
+}
+html[lang="ckb"] .hero h1 {
+  font-size: clamp(2rem, 3.3vw, 3rem);
+  line-height: 1.65;
+  overflow-wrap: break-word;
+}
 .brand small {
   display: block;
   font-size: 10px;

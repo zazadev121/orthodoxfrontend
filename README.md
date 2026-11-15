@@ -18,7 +18,7 @@ The backend README explains the SQL migration, first admin user, source seed, en
 ## Features
 
 - Fully translated interface in Sorani and Kurmanji; RTL/LTR layouts switch with the locale.
-- Home artwork uses CSS/vector geometry, with no external photograph dependencies.
+- The homepage and brand use the supplied Kurdistan cross image, bundled locally with no external image dependency.
 - Bible links open verified editions at their providers: [KSS on BibleGateway](https://www.biblegateway.com/versions/Kurdi-Sorani-Standard-KSS-Bible) (Biblica; Old/New Testament) and [Kurmanji Încîl](https://www.bible.com/versions/251) (Bible Society in Turkey, 2005; New Testament and Psalms). These are recognized Kurdish translations, not Orthodox-specific editions. Complete Orthodox canon coverage is not claimed. Full text is not bundled, scraped, or machine-translated. Obtain publisher permission / a licensed API before adding an in-app full-text reader.
 - Search/filter published quotations; real loading, empty and failure states.
 - AI language follows the selected locale and defaults to Sorani. Shows approved citation links and a warning about AI accuracy. Chat history stays in component memory and is cleared when leaving the page or switching languages.
