@@ -1,0 +1,930 @@
+import React, { useEffect, useState } from "react";
+import { createRoot } from "react-dom/client";
+import {
+  BookOpen,
+  MessageCircle,
+  Library,
+  ArrowUpRight,
+  Search,
+  ExternalLink,
+  Menu,
+  X,
+  LogOut,
+  Plus,
+  PenLine,
+  Trash2,
+  Send,
+  ShieldCheck,
+  ChevronRight,
+  Globe,
+  Check,
+  LoaderCircle,
+} from "lucide-react";
+import { copy } from "./i18n";
+import { api, auth } from "./api";
+import "./style.css";
+
+function Cross({ className = "" }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 60 80"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M30 4v72M17 19h26M6 34h48M17 58l26 10"
+        stroke="currentColor"
+        strokeWidth="4"
+      />
+      <path
+        d="M26 4h8M26 76h8M6 30v8M54 30v8"
+        stroke="currentColor"
+        strokeWidth="3"
+      />
+    </svg>
+  );
+}
+function App() {
+  const [language, setLanguage] = useState(() =>
+    localStorage.getItem("language") === "kmr" ? "kmr" : "ckb",
+  );
+  const [page, setPage] = useState(() => location.hash.slice(1) || "home");
+  const [menu, setMenu] = useState(false);
+  const t = copy[language];
+  useEffect(() => {
+    const handle = () => {
+      setPage(location.hash.slice(1) || "home");
+      setMenu(false);
+      window.scrollTo(0, 0);
+    };
+    window.addEventListener("hashchange", handle);
+    return () => window.removeEventListener("hashchange", handle);
+  }, []);
+  useEffect(() => {
+    document.documentElement.lang = language;
+    document.documentElement.dir = language === "ckb" ? "rtl" : "ltr";
+    localStorage.setItem("language", language);
+  }, [language]);
+  const nav = [
+    ["home", t.home],
+    ["bible", t.bible],
+    ["fathers", t.fathers],
+    ["ai", t.ai],
+  ];
+  return (
+    <>
+      <a
+        href="#main"
+        className="skip"
+        onClick={(e) => {
+          e.preventDefault();
+          document.querySelector("main").focus();
+        }}
+      >
+        {t.skip}
+      </a>
+      <header className="header">
+        <a href="#home" className="brand">
+          <Cross />
+          <span>
+            {t.name}
+            <small lang="en" dir="ltr">
+              Orthodoxy in Kurdistan
+            </small>
+          </span>
+        </a>
+        <nav
+          aria-label={t.home}
+          className={menu ? "navigation open" : "navigation"}
+        >
+          {nav.map(([id, label]) => (
+            <a
+              key={id}
+              href={`#${id}`}
+              className={page === id ? "active" : ""}
+              aria-current={page === id ? "page" : undefined}
+            >
+              {label}
+            </a>
+          ))}
+        </nav>
+        <div className="header-actions">
+          <button
+            className="language"
+            onClick={() => setLanguage(language === "ckb" ? "kmr" : "ckb")}
+            aria-label={
+              language === "ckb" ? "Switch to Kurmanji" : "گۆڕین بۆ سۆرانی"
+            }
+          >
+            <Globe size={16} />
+            {language === "ckb" ? "Kurmancî" : "سۆرانی"}
+          </button>
+          <button
+            className="mobile-menu icon-button"
+            aria-label={menu ? "Close menu" : "Open menu"}
+            aria-expanded={menu}
+            onClick={() => setMenu(!menu)}
+          >
+            {menu ? <X /> : <Menu />}
+          </button>
+        </div>
+      </header>
+      <main id="main" tabIndex={-1}>
+        {page === "home" ? (
+          <Home t={t} />
+        ) : page === "bible" ? (
+          <Bible t={t} />
+        ) : page === "fathers" ? (
+          <Fathers t={t} language={language} />
+        ) : page === "ai" ? (
+          <Chat key={language} t={t} language={language} />
+        ) : page === "admin" ? (
+          <Admin t={t} />
+        ) : page === "sources" ? (
+          <Sources t={t} />
+        ) : (
+          <div className="page">
+            <a href="#home">{t.back}</a>
+          </div>
+        )}
+      </main>
+      <footer>
+        <div className="footer-inner">
+          <div className="footer-brand">
+            <Cross />
+            <div>
+              <strong>{t.name}</strong>
+              <p>{t.footer}</p>
+            </div>
+          </div>
+          <div className="footer-links">
+            <a href="#sources">{t.sources}</a>
+            <a href="#admin">{t.admin}</a>
+            <span lang="en" dir="ltr">
+              © {new Date().getFullYear()} Orthodoxy in Kurdistan
+            </span>
+          </div>
+        </div>
+      </footer>
+    </>
+  );
+}
+function Home({ t }) {
+  return (
+    <>
+      <section className="hero">
+        <div className="hero-text">
+          <div className="welcome">
+            <span />
+            {t.welcome}
+          </div>
+          <h1>{t.hero}</h1>
+          <p>{t.intro}</p>
+          <div className="hero-actions">
+            <a className="button gold" href="#bible">
+              <BookOpen size={19} />
+              {t.read}
+            </a>
+            <a className="text-link" href="#ai">
+              {t.ask}
+              <ArrowUpRight size={18} />
+            </a>
+          </div>
+          <div className="hero-note">
+            <ShieldCheck size={17} />
+            {t.sourcePolicy}
+          </div>
+        </div>
+        <div className="sacred-art" aria-hidden="true">
+          <div className="art-grain" />
+          <div className="arch arch-outer">
+            <div className="arch arch-inner">
+              <div className="halo" />
+              <Cross className="art-cross" />
+              <div className="landscape mountain-one" />
+              <div className="landscape mountain-two" />
+              <div className="landscape mountain-three" />
+              <div className="church">
+                <div className="church-dome" />
+                <div className="church-body">
+                  <i />
+                </div>
+                <Cross />
+              </div>
+            </div>
+          </div>
+          <span className="art-caption" lang="en">
+            Faith. Rooted in eternity.
+          </span>
+        </div>
+      </section>
+      <section className="explore-section">
+        <div className="section-heading">
+          <h2>{t.journey}</h2>
+          <p>{t.journeyBody}</p>
+        </div>
+        <div className="paths">
+          {[
+            ["bible", BookOpen, t.bible, t.bibleDesc],
+            ["fathers", Library, t.fathers, t.fathersDesc],
+            ["ai", MessageCircle, t.ai, t.aiDesc],
+          ].map(([id, Icon, title, desc]) => (
+            <a className="path" key={id} href={`#${id}`}>
+              <Icon className="path-icon" size={28} />
+              <h3>{title}</h3>
+              <p>{desc}</p>
+              <span>
+                {t.explore}
+                <ArrowUpRight size={18} />
+              </span>
+            </a>
+          ))}
+        </div>
+      </section>
+      <section className="principle">
+        <Cross />
+        <div>
+          <h2>{t.principle}</h2>
+          <p>{t.principleBody}</p>
+        </div>
+      </section>
+    </>
+  );
+}
+function PageHead({ icon: Icon, title, intro }) {
+  return (
+    <div className="page-heading">
+      <Icon size={25} />
+      <h1>{title}</h1>
+      {intro && <p>{intro}</p>}
+    </div>
+  );
+}
+function Bible({ t }) {
+  return (
+    <div className="page">
+      <PageHead icon={BookOpen} title={t.bibleTitle} intro={t.bibleIntro} />
+      <div className="bible-editions">
+        {[
+          [
+            t.soraniBible,
+            t.kss,
+            t.kssInfo,
+            "KSS",
+            "https://www.biblegateway.com/versions/Kurdi-Sorani-Standard-KSS-Bible",
+          ],
+          [
+            t.kurmanjiBible,
+            t.kurnt,
+            t.kurInfo,
+            "KURNT",
+            "https://www.bible.com/versions/251",
+          ],
+        ].map(([title, name, desc, code, url]) => (
+          <article className="edition" key={code}>
+            <div className="book-cover">
+              <Cross />
+              <span dir="ltr">{code}</span>
+            </div>
+            <div>
+              <h2>{title}</h2>
+              <h3>{name}</h3>
+              <p>{desc}</p>
+              <a className="button" href={url} target="_blank" rel="noreferrer">
+                {t.openBible}
+                <ExternalLink size={16} />
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+      <aside className="notice">
+        <ShieldCheck size={22} />
+        <p>{t.bibleNotice}</p>
+      </aside>
+    </div>
+  );
+}
+function Fathers({ t, language }) {
+  const [quotes, setQuotes] = useState([]),
+    [status, setStatus] = useState("loading"),
+    [search, setSearch] = useState(""),
+    [topic, setTopic] = useState("");
+  const load = () => {
+    setStatus("loading");
+    api("/quotes")
+      .then((d) => {
+        setQuotes(d.quotes);
+        setStatus("ready");
+      })
+      .catch(() => setStatus("error"));
+  };
+  useEffect(load, []);
+  const filtered = quotes.filter(
+    (q) =>
+      (!topic || q.topic === topic) &&
+      `${q.father} ${q.topic} ${q.text_ckb} ${q.text_kmr}`
+        .toLocaleLowerCase()
+        .includes(search.toLocaleLowerCase()),
+  );
+  return (
+    <div className="page">
+      <PageHead icon={Library} title={t.fathersTitle} intro={t.fathersDesc} />
+      <div className="filters">
+        <label className="search">
+          <Search size={19} />
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={t.search}
+            aria-label={t.search}
+          />
+        </label>
+        <select
+          aria-label={t.topic}
+          value={topic}
+          onChange={(e) => setTopic(e.target.value)}
+        >
+          <option value="">{t.all}</option>
+          {[...new Set(quotes.map((q) => q.topic))].map((v) => (
+            <option key={v}>{v}</option>
+          ))}
+        </select>
+      </div>
+      {status === "loading" ? (
+        <Empty icon={LoaderCircle} title={t.loading} />
+      ) : status === "error" ? (
+        <Empty icon={Library} title={t.error}>
+          <button className="button" onClick={load}>
+            {t.retry}
+          </button>
+        </Empty>
+      ) : !filtered.length ? (
+        <Empty icon={Library} title={quotes.length ? t.noResults : t.noQuotes}>
+          <p>{!quotes.length && t.emptyQuotes}</p>
+        </Empty>
+      ) : (
+        <div className="quotes-grid">
+          {filtered.map((q) => (
+            <article className="quote" key={q.id}>
+              <span className="quote-mark">“</span>
+              <blockquote>{q[`text_${language}`]}</blockquote>
+              <h3>{q.father}</h3>
+              <p>{q.topic}</p>
+              <a href={q.source_url} target="_blank" rel="noreferrer">
+                {q.reference}
+                <ExternalLink size={14} />
+              </a>
+            </article>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+function Empty({ icon: Icon, title, children }) {
+  return (
+    <div className="empty">
+      <Icon size={34} />
+      <h2>{title}</h2>
+      {children}
+    </div>
+  );
+}
+function Chat({ t, language }) {
+  const [question, setQuestion] = useState(""),
+    [messages, setMessages] = useState([]),
+    [busy, setBusy] = useState(false),
+    [error, setError] = useState("");
+  async function submit(e) {
+    e.preventDefault();
+    if (busy || question.trim().length < 3) return;
+    const q = question.trim();
+    setBusy(true);
+    setError("");
+    try {
+      const result = await api("/chat", {
+        method: "POST",
+        body: JSON.stringify({ question: q, language }),
+      });
+      setMessages((m) => [...m, { question: q, ...result }]);
+      setQuestion("");
+    } catch (err) {
+      setError(err.message || t.error);
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <div className="page chat-page">
+      <PageHead icon={MessageCircle} title={t.aiTitle} intro={t.aiIntro} />
+      <div className="chat-layout">
+        <section className="chat-panel">
+          <div className="chat-top">
+            <span className="status-dot" />
+            {t.ai}
+            <ShieldCheck size={17} />
+          </div>
+          <div className="messages" aria-live="polite">
+            {!messages.length ? (
+              <div className="chat-welcome">
+                <Cross />
+                <h2>{t.ask}</h2>
+                <p>{t.sourcePolicy}</p>
+                <div className="suggestions">
+                  {t.examples.map((q) => (
+                    <button
+                      key={q}
+                      onClick={() => {
+                        setQuestion(q);
+                        document.getElementById("question").focus();
+                      }}
+                    >
+                      {q}
+                      <ChevronRight size={16} />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              messages.map((m, i) => (
+                <div className="exchange" key={i}>
+                  <div className="user-message">
+                    <small>{t.you}</small>
+                    <p>{m.question}</p>
+                  </div>
+                  <div className="answer-message">
+                    <strong>{t.answer}</strong>
+                    <p>{m.answer}</p>
+                    {m.citations.length > 0 && (
+                      <div className="citations">
+                        <span>{t.sources}</span>
+                        {m.citations.map((s) => (
+                          <a
+                            key={s.id}
+                            href={s.url}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            {s.title}
+                            <ExternalLink size={13} />
+                            <small>{s.publisher}</small>
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
+            {busy && (
+              <p className="loading">
+                <LoaderCircle size={18} className="spin" />
+                {t.thinking}
+              </p>
+            )}
+          </div>
+          {error && (
+            <div className="error" role="alert">
+              {error}
+            </div>
+          )}
+          <form className="chat-form" onSubmit={submit}>
+            <label className="sr-only" htmlFor="question">
+              {t.prompt}
+            </label>
+            <textarea
+              id="question"
+              placeholder={t.prompt}
+              value={question}
+              maxLength={1500}
+              rows={2}
+              onChange={(e) => setQuestion(e.target.value)}
+            />
+            <button
+              className="button"
+              disabled={busy || question.trim().length < 3}
+              aria-label={t.send}
+              title={t.send}
+            >
+              <Send size={21} />
+            </button>
+          </form>
+        </section>
+        <aside className="chat-sidebar">
+          <ShieldCheck size={26} />
+          <h2>{t.sources}</h2>
+          <p>{t.sourcePolicy}</p>
+          <a href="#sources" className="text-link">
+            {t.sources}
+            <ArrowUpRight size={17} />
+          </a>
+          <div className="sidebar-rule" />
+          <p>{t.aiNotice}</p>
+        </aside>
+      </div>
+    </div>
+  );
+}
+function Sources({ t }) {
+  const [sources, setSources] = useState([]),
+    [error, setError] = useState("");
+  useEffect(() => {
+    api("/sources")
+      .then((d) => setSources(d.sources))
+      .catch(() => setError(t.error));
+  }, [t]);
+  return (
+    <section className="page sources-page">
+      <PageHead icon={ShieldCheck} title={t.sources} intro={t.sourcePolicy} />
+      {error && <p role="alert">{error}</p>}
+      <div className="source-list">
+        {sources.map((s) => (
+          <a key={s.id} href={s.url} target="_blank" rel="noreferrer">
+            <div>
+              <h2>{s.title}</h2>
+              <p>{s.publisher}</p>
+            </div>
+            <ExternalLink size={19} />
+          </a>
+        ))}
+      </div>
+    </section>
+  );
+}
+const blankQuote = {
+  father: "",
+  text_ckb: "",
+  text_kmr: "",
+  reference: "",
+  source_url: "",
+  topic: "",
+  published: false,
+};
+const blankSource = {
+  title: "",
+  publisher: "",
+  url: "",
+  content: "",
+  keywords: "",
+  approved: false,
+};
+function Admin({ t }) {
+  const [session, setSession] = useState(null),
+    [checking, setChecking] = useState(true),
+    [allowed, setAllowed] = useState(false),
+    [error, setError] = useState(""),
+    [busy, setBusy] = useState(false),
+    [tab, setTab] = useState("quotes"),
+    [items, setItems] = useState([]),
+    [editing, setEditing] = useState(null),
+    [notice, setNotice] = useState(""),
+    [listLoading, setListLoading] = useState(false);
+  useEffect(() => {
+    if (!auth) {
+      setChecking(false);
+      return;
+    }
+    let active = true;
+    auth.auth.getSession().then(({ data }) => {
+      if (active) {
+        setSession(data.session);
+        setChecking(false);
+      }
+    });
+    const { data } = auth.auth.onAuthStateChange((_event, s) => {
+      setSession(s);
+      setAllowed(false);
+      setItems([]);
+      setEditing(null);
+    });
+    return () => {
+      active = false;
+      data.subscription.unsubscribe();
+    };
+  }, []);
+  const token = session?.access_token;
+  useEffect(() => {
+    if (!token) return;
+    let active = true;
+    setError("");
+    api("/admin/me", { token })
+      .then(() => {
+        if (active) setAllowed(true);
+      })
+      .catch((e) => {
+        if (active) setError(e.message);
+      });
+    return () => {
+      active = false;
+    };
+  }, [token]);
+  async function load() {
+    setListLoading(true);
+    try {
+      const d = await api(`/admin/${tab}`, { token });
+      setItems(d.items);
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setListLoading(false);
+    }
+  }
+  useEffect(() => {
+    setEditing(null);
+    setItems([]);
+    setNotice("");
+    if (allowed) load();
+  }, [allowed, tab, token]);
+  async function login(e) {
+    e.preventDefault();
+    setBusy(true);
+    setError("");
+    const form = new FormData(e.currentTarget);
+    try {
+      const { error } = await auth.auth.signInWithPassword({
+        email: form.get("email"),
+        password: form.get("password"),
+      });
+      if (error) throw error;
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function save(e) {
+    e.preventDefault();
+    setBusy(true);
+    setError("");
+    try {
+      const { id, created_at, ...body } = editing;
+      await api(`/admin/${tab}${id ? `/${id}` : ""}`, {
+        method: id ? "PATCH" : "POST",
+        token,
+        body: JSON.stringify(body),
+      });
+      setEditing(null);
+      setNotice(t.saved);
+      await load();
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function remove(item) {
+    if (!window.confirm(t.confirmDelete)) return;
+    setBusy(true);
+    setError("");
+    try {
+      await api(`/admin/${tab}/${item.id}`, { method: "DELETE", token });
+      setNotice(t.deleted);
+      await load();
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+  const fields =
+    tab === "quotes"
+      ? [
+          ["father", t.father],
+          ["text_ckb", t.textCkb, "textarea"],
+          ["text_kmr", t.textKmr, "textarea"],
+          ["reference", t.ref],
+          ["source_url", t.url, "url"],
+          ["topic", t.topic],
+        ]
+      : [
+          ["title", t.title],
+          ["publisher", t.publisher],
+          ["url", t.url, "url"],
+          ["content", t.content, "textarea"],
+          ["keywords", t.keywords, "textarea"],
+        ];
+  const toggle = tab === "quotes" ? "published" : "approved";
+  return (
+    <div className="page admin-page">
+      <PageHead icon={ShieldCheck} title={t.manage} />
+      {checking ? (
+        <p>{t.loading}</p>
+      ) : !auth ? (
+        <aside className="notice">{t.setup}</aside>
+      ) : !session ? (
+        <form className="login-form" onSubmit={login}>
+          <h2>{t.login}</h2>
+          <label>
+            {t.email}
+            <input
+              name="email"
+              type="email"
+              autoComplete="username"
+              required
+              dir="ltr"
+            />
+          </label>
+          <label>
+            {t.password}
+            <input
+              name="password"
+              type="password"
+              autoComplete="current-password"
+              required
+              dir="ltr"
+            />
+          </label>
+          <button className="button" disabled={busy}>
+            {busy ? t.loading : t.signIn}
+          </button>
+        </form>
+      ) : (
+        <>
+          <div className="admin-toolbar">
+            <span dir="ltr">{session.user.email}</span>
+            <button
+              className="text-link"
+              onClick={async () => {
+                setError("");
+                const { error } = await auth.auth.signOut();
+                if (error) setError(error.message);
+              }}
+            >
+              <LogOut size={16} />
+              {t.signOut}
+            </button>
+          </div>
+          {allowed && (
+            <>
+              <div className="tabs">
+                <button
+                  className={tab === "quotes" ? "selected" : ""}
+                  onClick={() => setTab("quotes")}
+                >
+                  {t.quotesTab}
+                </button>
+                <button
+                  className={tab === "sources" ? "selected" : ""}
+                  onClick={() => setTab("sources")}
+                >
+                  {t.sourcesTab}
+                </button>
+              </div>
+              <p className="editor-note">{t.sourceHint}</p>
+              {editing ? (
+                <form className="editor" onSubmit={save}>
+                  {fields.map(([key, label, type]) => (
+                    <label key={key}>
+                      {label}
+                      {type === "textarea" ? (
+                        <textarea
+                          required
+                          rows={key === "content" ? 7 : 4}
+                          value={editing[key]}
+                          dir={
+                            key === "text_ckb"
+                              ? "rtl"
+                              : key === "text_kmr"
+                                ? "ltr"
+                                : undefined
+                          }
+                          maxLength={
+                            key === "content"
+                              ? 12000
+                              : key === "keywords"
+                                ? 1500
+                                : 5000
+                          }
+                          onChange={(e) =>
+                            setEditing({ ...editing, [key]: e.target.value })
+                          }
+                        />
+                      ) : (
+                        <input
+                          required
+                          type={type || "text"}
+                          value={editing[key]}
+                          dir={type === "url" ? "ltr" : undefined}
+                          maxLength={
+                            key === "father"
+                              ? 160
+                              : key === "reference"
+                                ? 500
+                                : key === "topic"
+                                  ? 100
+                                  : 2000
+                          }
+                          onChange={(e) =>
+                            setEditing({ ...editing, [key]: e.target.value })
+                          }
+                        />
+                      )}
+                    </label>
+                  ))}
+                  <label className="checkbox">
+                    <input
+                      type="checkbox"
+                      checked={editing[toggle]}
+                      onChange={(e) =>
+                        setEditing({ ...editing, [toggle]: e.target.checked })
+                      }
+                    />
+                    {t[toggle]}
+                  </label>
+                  <div className="editor-actions">
+                    <button className="button" disabled={busy}>
+                      {t.save}
+                    </button>
+                    <button
+                      type="button"
+                      className="button secondary"
+                      disabled={busy}
+                      onClick={() => setEditing(null)}
+                    >
+                      {t.cancel}
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                <>
+                  <button
+                    className="button"
+                    onClick={() =>
+                      setEditing({
+                        ...(tab === "quotes" ? blankQuote : blankSource),
+                      })
+                    }
+                  >
+                    <Plus size={18} />
+                    {t.add}
+                  </button>
+                  {listLoading ? (
+                    <p>{t.loading}</p>
+                  ) : (
+                    <div className="admin-list">
+                      {!items.length && <p>{t.noRecords}</p>}
+                      {items.map((item) => (
+                        <article key={item.id}>
+                          <div>
+                            <strong>{item.father || item.title}</strong>
+                            <p className="record-preview">
+                              {item.text_ckb || item.content}
+                            </p>
+                            <span
+                              className={
+                                item[toggle] ? "badge approved" : "badge"
+                              }
+                            >
+                              {item[toggle] ? t[toggle] : t.draft}
+                            </span>
+                          </div>
+                          <div className="record-actions">
+                            <button
+                              className="icon-button"
+                              title={t.edit}
+                              aria-label={t.edit}
+                              onClick={() => setEditing({ ...item })}
+                            >
+                              <PenLine size={18} />
+                            </button>
+                            <button
+                              className="icon-button danger"
+                              title={t.remove}
+                              aria-label={t.remove}
+                              disabled={busy}
+                              onClick={() => remove(item)}
+                            >
+                              <Trash2 size={18} />
+                            </button>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+            </>
+          )}
+        </>
+      )}
+      {error && (
+        <div className="error" role="alert">
+          {error}
+        </div>
+      )}
+      {notice && (
+        <p className="success" role="status">
+          <Check size={17} />
+          {notice}
+        </p>
+      )}
+    </div>
+  );
+}
+createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+);
