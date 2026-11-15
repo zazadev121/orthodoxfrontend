@@ -195,6 +195,16 @@ html[lang="ckb"] .hero h1 {
   font-size: 0.78rem;
   white-space: nowrap;
 }
+.public-prayers-note {
+  color: var(--muted);
+  font-size: 0.88rem;
+  margin-block: -20px 28px;
+}
+@media (min-width: 561px) and (max-width: 900px) {
+  .explore-section .paths {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
 .prayer-list {
   display: grid;
   gap: 20px;
@@ -542,7 +552,7 @@ html[lang="ckb"] .hero h1 {
 }
 .paths {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 34px;
 }
 .path {

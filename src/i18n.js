@@ -1,5 +1,8 @@
 export const copy = {
   en: {
+    prayersPublic: "Free to read for everyone. No sign-in needed.",
+    adminPanel: "Admin panel",
+    account: "Account",
     name: "Orthodoxy in Kurdistan",
     home: "Home",
     bible: "The Bible",
@@ -131,6 +134,9 @@ export const copy = {
     closeMenu: "Close menu",
   },
   ckb: {
+    prayersPublic: "بۆ هەمووان بەخۆڕاییە؛ پێویستی بە چوونەژوورەوە نییە.",
+    adminPanel: "پانێڵی بەڕێوەبەر",
+    account: "هەژمار",
     name: "ئۆرتۆدۆکسی لە کوردستان",
     home: "سەرەکی",
     bible: "کتێبی پیرۆز",
@@ -251,6 +257,9 @@ export const copy = {
     back: "گەڕانەوە بۆ سەرەکی",
   },
   kmr: {
+    prayersPublic: "Ji bo herkesî belaş e. Têketin ne pêwîst e.",
+    adminPanel: "Panela rêveber",
+    account: "Hesab",
     name: "Ortodoksî li Kurdistanê",
     home: "Destpêk",
     bible: "Pirtûka Pîroz",

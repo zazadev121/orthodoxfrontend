@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { copy } from "./i18n";
 import { api, auth } from "./api";
+import { useAccount } from "./use-account";
 import "./style.css";
 function errorMessage(error, t) {
   return (
@@ -59,6 +60,7 @@ function Cross({ className = "" }) {
   );
 }
 function App() {
+  const account = useAccount();
   const [language, setLanguage] = useState(() => {
     const requested =
       new URLSearchParams(location.search).get("lang") ||
@@ -88,6 +90,7 @@ function App() {
     ["fathers", t.fathers],
     ["prayers", t.prayers],
     ["ai", t.ai],
+    ...(account.allowed ? [["admin", t.adminPanel]] : []),
   ];
   return (
     <>
@@ -133,9 +136,25 @@ function App() {
           ))}
         </nav>
         <div className="header-actions">
-          <a className="admin-signin" href="#admin" aria-label={t.signIn}>
-            <LogIn size={16} />
-            <span>{t.signIn}</span>
+          <a
+            className="admin-signin"
+            href="#admin"
+            aria-label={
+              account.session
+                ? account.allowed
+                  ? t.adminPanel
+                  : t.account
+                : t.signIn
+            }
+          >
+            {account.allowed ? <ShieldCheck size={16} /> : <LogIn size={16} />}
+            <span>
+              {account.session
+                ? account.allowed
+                  ? t.adminPanel
+                  : t.account
+                : t.signIn}
+            </span>
           </a>
           <select
             className="language"
@@ -171,7 +190,7 @@ function App() {
         ) : page === "ai" ? (
           <Chat key={language} t={t} language={language} />
         ) : page === "admin" ? (
-          <Admin t={t} language={language} />
+          <Admin t={t} language={language} account={account} />
         ) : page === "sources" ? (
           <Sources t={t} />
         ) : (
@@ -255,6 +274,7 @@ function Home({ t }) {
             ["bible", BookOpen, t.bible, t.bibleDesc],
             ["fathers", Library, t.fathers, t.fathersDesc],
             ["ai", MessageCircle, t.ai, t.aiDesc],
+            ["prayers", Heart, t.prayers, t.prayersIntro],
           ].map(([id, Icon, title, desc]) => (
             <a className="path" key={id} href={`#${id}`}>
               <Icon className="path-icon" size={28} />
@@ -460,6 +480,7 @@ function Prayers({ t, language }) {
   return (
     <div className="page">
       <PageHead icon={Heart} title={t.prayersTitle} intro={t.prayersIntro} />
+      <p className="public-prayers-note">{t.prayersPublic}</p>
       <aside className="notice prayer-translation-note">
         <ShieldCheck size={20} />
         <p>{t.prayerTranslationNote}</p>
@@ -725,59 +746,16 @@ const blankPrayer = {
   topic: "",
   published: false,
 };
-function Admin({ t, language }) {
-  const [session, setSession] = useState(null),
-    [checking, setChecking] = useState(true),
-    [allowed, setAllowed] = useState(false),
-    [error, setError] = useState(""),
+function Admin({ t, language, account }) {
+  const { session, checking, allowed, error: accountError } = account;
+  const [error, setError] = useState(""),
     [busy, setBusy] = useState(false),
     [tab, setTab] = useState("quotes"),
     [items, setItems] = useState([]),
     [editing, setEditing] = useState(null),
     [notice, setNotice] = useState(""),
     [listLoading, setListLoading] = useState(false);
-  useEffect(() => {
-    if (!auth) {
-      setChecking(false);
-      return;
-    }
-    let active = true;
-    auth.auth.getSession().then(({ data }) => {
-      if (active) {
-        setSession(data.session);
-        setChecking(false);
-      }
-    });
-    const { data } = auth.auth.onAuthStateChange((_event, s) => {
-      setSession(s);
-      if (!s) {
-        setAllowed(false);
-        setItems([]);
-        setEditing(null);
-      }
-    });
-    return () => {
-      active = false;
-      data.subscription.unsubscribe();
-    };
-  }, []);
   const token = session?.access_token;
-  useEffect(() => {
-    if (!token) return;
-    let active = true;
-    setAllowed(false);
-    setError("");
-    api("/admin/me", { token })
-      .then(() => {
-        if (active) setAllowed(true);
-      })
-      .catch((e) => {
-        if (active) setError(errorMessage(e, t));
-      });
-    return () => {
-      active = false;
-    };
-  }, [token]);
   async function load() {
     setListLoading(true);
     try {
@@ -1104,9 +1082,9 @@ function Admin({ t, language }) {
           )}
         </>
       )}
-      {error && (
+      {(error || accountError) && (
         <div className="error" role="alert">
-          {error}
+          {error || (accountError && errorMessage(accountError, t))}
         </div>
       )}
       {notice && (
