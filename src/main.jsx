@@ -21,12 +21,14 @@ import {
   LoaderCircle,
   Heart,
   LogIn,
-  Moon,
-  Sun,
+  Palette,
+  Home as HomeIcon,
+  Settings2,
 } from "lucide-react";
 import { copy } from "./i18n";
 import { api, auth } from "./api";
 import { useAccount } from "./use-account";
+import { themes, initialTheme, initialReaderSize } from "./themes.js";
 import "./style.css";
 function errorMessage(error, t) {
   return (
@@ -63,17 +65,16 @@ function Cross({ className = "" }) {
 }
 function App() {
   const account = useAccount();
-  const [theme, setTheme] = useState(() => {
-    try {
-      const saved = localStorage.getItem("theme");
-      if (saved === "dark" || saved === "light") return saved;
-    } catch {}
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-  });
+  const [theme, setTheme] = useState(initialTheme);
+  const [readerSize, setReaderSize] = useState(initialReaderSize);
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     try { localStorage.setItem("theme", theme); } catch {}
   }, [theme]);
+  useEffect(() => {
+    document.documentElement.style.setProperty("--reader-scale", readerSize);
+    try { localStorage.setItem("readerSize", readerSize); } catch {}
+  }, [readerSize]);
   const [language, setLanguage] = useState(() => {
     const requested =
       new URLSearchParams(location.search).get("lang") ||
@@ -149,16 +150,11 @@ function App() {
           ))}
         </nav>
         <div className="header-actions">
-          <button
-            className="icon-button theme-toggle"
-            type="button"
-            aria-label={theme === "dark" ? t.lightTheme : t.darkTheme}
-            title={theme === "dark" ? t.lightTheme : t.darkTheme}
-            aria-pressed={theme === "dark"}
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          >
-            {theme === "dark" ? <Sun size={19} /> : <Moon size={19} />}
-          </button>
+          <a className="icon-button theme-toggle" href="#appearance"
+            aria-label={t.appearance} title={t.appearance}
+            aria-current={page === "appearance" ? "page" : undefined}>
+            <Palette size={20} />
+          </a>
           <a
             className="admin-signin"
             href="#admin"
@@ -202,7 +198,10 @@ function App() {
         </div>
       </header>
       <main id="main" tabIndex={-1}>
-        {page === "home" ? (
+        {page === "appearance" ? (
+          <Appearance t={t} theme={theme} setTheme={setTheme}
+            readerSize={readerSize} setReaderSize={setReaderSize} />
+        ) : page === "home" ? (
           <Home t={t} />
         ) : page === "bible" ? (
           <Bible t={t} />
@@ -222,6 +221,18 @@ function App() {
           </div>
         )}
       </main>
+      <nav className="bottom-navigation" aria-label={t.mobileNavigation}>
+        {[
+          ["home", HomeIcon, t.home], ["bible", BookOpen, t.bible],
+          ["fathers", Library, t.fathers], ["prayers", Heart, t.prayers],
+          ["appearance", Palette, t.appearance],
+        ].map(([id, Icon, label]) => (
+          <a key={id} href={`#${id}`} className={page === id ? "active" : ""}
+            aria-current={page === id ? "page" : undefined}>
+            <Icon size={21} /><span>{label}</span>
+          </a>
+        ))}
+      </nav>
       <footer>
         <div className="footer-inner">
           <div className="footer-brand">
@@ -248,6 +259,45 @@ function App() {
         </div>
       </footer>
     </>
+  );
+}
+function Appearance({ t, theme, setTheme, readerSize, setReaderSize }) {
+  return (
+    <div className="page appearance-page">
+      <div className="appearance-heading">
+        <span className="eyebrow"><Settings2 size={15} />{t.personalSpace}</span>
+        <h1>{t.appearance}</h1><p>{t.appearanceIntro}</p>
+      </div>
+      <section className="appearance-section" aria-labelledby="palette-heading">
+        <h2 id="palette-heading"><Palette size={21} />{t.displayColor}</h2>
+        <div className="theme-grid" role="group" aria-labelledby="palette-heading">
+          {themes.map(({ id, preview }) => (
+            <button key={id} type="button" className={`theme-card${theme === id ? " selected" : ""}`}
+              aria-pressed={theme === id} onClick={() => setTheme(id)}>
+              <span className="theme-swatch" style={{ background: preview }}>
+                {theme === id && <span className="theme-check"><Check size={22} /></span>}
+              </span>
+              <span className="theme-name">{t.themeNames[id]}</span>
+            </button>
+          ))}
+        </div>
+        <p className="settings-caption" role="status">{t.savedOnDevice}</p>
+      </section>
+      <section className="appearance-section" aria-labelledby="reader-heading">
+        <h2 id="reader-heading"><BookOpen size={21} />{t.reading}</h2>
+        <div className="reading-panel">
+          <p>{t.readingSize}</p>
+          <div className="size-options" role="group" aria-labelledby="reader-heading">
+            {[["0.9", t.smallText], ["1", t.mediumText], ["1.15", t.largeText]].map(([value, label]) => (
+              <button type="button" key={value} aria-pressed={readerSize === value}
+                className={readerSize === value ? "selected" : ""}
+                onClick={() => setReaderSize(value)}>{label}</button>
+            ))}
+          </div>
+          <div className="reading-preview"><Cross /><p>{t.principleBody}</p></div>
+        </div>
+      </section>
+    </div>
   );
 }
 function Home({ t }) {

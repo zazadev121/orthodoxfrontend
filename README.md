@@ -21,7 +21,7 @@ Backend: https://github.com/zazadev121/orthodoxbackend
 
 The backend README explains the SQL migration, first admin user, source seed, environment and hosting. A database connection string is unnecessary. The frontend needs the same Supabase project as the backend. Admin sign-in is at `/#admin` (also linked in the footer). Only users added to the backend's `admins` table can manage content.
 
-The header theme toggle supports light and dark appearances. It follows the system preference initially and remembers a manual choice. Quote creation no longer asks for a source URL; deploy the matching backend update first. Existing source links remain readable. No SQL migration is needed.
+Appearance settings (`/#appearance`) offer nine saved palettes: amethyst, midnight, evening blue, burgundy, forest, ocean, ivory, charcoal, and coffee. The default is amethyst; previous light/dark choices migrate to ivory/midnight. A palette icon opens settings, also available in the mobile bottom navigation. Reading size controls apply to prayers and quotations and persist on this device. Quote creation no longer asks for a source URL; deploy the matching backend update first. Existing source links remain readable. No SQL migration is needed.
 
 ## Features
 

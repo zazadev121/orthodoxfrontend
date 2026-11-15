@@ -5,8 +5,11 @@
     <script>
       try {
         const saved = localStorage.getItem("theme");
-        document.documentElement.dataset.theme = saved === "dark" || saved === "light"
-          ? saved : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        const themes = ["amethyst", "midnight", "slate", "burgundy", "forest", "ocean", "ivory", "charcoal", "coffee"];
+        document.documentElement.dataset.theme = themes.includes(saved) ? saved
+          : saved === "light" ? "ivory" : saved === "dark" ? "midnight" : "amethyst";
+        const size = localStorage.getItem("readerSize");
+        if (["0.9", "1", "1.15"].includes(size)) document.documentElement.style.setProperty("--reader-scale", size);
       } catch {}
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
