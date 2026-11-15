@@ -21,6 +21,8 @@ import {
   LoaderCircle,
   Heart,
   LogIn,
+  Moon,
+  Sun,
 } from "lucide-react";
 import { copy } from "./i18n";
 import { api, auth } from "./api";
@@ -61,6 +63,17 @@ function Cross({ className = "" }) {
 }
 function App() {
   const account = useAccount();
+  const [theme, setTheme] = useState(() => {
+    try {
+      const saved = localStorage.getItem("theme");
+      if (saved === "dark" || saved === "light") return saved;
+    } catch {}
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  });
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    try { localStorage.setItem("theme", theme); } catch {}
+  }, [theme]);
   const [language, setLanguage] = useState(() => {
     const requested =
       new URLSearchParams(location.search).get("lang") ||
@@ -136,6 +149,16 @@ function App() {
           ))}
         </nav>
         <div className="header-actions">
+          <button
+            className="icon-button theme-toggle"
+            type="button"
+            aria-label={theme === "dark" ? t.lightTheme : t.darkTheme}
+            title={theme === "dark" ? t.lightTheme : t.darkTheme}
+            aria-pressed={theme === "dark"}
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          >
+            {theme === "dark" ? <Sun size={19} /> : <Moon size={19} />}
+          </button>
           <a
             className="admin-signin"
             href="#admin"
@@ -430,10 +453,12 @@ function Fathers({ t, language }) {
               </blockquote>
               <h3>{q.father}</h3>
               <p>{q.topic}</p>
-              <a href={q.source_url} target="_blank" rel="noreferrer">
-                {q.reference}
-                <ExternalLink size={14} />
-              </a>
+              {q.source_url ? (
+                <a href={q.source_url} target="_blank" rel="noreferrer">
+                  {q.reference}
+                  <ExternalLink size={14} />
+                </a>
+              ) : <span className="quote-reference">{q.reference}</span>}
             </article>
           ))}
         </div>
@@ -720,7 +745,6 @@ const blankQuote = {
   text_ckb: "",
   text_kmr: "",
   reference: "",
-  source_url: "",
   topic: "",
   published: false,
 };
@@ -832,7 +856,6 @@ function Admin({ t, language, account }) {
           ["text_kmr", t.textKmr, "textarea"],
           ["text_en", t.textEn || copy.en.textEn, "textarea"],
           ["reference", t.ref],
-          ["source_url", t.url, "url"],
           ["topic", t.topic],
         ]
       : tab === "prayers"
@@ -930,7 +953,7 @@ function Admin({ t, language, account }) {
                   {t.sourcesTab}
                 </button>
               </div>
-              <p className="editor-note">{t.sourceHint}</p>
+              <p className="editor-note">{tab === "quotes" ? t.quoteHint : t.sourceHint}</p>
               {editing ? (
                 <form className="editor" onSubmit={save}>
                   {fields.map(([key, label, type]) => (
@@ -1101,3 +1124,4 @@ createRoot(document.getElementById("root")).render(
     <App />
   </React.StrictMode>,
 );
+

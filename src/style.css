@@ -1,10 +1,15 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&display=swap");
 :root {
   font-family: "Noto Sans", "Noto Naskh Arabic", sans-serif;
-  color: #243b4c;
-  background: #fafaf7;
+  color: var(--text);
+  background: var(--paper);
   font-synthesis: none;
   font-weight: 400;
+  color-scheme: light;
+  --text: #243b4c;
+  --surface: #fff;
+  --soft: #eaf0ee;
+  --subtle: #f3f6f3;
   --ink: #182e40;
   --gold: #d5b674;
   --muted: #647580;
@@ -131,7 +136,7 @@ h3 {
   mix-blend-mode: multiply;
 }
 .sacred-art.kurdistan-art {
-  background: #fff;
+  background: var(--surface);
   padding: 45px;
 }
 .sacred-art.kurdistan-art::before {
@@ -214,7 +219,7 @@ html[lang="ckb"] .hero h1 {
   margin-block: 0 28px;
 }
 .prayer {
-  background: white;
+  background: var(--surface);
   border: 1px solid var(--line);
   padding: 24px 30px;
 }
@@ -585,7 +590,7 @@ html[lang="ckb"] .hero h1 {
   max-width: 1100px;
   margin: 0 auto 80px;
   padding: 35px 50px;
-  background: #eaf0ee;
+  background: var(--soft);
   display: flex;
   gap: 40px;
   align-items: center;
@@ -605,7 +610,7 @@ html[lang="ckb"] .hero h1 {
   font-size: 0.93rem;
 }
 footer {
-  background: #f0f2ee;
+  background: var(--soft);
   border-top: 1px solid #e0e5e0;
   padding: 35px 6%;
 }
@@ -682,7 +687,7 @@ footer {
   display: flex;
   gap: 26px;
   align-items: center;
-  background: white;
+  background: var(--surface);
 }
 .edition h2 {
   font-size: 1.3rem;
@@ -733,7 +738,7 @@ footer {
 .notice {
   display: flex;
   gap: 16px;
-  background: #eaf0ee;
+  background: var(--soft);
   margin-top: 34px;
   padding: 24px;
   align-items: flex-start;
@@ -754,7 +759,7 @@ footer {
   gap: 12px;
   padding: 0 15px;
   border: 1px solid var(--line);
-  background: white;
+  background: var(--surface);
   flex: 1;
 }
 .search input {
@@ -771,7 +776,7 @@ footer {
 input,
 textarea {
   border: 1px solid #cbd5d8;
-  background: white;
+  background: var(--surface);
   color: var(--ink);
   padding: 10px 12px;
 }
@@ -779,7 +784,7 @@ textarea {
   padding: 65px 20px;
   text-align: center;
   border: 1px dashed #cdd7d8;
-  background: #f3f6f3;
+  background: var(--subtle);
 }
 .empty > svg {
   color: #99a6a9;
@@ -799,7 +804,7 @@ textarea {
   gap: 28px;
 }
 .quote {
-  background: white;
+  background: var(--surface);
   padding: 28px 34px;
   border: 1px solid var(--line);
   position: relative;
@@ -841,7 +846,7 @@ textarea {
 }
 .chat-panel {
   border: 1px solid var(--line);
-  background: white;
+  background: var(--surface);
   overflow: hidden;
 }
 .chat-top {
@@ -918,7 +923,7 @@ textarea {
   min-height: 65px;
   max-height: 200px;
   border: 0;
-  background: #f4f6f3;
+  background: var(--subtle);
   font-size: 0.87rem;
 }
 .chat-form .button {
@@ -950,7 +955,7 @@ textarea {
 }
 .user-message {
   padding: 16px 20px;
-  background: #edf1ee;
+  background: var(--soft);
   margin-inline-start: 32px;
   margin-bottom: 20px;
   border-radius: 8px 8px 0 8px;
@@ -1020,7 +1025,7 @@ textarea {
   gap: 24px;
   padding: 24px;
   border: 1px solid var(--line);
-  background: white;
+  background: var(--surface);
 }
 .source-list h2 {
   font-size: 1.1rem;
@@ -1035,7 +1040,7 @@ textarea {
   max-width: 440px;
   margin: 0 auto;
   padding: 35px;
-  background: white;
+  background: var(--surface);
   border: 1px solid var(--line);
   display: grid;
   gap: 22px;
@@ -1086,7 +1091,7 @@ label:not(.search):not(.checkbox) {
   border: 1px solid var(--line);
   padding: 24px;
   margin-bottom: 15px;
-  background: white;
+  background: var(--surface);
 }
 .record-preview {
   margin: 10px 0;
@@ -1132,7 +1137,7 @@ label:not(.search):not(.checkbox) {
   display: grid;
   gap: 22px;
   padding: 30px;
-  background: white;
+  background: var(--surface);
   border: 1px solid var(--line);
 }
 .editor textarea {
@@ -1189,7 +1194,7 @@ label:not(.search):not(.checkbox) {
   top: 10px;
   left: 10px;
   z-index: 100;
-  background: white;
+  background: var(--surface);
   padding: 12px;
 }
 .spin {
@@ -1684,4 +1689,29 @@ label:not(.search):not(.checkbox) {
     animation: none !important;
     scroll-behavior: auto !important;
   }
+}
+
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --text: #e1e8ed;
+  --paper: #101923;
+  --surface: #1a2834;
+  --soft: #21323b;
+  --subtle: #17242e;
+  --muted: #afbdc7;
+  --line: #3b4d59;
+}
+[data-theme="dark"] :is(input, textarea, select) { color: var(--text); border-color: var(--line); }
+[data-theme="dark"] :is(.principle p, .edition p) { color: var(--muted); }
+[data-theme="dark"] :is(.navigation a.active, .navigation a:hover, .button.secondary) { color: var(--gold); }
+[data-theme="dark"] .button:not(.gold):not(.secondary) { background: #304f65; border-color: #54738a; }
+[data-theme="dark"] :is(.principle, footer) { border-color: var(--line); }
+[data-theme="dark"] :is(.quote a, .quote-reference, .tabs .selected) { color: #d5b674; }
+[data-theme="dark"] .badge { background: #403a2c; color: #ecd092; }
+[data-theme="dark"] :is(.badge.approved, .success) { background: #213e2d; color: #b4dfb9; }
+[data-theme="dark"] .error { background: #402823; color: #ffc3b8; border-color: #805047; }
+.quote-reference { color: #7b673c; font-size: .8rem; }
+@media (max-width: 560px) {
+  .header-actions { flex-wrap: wrap; }
 }

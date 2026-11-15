@@ -2,6 +2,13 @@
 <html lang="ckb" dir="rtl">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      try {
+        const saved = localStorage.getItem("theme");
+        document.documentElement.dataset.theme = saved === "dark" || saved === "light"
+          ? saved : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      } catch {}
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#182e40" />
     <link rel="icon" type="image/jpeg" href="/kurdistan-cross.jpg" />
@@ -17,3 +24,4 @@
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
+

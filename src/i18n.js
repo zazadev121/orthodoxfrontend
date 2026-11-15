@@ -1,5 +1,8 @@
 export const copy = {
   en: {
+    darkTheme: "Use dark theme",
+    lightTheme: "Use light theme",
+    quoteHint: "Add the quotation, author, and written reference. Check the wording and translations before publishing.",
     prayersPublic: "Free to read for everyone. No sign-in needed.",
     adminPanel: "Admin panel",
     account: "Account",
@@ -134,6 +137,9 @@ export const copy = {
     closeMenu: "Close menu",
   },
   ckb: {
+    darkTheme: "دۆخی تاریک",
+    lightTheme: "دۆخی ڕووناک",
+    quoteHint: "وتەکە، ناوی نووسەر و سەرچاوەی نووسراو زیاد بکە. پێش بڵاوکردنەوە دەق و وەرگێڕانەکان بپشکنە.",
     prayersPublic: "بۆ هەمووان بەخۆڕاییە؛ پێویستی بە چوونەژوورەوە نییە.",
     adminPanel: "پانێڵی بەڕێوەبەر",
     account: "هەژمار",
@@ -257,6 +263,9 @@ export const copy = {
     back: "گەڕانەوە بۆ سەرەکی",
   },
   kmr: {
+    darkTheme: "Moda tarî",
+    lightTheme: "Moda ronahî",
+    quoteHint: "Gotinê, navê nivîskar û çavkaniya nivîskî zêde bike. Berî weşandinê nivîs û wergeran kontrol bike.",
     prayersPublic: "Ji bo herkesî belaş e. Têketin ne pêwîst e.",
     adminPanel: "Panela rêveber",
     account: "Hesab",
@@ -378,3 +387,4 @@ export const copy = {
     back: "Vegere destpêkê",
   },
 };
+
