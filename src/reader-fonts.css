@@ -1,0 +1,41 @@
+/* Reader fonts are requested only when used: the selected face, or picker previews. */
+@font-face { font-family: "Reader Naskh"; src: url("/fonts/naskh.woff") format("woff"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Reader Kufi"; src: url("/fonts/kufi.woff") format("woff"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Reader Sans"; src: url("/fonts/sans.woff") format("woff"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Reader Vazir"; src: url("/fonts/vazir.woff") format("woff"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Reader Readex"; src: url("/fonts/readex.woff") format("woff"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Reader NRT"; src: url("/fonts/nrt.woff") format("woff"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Reader Speda"; src: url("/fonts/speda.woff") format("woff"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Reader Rudaw"; src: url("/fonts/rudaw.woff") format("woff"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Reader Nastaliq"; src: url("/fonts/nastaliq.woff") format("woff"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Reader Rabar"; src: url("/fonts/rabar.woff") format("woff"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Reader Unikurd"; src: url("/fonts/unikurd.woff") format("woff"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Reader Bukra"; src: url("/fonts/bukra.woff") format("woff"); font-weight: 400; font-style: normal; font-display: swap; }
+:root { --reading-font: "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; --reading-leading: 2; }
+:root[data-reader-font="naskh"] { --reading-font: "Reader Naskh", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; }
+:root[data-reader-font="kufi"] { --reading-font: "Reader Kufi", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; }
+:root[data-reader-font="sans"] { --reading-font: "Reader Sans", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; }
+:root[data-reader-font="vazir"] { --reading-font: "Reader Vazir", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; }
+:root[data-reader-font="readex"] { --reading-font: "Reader Readex", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; }
+:root[data-reader-font="nrt"] { --reading-font: "Reader NRT", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; }
+:root[data-reader-font="speda"] { --reading-font: "Reader Speda", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; }
+:root[data-reader-font="rudaw"] { --reading-font: "Reader Rudaw", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; }
+:root[data-reader-font="nastaliq"] { --reading-font: "Reader Nastaliq", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; }
+:root[data-reader-font="rabar"] { --reading-font: "Reader Rabar", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; }
+:root[data-reader-font="unikurd"] { --reading-font: "Reader Unikurd", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; }
+:root[data-reader-font="bukra"] { --reading-font: "Reader Bukra", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; }
+
+:root[data-reader-font="nastaliq"] { --reading-leading: 2.8; }
+main :is(.scripture-chapter p, .scripture-chapter h2, .scripture-chapter h3, .scripture-chapter summary, .daily-verse blockquote, .daily-reference, .quote blockquote, .quote h3, .prayer-text, .prayer summary h2, .reading-preview p, .principle p, .hero-text > p, .path p, .record-preview, .message p) { font-family: var(--reading-font); line-height: var(--reading-leading); letter-spacing: normal; }
+.font-description { color: var(--muted); font-size: .85rem; margin-bottom: 18px; }
+.font-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 15px; border: 1px solid var(--line); background: color-mix(in srgb,var(--surface) 45%,transparent); border-radius: 26px; padding: 22px; }
+.font-card { min-width: 0; padding: 19px 17px; text-align: start; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; color: var(--text); transition: border-color .2s, box-shadow .2s; }
+.font-card:hover, .font-card.selected { border-color: var(--gold); }
+.font-card.selected { box-shadow: 0 0 0 1px var(--gold),0 0 22px color-mix(in srgb,var(--gold) 12%,transparent); }
+.font-card-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: var(--gold); font-size: .95rem; }
+.font-card-heading svg { flex-shrink: 0; }
+.font-sample { display: flex; align-items: center; justify-content: center; text-align: center; min-height: 105px; font-size: 1.1rem; line-height: 2.8; white-space: normal; overflow-wrap: anywhere; padding-block: 12px; }
+.font-source { display: block; color: var(--muted); font-size: .6rem; text-align: center; overflow-wrap: anywhere; }
+.font-retry { margin-top: 6px; color: var(--gold); }
+@media(max-width:560px) { .font-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; padding:15px; } .font-card { padding:16px 12px; } .font-sample { font-size:1rem; min-height:115px; } }
+@media(prefers-reduced-motion:reduce) { .font-card { transition:none; } }
