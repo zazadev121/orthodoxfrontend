@@ -451,6 +451,10 @@ function Prayers({ t, language }) {
   return (
     <div className="page">
       <PageHead icon={Heart} title={t.prayersTitle} intro={t.prayersIntro} />
+      <aside className="notice prayer-translation-note">
+        <ShieldCheck size={20} />
+        <p>{t.prayerTranslationNote}</p>
+      </aside>
       <div className="filters">
         <label className="search">
           <Search size={19} />

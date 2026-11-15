@@ -7,6 +7,8 @@ export const copy = {
     ai: "پرسیار و باوەڕ",
     admin: "بەڕێوەبردن",
     prayers: "نوێژ و دوعا",
+    prayerTranslationNote:
+      "تێبینی: دەقە سەرەتاییەکان وەرگێڕانی کاریی ئەم ماڵپەڕەن لە نوێژە نەریتییەکان، نەک وەرگێڕانی فەرمیی کڵێسا. پێویستیان بە پێداچوونەوەی زمانەوانی و کڵێسایی هەیە. نوێژە کورتەکان جێگەی ڕێوڕەسمی تەواوی بەیانی یان شەو ناگرنەوە.",
     prayerSearch: "گەڕان بە ناونیشان، بابەت یان دەقی نوێژ…",
     prayersTitle: "نوێژ و دوعا بە زمانی کوردی",
     prayersIntro:
@@ -124,6 +126,8 @@ export const copy = {
     ai: "Pirs û bawerî",
     admin: "Rêveberî",
     prayers: "Dua",
+    prayerTranslationNote:
+      "Nîşe: Nivîsên destpêkê wergerên xebatê yên vê malperê ji duayên kevneşopî ne, ne wergerên fermî yên Dêrê. Pêdiviya wan bi kontrola zimanî û dêrî heye. Duayên kurt cihê rêza tam a sibehê an şevê nagirin.",
     prayerSearch: "Li gor sernav, mijar an nivîsa duayê bigere…",
     prayersTitle: "Dua bi zimanê Kurdî",
     prayersIntro:
