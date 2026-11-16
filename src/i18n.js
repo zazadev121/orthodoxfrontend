@@ -1,10 +1,10 @@
 export const copy = {
   en: {
-    readingFont: "Reading font",
-    fontDescription: "Choose a typeface for Bible verses, quotations, prayers, and reading text. Each card previews the real font.",
+    readingFont: "Website font",
+    fontDescription: "Choose the font for the entire website, including menus, headings, buttons, and reading. Speda is the default. Changes are saved on this device.",
     fontLoading: "Loading your selected font…",
     fontError: "The font could not load. A readable fallback is being used. Try again.",
-    fontSaved: "Your reading font is saved on this device.",
+    fontSaved: "Your website font is saved on this device.",
 
     dailyVerse: "VERSE OF THE DAY",
     dailyTranslation: "Daily verse translation",
@@ -40,7 +40,7 @@ export const copy = {
     mediumText: "Medium",
     largeText: "Large",
     mobileNavigation: "Main navigation",
-    themeNames: {"amethyst": "Amethyst", "midnight": "Midnight", "slate": "Evening blue", "burgundy": "Burgundy", "forest": "Forest", "ocean": "Ocean", "ivory": "Ivory", "charcoal": "Charcoal", "coffee": "Warm coffee"},
+    themeNames: {"traditional": "Orthodox parchment", "amethyst": "Amethyst", "midnight": "Midnight", "slate": "Evening blue", "burgundy": "Burgundy", "forest": "Forest", "ocean": "Ocean", "ivory": "Ivory", "charcoal": "Charcoal", "coffee": "Warm coffee"},
 
     darkTheme: "Use dark theme",
     lightTheme: "Use light theme",
@@ -177,11 +177,11 @@ export const copy = {
     closeMenu: "Close menu",
   },
   ckb: {
-    readingFont: "فۆنتی خوێندنەوە",
-    fontDescription: "فۆنتێک بۆ ئایەتەکان، وتەکان، نوێژ و دەقی خوێندنەوە هەڵبژێرە. هەر کارتێک فۆنتە ڕاستەقینەکە پیشان دەدات.",
+    readingFont: "فۆنتی ماڵپەڕ",
+    fontDescription: "فۆنت بۆ هەموو ماڵپەڕەکە هەڵبژێرە: لیستەکان، سەردێڕەکان، دوگمەکان و خوێندنەوە. فۆنتی بنەڕەت سپێدایە. هەڵبژاردنەکەت لەم ئامێرەدا پاشەکەوت دەکرێت.",
     fontLoading: "فۆنتە هەڵبژێردراوەکەت بار دەکرێت…",
     fontError: "فۆنتەکە بار نەبوو. فۆنتێکی جێگرەوە بەکاردێت. دووبارە هەوڵ بدەوە.",
-    fontSaved: "فۆنتی خوێندنەوەکەت لەسەر ئەم ئامێرە پاشەکەوت کرا.",
+    fontSaved: "فۆنتی ماڵپەڕەکەت لەسەر ئەم ئامێرە پاشەکەوت کرا.",
 
     dailyVerse: "ئایەتی ڕۆژ",
     dailyTranslation: "وەرگێڕانی ئایەتی ڕۆژ",
@@ -217,7 +217,7 @@ export const copy = {
     mediumText: "مامناوەند",
     largeText: "گەورە",
     mobileNavigation: "ڕێنیشاندەری سەرەکی",
-    themeNames: {"amethyst": "مۆر", "midnight": "شەو", "slate": "شینی ئێوارە", "burgundy": "سووری تاریک", "forest": "دارستان", "ocean": "دەریا", "ivory": "ڕووناک", "charcoal": "خۆڵەمێشی", "coffee": "قاوەی گەرم"},
+    themeNames: {"traditional": "پەڕەی نەریتی", "amethyst": "مۆر", "midnight": "شەو", "slate": "شینی ئێوارە", "burgundy": "سووری تاریک", "forest": "دارستان", "ocean": "دەریا", "ivory": "ڕووناک", "charcoal": "خۆڵەمێشی", "coffee": "قاوەی گەرم"},
 
     darkTheme: "دۆخی تاریک",
     lightTheme: "دۆخی ڕووناک",
@@ -343,8 +343,8 @@ export const copy = {
     back: "گەڕانەوە بۆ سەرەکی",
   },
   kmr: {
-    readingFont: "Fonta xwendinê",
-    fontDescription: "Ji bo ayet, gotin, dua û nivîsa xwendinê fontê hilbijêre. Her kart fonta rastîn nîşan dide.",
+    readingFont: "Fonta malperê",
+    fontDescription: "Fonta tevahiya malperê hilbijêre: menu, sernivîs, bişkok û nivîs. Speda fonta bingehîn e. Hilbijartin li ser vê amûrê tê tomarkirin.",
     fontLoading: "Fonta te tê barkirin…",
     fontError: "Font nehat barkirin. Fonta cîgir tê bikaranîn. Dîsa biceribîne.",
     fontSaved: "Fonta te li ser vê amûrê hat tomarkirin.",
@@ -383,7 +383,7 @@ export const copy = {
     mediumText: "Navîn",
     largeText: "Mezin",
     mobileNavigation: "Rêberiya sereke",
-    themeNames: {"amethyst": "Mor", "midnight": "Nîvê şevê", "slate": "Şîna êvarê", "burgundy": "Sorê tarî", "forest": "Daristan", "ocean": "Okyanûs", "ivory": "Ronahî", "charcoal": "Komir", "coffee": "Qehweya germ"},
+    themeNames: {"traditional": "Pergamena kevneşopî", "amethyst": "Mor", "midnight": "Nîvê şevê", "slate": "Şîna êvarê", "burgundy": "Sorê tarî", "forest": "Daristan", "ocean": "Okyanûs", "ivory": "Ronahî", "charcoal": "Komir", "coffee": "Qehweya germ"},
 
     darkTheme: "Moda tarî",
     lightTheme: "Moda ronahî",

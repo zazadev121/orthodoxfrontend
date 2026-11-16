@@ -11,7 +11,7 @@
 @font-face { font-family: "Reader Rabar"; src: url("/fonts/rabar.woff") format("woff"); font-weight: 400; font-style: normal; font-display: swap; }
 @font-face { font-family: "Reader Unikurd"; src: url("/fonts/unikurd.woff") format("woff"); font-weight: 400; font-style: normal; font-display: swap; }
 @font-face { font-family: "Reader Bukra"; src: url("/fonts/bukra.woff") format("woff"); font-weight: 400; font-style: normal; font-display: swap; }
-:root { --reading-font: "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; --reading-leading: 2; }
+:root { --reading-font: "Reader Speda", "Noto Naskh Arabic", "Noto Sans", serif; --reading-leading: 2; }
 :root[data-reader-font="naskh"] { --reading-font: "Reader Naskh", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; }
 :root[data-reader-font="kufi"] { --reading-font: "Reader Kufi", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; }
 :root[data-reader-font="sans"] { --reading-font: "Reader Sans", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; }
@@ -39,3 +39,11 @@ main :is(.scripture-chapter p, .scripture-chapter h2, .scripture-chapter h3, .sc
 .font-retry { margin-top: 6px; color: var(--gold); }
 @media(max-width:560px) { .font-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; padding:15px; } .font-card { padding:16px 12px; } .font-sample { font-size:1rem; min-height:115px; } }
 @media(prefers-reduced-motion:reduce) { .font-card { transition:none; } }
+
+/* One global font token deliberately overrides legacy per-section typography.
+   Font specimen cards are the sole exception, so each shows its own real face. */
+html, body, #root, #root * { font-family: var(--reading-font) !important; }
+#root .font-sample { font-family: var(--sample-font) !important; }
+html { text-rendering: optimizeLegibility; }
+body { font-kerning: normal; }
+html[lang="ckb"] #root { letter-spacing: normal; }

@@ -32,8 +32,11 @@ import { themes, initialTheme, initialReaderSize } from "./themes.js";
 import { FontPicker } from "./font-picker.jsx";
 import { initialReaderFont, readerFontFor } from "./reader-fonts.js";
 import { DailyVerse, BibleReader } from "./scripture.jsx";
+import { OrthodoxHome, OrthodoxStudy } from "./orthodox-home.jsx";
+import { Saints, SaintProfile } from "./saints.jsx";
 import "./style.css";
 import "./reader-fonts.css";
+import "./heritage.css";
 function errorMessage(error, t) {
   return (
     {
@@ -97,15 +100,16 @@ function App() {
   const [language, setLanguage] = useState(() => {
     const requested =
       new URLSearchParams(location.search).get("lang") ||
-      localStorage.getItem("language");
+      (() => { try { return localStorage.getItem("language"); } catch { return null; } })();
     return Object.hasOwn(copy, requested) ? requested : "ckb";
   });
-  const [page, setPage] = useState(() => location.hash.slice(1).split("?")[0] || "home");
+  const [route, setRoute] = useState(() => location.hash.slice(1) || "home");
+  const page = route.split("?")[0];
   const [menu, setMenu] = useState(false);
   const t = copy[language];
   useEffect(() => {
     const handle = () => {
-      setPage(location.hash.slice(1).split("?")[0] || "home");
+      setRoute(location.hash.slice(1) || "home");
       setMenu(false);
       window.scrollTo(0, 0);
     };
@@ -115,12 +119,13 @@ function App() {
   useEffect(() => {
     document.documentElement.lang = language;
     document.documentElement.dir = language === "ckb" ? "rtl" : "ltr";
-    localStorage.setItem("language", language);
+    try { localStorage.setItem("language", language); } catch {}
   }, [language]);
   const nav = [
     ["home", t.home],
     ["bible", t.bible],
     ["fathers", t.fathers],
+    ["saints", language === "ckb" ? "پایەپیرۆزان" : language === "kmr" ? "Pîroz" : "Saints"],
     ["prayers", t.prayers],
     ["ai", t.ai],
     ...(account.allowed ? [["admin", t.adminPanel]] : []),
@@ -223,7 +228,13 @@ function App() {
             readerFont={readerFont} setReaderFont={setReaderFont} fontStatus={fontStatus}
             retryFont={() => setFontAttempt(value => value + 1)} />
         ) : page === "home" ? (
-          <Home t={t} language={language} />
+          <OrthodoxHome t={t} language={language} />
+        ) : page === "saints" ? (
+          <Saints language={language} />
+        ) : page === "saint" ? (
+          <SaintProfile language={language} route={route} />
+        ) : ["teachings", "councils", "about"].includes(page) ? (
+          <OrthodoxStudy key={page} language={language} page={page} route={route} />
         ) : page === "bible" ? (
           <BibleReader key={language} t={t} language={language} />
         ) : page === "fathers" ? (
@@ -271,6 +282,8 @@ function App() {
             </div>
           </div>
           <div className="footer-links">
+            <a href="#about">{language === "ckb" ? "دەربارەی ئێمە" : language === "kmr" ? "Derbarê me" : "About"}</a>
+            <a href="#councils">{language === "ckb" ? "ئەنجومەنەکان" : language === "kmr" ? "Civînên gerdûnî" : "Ecumenical Councils"}</a>
             <a href="#sources">{t.sources}</a>
             <a href="#admin">{t.admin}</a>
             <span lang="en" dir="ltr">
@@ -322,78 +335,7 @@ function Appearance({ t, theme, setTheme, readerSize, setReaderSize, readerFont,
     </div>
   );
 }
-function Home({ t, language }) {
-  return (
-    <>
-      <section className="hero">
-        <div className="hero-text">
-          <div className="welcome">
-            <span />
-            {t.welcome}
-          </div>
-          <h1>{t.hero}</h1>
-          <p>{t.intro}</p>
-          <div className="hero-actions">
-            <a className="button gold" href="#bible">
-              <BookOpen size={19} />
-              {t.read}
-            </a>
-            <a className="text-link" href="#ai">
-              {t.ask}
-              <ArrowUpRight size={18} />
-            </a>
-          </div>
-          <div className="hero-note">
-            <ShieldCheck size={17} />
-            {t.sourcePolicy}
-          </div>
-        </div>
-        <div className="sacred-art kurdistan-art">
-          <img
-            className="kurdistan-cross"
-            src="/kurdistan-cross.jpg"
-            alt="Kurdistan cross"
-            width="960"
-            height="960"
-            fetchPriority="high"
-          />
-        </div>
-      </section>
-      <DailyVerse t={t} language={language} />
-      <section className="explore-section">
-        <div className="section-heading">
-          <h2>{t.journey}</h2>
-          <p>{t.journeyBody}</p>
-        </div>
-        <div className="paths">
-          {[
-            ["bible", BookOpen, t.bible, t.bibleDesc],
-            ["fathers", Library, t.fathers, t.fathersDesc],
-            ["ai", MessageCircle, t.ai, t.aiDesc],
-            ["prayers", Heart, t.prayers, t.prayersIntro],
-          ].map(([id, Icon, title, desc]) => (
-            <a className="path" key={id} href={`#${id}`}>
-              <Icon className="path-icon" size={28} />
-              <h3>{title}</h3>
-              <p>{desc}</p>
-              <span>
-                {t.explore}
-                <ArrowUpRight size={18} />
-              </span>
-            </a>
-          ))}
-        </div>
-      </section>
-      <section className="principle">
-        <Cross />
-        <div>
-          <h2>{t.principle}</h2>
-          <p>{t.principleBody}</p>
-        </div>
-      </section>
-    </>
-  );
-}
+
 function PageHead({ icon: Icon, title, intro }) {
   return (
     <div className="page-heading">
