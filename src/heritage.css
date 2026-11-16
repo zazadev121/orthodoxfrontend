@@ -147,3 +147,5 @@ html[lang="ckb"] #root :is(h1,h2,h3,p,button,a) { letter-spacing: 0; }
 .heritage-page { margin-top: 24px; padding-top: 0; margin-bottom: 55px; }
 .directory-tools label.saint-search { display: flex; flex-direction: row; align-items: center; }
 @media(max-width:600px) { .heritage-page { margin-top: 20px; }.heritage-heading { margin-top: 12px; } }
+/* Avoid Safari's automatic field zoom while keeping the reading scale compact. */
+@media(max-width:800px) { #root :is(input,select,textarea) { font-size: 16px; } }
