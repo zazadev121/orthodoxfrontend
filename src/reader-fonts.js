@@ -13,9 +13,9 @@ export const readerFonts = [
   { id: "bukra", label: "بەکرا", family: "Reader Bukra", sourceFamily: "Nizar Bukra Regular" },
 ];
 export function readerFontFor(value) {
-  return readerFonts.find(font => font.id === value) || readerFonts[0];
+  return readerFonts.find(font => font.id === value) || readerFonts.find(font => font.id === "speda");
 }
 export function initialReaderFont() {
   try { return readerFontFor(localStorage.getItem("readerFont")).id; }
-  catch { return "naskh"; }
+  catch { return "speda"; }
 }

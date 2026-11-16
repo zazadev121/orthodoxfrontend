@@ -17,7 +17,7 @@ test('font preferences restore safely and reject unknown saved values',()=>{
  const original=globalThis.localStorage;
  try{
   for(const font of readerFonts){globalThis.localStorage={getItem:()=>font.id};assert.equal(initialReaderFont(),font.id);}
-  for(const value of [null,'bad','url(https://example.test/x)','__proto__']){globalThis.localStorage={getItem:()=>value};assert.equal(initialReaderFont(),'naskh');assert.equal(readerFontFor(value).id,'naskh');}
-  globalThis.localStorage={getItem(){throw Error('blocked');}};assert.equal(initialReaderFont(),'naskh');
+  for(const value of [null,'bad','url(https://example.test/x)','__proto__']){globalThis.localStorage={getItem:()=>value};assert.equal(initialReaderFont(),'speda');assert.equal(readerFontFor(value).id,'speda');}
+  globalThis.localStorage={getItem(){throw Error('blocked');}};assert.equal(initialReaderFont(),'speda');
  }finally{globalThis.localStorage=original;}
 });

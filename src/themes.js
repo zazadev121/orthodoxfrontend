@@ -1,5 +1,6 @@
 // Palette IDs are shared with the early theme initializer in index.html.
 export const themes = [
+  { id: "traditional", preview: "linear-gradient(135deg, #5b1824 0 48%, #c3a15e 49% 52%, #f6efe1 53%)" },
   {
     "id": "amethyst",
     "preview": "linear-gradient(135deg, #100b1b, #281544)"
@@ -44,7 +45,7 @@ export function initialTheme() {
     if (saved === "light") return "ivory";
     if (saved === "dark") return "midnight";
   } catch {}
-  return "amethyst";
+  return "traditional";
 }
 export function initialReaderSize() {
   try {

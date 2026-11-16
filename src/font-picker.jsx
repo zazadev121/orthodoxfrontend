@@ -12,7 +12,7 @@ export function FontPicker({ t, selected, onChange, status, onRetry }) {
         aria-label={font.label} aria-pressed={selected === font.id}
         onClick={() => onChange(font.id)}>
         <span className="font-card-heading"><span lang={font.id === "nrt" ? "en" : "ckb"} dir={font.id === "nrt" ? "ltr" : "rtl"}>{font.label}</span>{selected === font.id && <Check size={18} />}</span>
-        <span className="font-sample" lang="ckb" dir="rtl" style={{ fontFamily: `"${font.family}", "Reader Naskh", "Noto Naskh Arabic", serif` }}>دڵێکی پڕ لە خۆشەویستی</span>
+        <span className="font-sample" lang="ckb" dir="rtl" style={{ "--sample-font": `"${font.family}", "Reader Naskh", "Noto Naskh Arabic", serif` }}>دڵێکی پڕ لە خۆشەویستی</span>
         <span className="font-source" lang="en" dir="ltr">{font.sourceFamily}</span>
       </button>)}
     </div>
