@@ -101,7 +101,7 @@ export function AuthorLibrary({ language }) {
     <div className="page heritage-page">
       <header className="heritage-heading">
         <span className="eyebrow">
-          {cms.text("general.synaxarionLabel", language, "ORTHODOX SYNAXARION")}
+          {cms.text("general.synaxarionLabel", language, "EASTERN ORTHODOX SYNAXARION")}
         </span>
         <h1>{w.libraryTitle}</h1>
         <p>{w.libraryIntro}</p>
@@ -399,7 +399,7 @@ export function AuthorProfile({ language, route }) {
             {cms.text(
               "general.synaxarionLabel",
               language,
-              "ORTHODOX SYNAXARION",
+              "EASTERN ORTHODOX SYNAXARION",
             )}
           </span>
           <h1>{authorName(a, language)}</h1>

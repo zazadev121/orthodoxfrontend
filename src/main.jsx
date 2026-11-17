@@ -231,7 +231,7 @@ function App() {
               {cms.text(
                 "general.brandEnglish",
                 language,
-                "Orthodoxy in Kurdistan",
+                "Eastern Orthodoxy in Kurdistan",
               )}
             </small>
           </span>
@@ -461,7 +461,7 @@ function App() {
             <a href="#sources">{t.sources}</a>
             <a href="#admin">{t.admin}</a>
             <span lang="en" dir="ltr">
-              © {new Date().getFullYear()} Orthodoxy in Kurdistan
+              © {new Date().getFullYear()} Eastern Orthodoxy in Kurdistan
             </span>
           </div>
         </div>

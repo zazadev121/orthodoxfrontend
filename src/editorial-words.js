@@ -3,7 +3,7 @@ export const editorialWords = {
   en: {
     libraryTitle: "Saints and Church Fathers",
     libraryIntro:
-      "The lives, teachings and writings of Orthodox saints and Church Fathers.",
+      "The lives, teachings and writings of Eastern Orthodox saints and Church Fathers.",
     exploreAuthors: "Explore the library",
     sectionVisible: "Show this homepage section",
     dashboard: "Editorial Dashboard",
@@ -150,7 +150,7 @@ export const editorialWords = {
   ckb: {
     libraryTitle: "پایەپیرۆزان و باوکانی کڵێسا",
     libraryIntro:
-      "ژیان، فێرکاری و نووسینەکانی پایەپیرۆزان و باوکانی کڵێسای ئۆرتۆدۆکس.",
+      "ژیان، فێرکاری و نووسینەکانی پایەپیرۆزان و باوکانی کڵێسای ئۆرتۆدۆکسی ڕۆژهەڵات.",
     exploreAuthors: "کتێبخانەکە ببینە",
     sectionVisible: "ئەم بەشەی سەرەکی پیشان بدە",
     dashboard: "داشبۆردی دەستکاریکردن",

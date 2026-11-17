@@ -130,18 +130,18 @@ export const heritageWords = (language) =>
         saints: "ژیانی پایەپیرۆزان",
         saintSub: "گەواهیدەرانی باوەڕ، خۆشەویستی و خزمەت.",
         all: "هەموو پایەپیرۆزان",
-        teaching: "فێرکاریی ئۆرتۆدۆکس",
+        teaching: "فێرکاریی ئۆرتۆدۆکسی ڕۆژهەڵات",
         teachingSub: "ناسینێکی سەرەتایی بۆ باوەڕی نێردراوان و کڵێسا.",
         councils: "حەوت ئەنجومەنە جیهانییەکان",
         councilSub: "پاراستنی باوەڕی کڵێسا لە سەدەکانی یەکەمدا.",
-        about: "دەربارەی ئۆرتۆدۆکسی لە کوردستان",
+        about: "دەربارەی ئۆرتۆدۆکسی ڕۆژهەڵات لە کوردستان",
         aboutText:
           "ئەم ماڵپەڕە سەرچاوەیەکی فێرکارییە بۆ ناساندنی باوەڕی ئۆرتۆدۆکسی ڕۆژهەڵات بە خوێنەرانی کورد. کتێبی پیرۆز، ژیانی پایەپیرۆزان، نوێژ و فێرکاری لە یەک شوێندا کۆدەکاتەوە.",
         aboutPolicy:
-          "ناوەڕۆکەکان پشت بە کتێبی پیرۆز، باوکانی کڵێسا و سەرچاوە ئۆرتۆدۆکسییە ناسراوەکان دەبەستن. دەقە وەرگێڕدراوەکان دەستنیشان دەکرێن؛ بۆ ڕێنماییی شوانایەتی پەیوەندی بە قەشەیەکی ئۆرتۆدۆکسەوە بکە.",
+          "ناوەڕۆکەکان پشت بە کتێبی پیرۆز، باوکانی کڵێسا و سەرچاوە ئۆرتۆدۆکسی ڕۆژهەڵات ناسراوەکان دەبەستن. دەقە وەرگێڕدراوەکان دەستنیشان دەکرێن؛ بۆ ڕێنماییی شوانایەتی پەیوەندی بە قەشەیەکی ئۆرتۆدۆکسی ڕۆژهەڵاتەوە بکە.",
         more: "زیاتر بخوێنەوە",
         sources: "سەرچاوە",
-        prayerTitle: "نوێژ و یادکردنەوەی ئۆرتۆدۆکس",
+        prayerTitle: "نوێژ و یادکردنەوەی ئۆرتۆدۆکسی ڕۆژهەڵات",
         prayerText:
           "نوێژەکان بخوێنەوە و کاتێک بۆ ئارامی و یادکردنەوەی خودا تەرخان بکە.",
         prayerAction: "نوێژەکان بخوێنەوە",
@@ -154,7 +154,7 @@ export const heritageWords = (language) =>
       }
     : {
         welcome: "A LIVING TRADITION · AN ENDURING FAITH",
-        title: "The light of Orthodoxy, in Kurdish",
+        title: "The light of Eastern Orthodoxy, in Kurdish",
         intro:
           "A quiet place to read Holy Scripture, discover the saints, and explore the faith of the Eastern Orthodox Church.",
         begin: "Read the Holy Bible",
@@ -164,20 +164,20 @@ export const heritageWords = (language) =>
         saints: "Lives of the Saints",
         saintSub: "Witnesses to faith, love, and service across the centuries.",
         all: "Explore all ten saints",
-        teaching: "Orthodox Teachings",
+        teaching: "Eastern Orthodox Teachings",
         teachingSub:
           "A short introduction to the apostolic faith of the Church.",
         councils: "The Seven Ecumenical Councils",
         councilSub:
           "Safeguarding the Church's confession through the early centuries.",
-        about: "About Orthodoxy in Kurdistan",
+        about: "About Eastern Orthodoxy in Kurdistan",
         aboutText:
           "This educational website introduces the Eastern Orthodox faith to Kurdish readers. It brings Scripture, the lives of the saints, prayers, and Christian teaching together in one place.",
         aboutPolicy:
-          "Our reference points are Holy Scripture, the Church Fathers, and reliable Orthodox publications. Editorial translations are identified. For personal pastoral guidance, speak with an Orthodox priest.",
+          "Our reference points are Holy Scripture, the Church Fathers, and reliable Eastern Orthodox publications. Editorial translations are identified. For personal pastoral guidance, speak with an Eastern Orthodox priest.",
         more: "Read more",
         sources: "Source",
-        prayerTitle: "Orthodox Prayers and Remembrance",
+        prayerTitle: "Eastern Orthodox Prayers and Remembrance",
         prayerText:
           "Read the prayers and make room for stillness and remembrance of God.",
         prayerAction: "Read the prayers",
@@ -488,7 +488,7 @@ export function OrthodoxStudy({ language, page, route }) {
         ← {language === "ckb" ? "سەرەکی" : "Home"}
       </a>
       <header className="heritage-heading">
-        <span className="eyebrow">ORTHODOX FAITH & LIFE</span>
+        <span className="eyebrow">EASTERN ORTHODOX FAITH & LIFE</span>
         <h1>
           {
             w[

@@ -10,7 +10,7 @@ export const saintWords = language => language === "ckb" ? {
 export function SaintCard({ saint, language }) {
   const w = saintWords(language);
   return <a className="saint-card" href={`#saint?id=${saint.id}`}>
-    <div className="saint-image"><img src={`/icons/${saint.id}.webp`} alt={`${saint.en} — Orthodox icon`} width="480" height="600" loading="lazy" decoding="async" /></div>
+    <div className="saint-image"><img src={`/icons/${saint.id}.webp`} alt={`${saint.en} — Eastern Orthodox icon`} width="480" height="600" loading="lazy" decoding="async" /></div>
     <div className="saint-card-copy"><h3 lang="ckb" dir="rtl">{saint.ckb}</h3><p lang="en" dir="ltr">{saint.en}</p><span>{w.read}<ArrowUpRight size={16} /></span></div>
   </a>;
 }
@@ -21,7 +21,7 @@ export function Saints({ language }) {
   const [last] = useState(() => { try { return saintById(localStorage.getItem("lastSaint")); } catch { return null; } });
   const w = saintWords(language);
   const list = saints.filter(s => (!savedOnly || savedIds.includes(s.id)) && `${s.en} ${s.ckb}`.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase()));
-  return <div className="page heritage-page"><header className="heritage-heading"><span className="eyebrow">ORTHODOX SYNAXARION</span><h1>{w.title}</h1><p>{w.intro}</p></header>
+  return <div className="page heritage-page"><header className="heritage-heading"><span className="eyebrow">EASTERN ORTHODOX SYNAXARION</span><h1>{w.title}</h1><p>{w.intro}</p></header>
     <div className="directory-tools"><label className="saint-search"><Search size={18} /><input type="search" value={search} onChange={e => setSearch(e.target.value)} placeholder={w.search} aria-label={w.search} /></label><button className="profile-save" aria-pressed={savedOnly} onClick={() => setSavedOnly(!savedOnly)}><Bookmark size={16} />{w.savedOnly}</button>{last && <a className="text-link" href={`#saint?id=${last.id}`}>{w.resume}: {language === "ckb" ? last.ckb : last.en}</a>}</div>
     <p className="editorial-note">{w.sourcePolicy}</p><div className="saints-grid">{list.map(s => <SaintCard key={s.id} saint={s} language={language} />)}</div>
     {!list.length && <p role="status">{w.empty}</p>}
@@ -36,15 +36,15 @@ export function SaintProfile({ language, route }) {
   useEffect(() => {
     if (!saint) return;
     try { localStorage.setItem("lastSaint", saint.id); setSaved(localStorage.getItem(`saint:${saint.id}:saved`) === "true"); } catch {}
-    document.title = `${saint.en} · Orthodoxy in Kurdistan`;
-    return () => { document.title = "Orthodoxy in Kurdistan"; };
+    document.title = `${saint.en} · Eastern Orthodoxy in Kurdistan`;
+    return () => { document.title = "Eastern Orthodoxy in Kurdistan"; };
   }, [saint]);
   if (!saint) return <div className="page"><h1>{w.unavailable}</h1><a className="button" href="#saints">{w.all}</a></div>;
   const credit = credits[saint.id];
   function toggleSaved() { const value = !saved; setSaved(value); try { localStorage.setItem(`saint:${saint.id}:saved`, String(value)); } catch {} }
   return <article className="page heritage-page saint-profile"><a href="#saints" className="text-link">← {w.all}</a>
-    <header className="profile-header"><figure><img className="profile-icon" src={`/icons/${saint.id}.webp`} alt={`${saint.en} — Orthodox icon`} width="720" height="960" fetchPriority="high" /><figcaption><a href={credit.url} target="_blank" rel="noreferrer">{w.credit} ↗</a></figcaption></figure>
-      <div className="profile-heading"><span className="eyebrow">ORTHODOX SYNAXARION</span><h1 lang="ckb" dir="rtl">{saint.ckb}</h1><p className="english-name" lang="en" dir="ltr">{saint.en}</p>
+    <header className="profile-header"><figure><img className="profile-icon" src={`/icons/${saint.id}.webp`} alt={`${saint.en} — Eastern Orthodox icon`} width="720" height="960" fetchPriority="high" /><figcaption><a href={credit.url} target="_blank" rel="noreferrer">{w.credit} ↗</a></figcaption></figure>
+      <div className="profile-heading"><span className="eyebrow">EASTERN ORTHODOX SYNAXARION</span><h1 lang="ckb" dir="rtl">{saint.ckb}</h1><p className="english-name" lang="en" dir="ltr">{saint.en}</p>
         <dl className="saint-facts"><div><dt>{w.dates}</dt><dd lang="en" dir="ltr">{saint.dates}</dd></div><div><dt><CalendarDays size={16} />{w.feast}</dt><dd>{localized(saint.feast, language)}</dd></div></dl>
         <button className="profile-save" aria-pressed={saved} onClick={toggleSaved}>{saved ? <Check size={16} /> : <Bookmark size={16} />}{saved ? w.saved : w.save}</button>
       </div></header>
