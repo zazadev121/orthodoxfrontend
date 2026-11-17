@@ -384,15 +384,15 @@ function App() {
           ["home", HomeIcon, t.home],
           ["bible", BookOpen, t.bible],
           ["fathers", Library, t.fathers],
-          ["saints", Church, t.saints],
+          ["saints", Church, cms.text("general.navSaints", language, language === "ckb" ? "پایەپیرۆزان" : language === "kmr" ? "Pîroz" : "Saints")],
           ["prayers", Heart, t.prayers],
           ["appearance", Palette, t.appearance],
         ].map(([id, Icon, label]) => (
           <a
             key={id}
             href={`#${id}`}
-            className={page === id ? "active" : ""}
-            aria-current={page === id ? "page" : undefined}
+            className={page === id || (id === "saints" && page === "saint") ? "active" : ""}
+            aria-current={page === id || (id === "saints" && page === "saint") ? "page" : undefined}
           >
             <Icon size={21} />
             <span>{label}</span>
