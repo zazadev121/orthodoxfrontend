@@ -37,6 +37,25 @@ import { Saints, SaintProfile } from "./saints.jsx";
 import "./style.css";
 import "./reader-fonts.css";
 import "./heritage.css";
+import {
+  EditorialProvider,
+  useEditorial,
+  useEditorialWords,
+} from "./editorial-context.jsx";
+import {
+  AuthorLibrary,
+  AuthorProfile,
+  QuoteFeed,
+  PrayerFeed,
+  DoctrineLibrary,
+  EditorialArticle,
+} from "./editorial-public.jsx";
+const AdminWorkspace = React.lazy(() =>
+  import("./editorial-admin.jsx").then((module) => ({
+    default: module.AdminWorkspace,
+  })),
+);
+import "./editorial.css";
 function errorMessage(error, t) {
   return (
     {
@@ -71,6 +90,7 @@ function Cross({ className = "" }) {
   );
 }
 function App() {
+  const cms = useEditorial();
   const account = useAccount();
   const [theme, setTheme] = useState(initialTheme);
   const [readerSize, setReaderSize] = useState(initialReaderSize);
@@ -80,33 +100,56 @@ function App() {
   useEffect(() => {
     const font = readerFontFor(readerFont);
     document.documentElement.dataset.readerFont = font.id;
-    try { localStorage.setItem("readerFont", font.id); } catch {}
+    try {
+      localStorage.setItem("readerFont", font.id);
+    } catch {}
     let active = true;
     setFontStatus("loading");
-    if (!document.fonts) { setFontStatus("error"); return; }
-    document.fonts.load(`20px "${font.family}"`, "دڵێکی پڕ لە خۆشەویستی")
-      .then(faces => { if (active) setFontStatus(faces.length ? "loaded" : "error"); })
-      .catch(() => { if (active) setFontStatus("error"); });
-    return () => { active = false; };
+    if (!document.fonts) {
+      setFontStatus("error");
+      return;
+    }
+    document.fonts
+      .load(`20px "${font.family}"`, "دڵێکی پڕ لە خۆشەویستی")
+      .then((faces) => {
+        if (active) setFontStatus(faces.length ? "loaded" : "error");
+      })
+      .catch(() => {
+        if (active) setFontStatus("error");
+      });
+    return () => {
+      active = false;
+    };
   }, [readerFont, fontAttempt]);
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
-    try { localStorage.setItem("theme", theme); } catch {}
+    try {
+      localStorage.setItem("theme", theme);
+    } catch {}
   }, [theme]);
   useEffect(() => {
     document.documentElement.style.setProperty("--reader-scale", readerSize);
-    try { localStorage.setItem("readerSize", readerSize); } catch {}
+    try {
+      localStorage.setItem("readerSize", readerSize);
+    } catch {}
   }, [readerSize]);
   const [language, setLanguage] = useState(() => {
     const requested =
       new URLSearchParams(location.search).get("lang") ||
-      (() => { try { return localStorage.getItem("language"); } catch { return null; } })();
+      (() => {
+        try {
+          return localStorage.getItem("language");
+        } catch {
+          return null;
+        }
+      })();
     return Object.hasOwn(copy, requested) ? requested : "ckb";
   });
   const [route, setRoute] = useState(() => location.hash.slice(1) || "home");
   const page = route.split("?")[0];
   const [menu, setMenu] = useState(false);
-  const t = copy[language];
+  const t = cms.words(copy[language], "ui", language);
+  const ew = useEditorialWords(language);
   useEffect(() => {
     const handle = () => {
       setRoute(location.hash.slice(1) || "home");
@@ -119,13 +162,27 @@ function App() {
   useEffect(() => {
     document.documentElement.lang = language;
     document.documentElement.dir = language === "ckb" ? "rtl" : "ltr";
-    try { localStorage.setItem("language", language); } catch {}
+    try {
+      localStorage.setItem("language", language);
+    } catch {}
   }, [language]);
   const nav = [
     ["home", t.home],
     ["bible", t.bible],
     ["fathers", t.fathers],
-    ["saints", language === "ckb" ? "پایەپیرۆزان" : language === "kmr" ? "Pîroz" : "Saints"],
+    [
+      "saints",
+      cms.text(
+        "general.navSaints",
+        language,
+        language === "ckb"
+          ? "پایەپیرۆزان"
+          : language === "kmr"
+            ? "Pîroz"
+            : "Saints",
+      ),
+    ],
+    ["doctrine", ew.doctrineTitle],
     ["prayers", t.prayers],
     ["ai", t.ai],
     ...(account.allowed ? [["admin", t.adminPanel]] : []),
@@ -144,17 +201,27 @@ function App() {
       </a>
       <header className="header">
         <a href="#home" className="brand">
-          <img
-            className="brand-cross"
-            src="/kurdistan-cross.jpg"
-            alt=""
-            width="42"
-            height="42"
-          />
+          {cms.text("general.brandImage", language, "/kurdistan-cross.jpg") && (
+            <img
+              className="brand-cross"
+              src={cms.text(
+                "general.brandImage",
+                language,
+                "/kurdistan-cross.jpg",
+              )}
+              alt=""
+              width="42"
+              height="42"
+            />
+          )}
           <span>
             {t.name}
             <small lang="en" dir="ltr">
-              Orthodoxy in Kurdistan
+              {cms.text(
+                "general.brandEnglish",
+                language,
+                "Orthodoxy in Kurdistan",
+              )}
             </small>
           </span>
         </a>
@@ -174,9 +241,13 @@ function App() {
           ))}
         </nav>
         <div className="header-actions">
-          <a className="icon-button theme-toggle" href="#appearance"
-            aria-label={t.appearance} title={t.appearance}
-            aria-current={page === "appearance" ? "page" : undefined}>
+          <a
+            className="icon-button theme-toggle"
+            href="#appearance"
+            aria-label={t.appearance}
+            title={t.appearance}
+            aria-current={page === "appearance" ? "page" : undefined}
+          >
             <Palette size={20} />
           </a>
           <a
@@ -222,25 +293,79 @@ function App() {
         </div>
       </header>
       <main id="main" tabIndex={-1}>
-        {page === "appearance" ? (
-          <Appearance t={t} theme={theme} setTheme={setTheme}
-            readerSize={readerSize} setReaderSize={setReaderSize}
-            readerFont={readerFont} setReaderFont={setReaderFont} fontStatus={fontStatus}
-            retryFont={() => setFontAttempt(value => value + 1)} />
+        {cms.ready === null &&
+        !["admin", "appearance", "bible"].includes(page) ? (
+          <div className="page">
+            <p role="status">{cms.error ? cms.error.message : t.loading}</p>
+            {cms.error && (
+              <button
+                className="button"
+                onClick={() => cms.refresh().catch(() => {})}
+              >
+                {t.retry}
+              </button>
+            )}
+          </div>
+        ) : page === "appearance" ? (
+          <Appearance
+            t={t}
+            theme={theme}
+            setTheme={setTheme}
+            readerSize={readerSize}
+            setReaderSize={setReaderSize}
+            readerFont={readerFont}
+            setReaderFont={setReaderFont}
+            fontStatus={fontStatus}
+            retryFont={() => setFontAttempt((value) => value + 1)}
+          />
         ) : page === "home" ? (
           <OrthodoxHome t={t} language={language} />
         ) : page === "saints" ? (
-          <Saints language={language} />
+          cms.ready ? (
+            <AuthorLibrary language={language} />
+          ) : (
+            <Saints language={language} />
+          )
         ) : page === "saint" ? (
-          <SaintProfile language={language} route={route} />
-        ) : ["teachings", "councils", "about"].includes(page) ? (
-          <OrthodoxStudy key={page} language={language} page={page} route={route} />
+          cms.ready ? (
+            <AuthorProfile language={language} route={route} />
+          ) : (
+            <SaintProfile language={language} route={route} />
+          )
+        ) : page === "article" || page === "writing" ? (
+          <EditorialArticle
+            language={language}
+            route={route}
+            writing={page === "writing"}
+          />
+        ) : cms.ready &&
+          ["doctrine", "teachings", "councils"].includes(page) ? (
+          <DoctrineLibrary
+            key={page}
+            language={language}
+            category={page === "councils" ? "council" : "doctrine"}
+          />
+        ) : ["doctrine", "teachings", "councils", "about"].includes(page) ? (
+          <OrthodoxStudy
+            key={page}
+            language={language}
+            page={page === "doctrine" ? "teachings" : page}
+            route={route}
+          />
         ) : page === "bible" ? (
           <BibleReader key={language} t={t} language={language} />
         ) : page === "fathers" ? (
-          <Fathers t={t} language={language} />
+          cms.ready ? (
+            <QuoteFeed language={language} />
+          ) : (
+            <Fathers t={t} language={language} />
+          )
         ) : page === "prayers" ? (
-          <Prayers t={t} language={language} />
+          cms.ready ? (
+            <PrayerFeed t={t} language={language} />
+          ) : (
+            <Prayers t={t} language={language} />
+          )
         ) : page === "ai" ? (
           <Chat key={language} t={t} language={language} />
         ) : page === "admin" ? (
@@ -255,35 +380,72 @@ function App() {
       </main>
       <nav className="bottom-navigation" aria-label={t.mobileNavigation}>
         {[
-          ["home", HomeIcon, t.home], ["bible", BookOpen, t.bible],
-          ["fathers", Library, t.fathers], ["prayers", Heart, t.prayers],
+          ["home", HomeIcon, t.home],
+          ["bible", BookOpen, t.bible],
+          ["fathers", Library, t.fathers],
+          ["prayers", Heart, t.prayers],
           ["appearance", Palette, t.appearance],
         ].map(([id, Icon, label]) => (
-          <a key={id} href={`#${id}`} className={page === id ? "active" : ""}
-            aria-current={page === id ? "page" : undefined}>
-            <Icon size={21} /><span>{label}</span>
+          <a
+            key={id}
+            href={`#${id}`}
+            className={page === id ? "active" : ""}
+            aria-current={page === id ? "page" : undefined}
+          >
+            <Icon size={21} />
+            <span>{label}</span>
           </a>
         ))}
       </nav>
       <footer>
         <div className="footer-inner">
           <div className="footer-brand">
-            <img
-              className="brand-cross"
-              src="/kurdistan-cross.jpg"
-              alt=""
-              width="42"
-              height="42"
-              loading="lazy"
-            />
+            {cms.text(
+              "general.brandImage",
+              language,
+              "/kurdistan-cross.jpg",
+            ) && (
+              <img
+                className="brand-cross"
+                src={cms.text(
+                  "general.brandImage",
+                  language,
+                  "/kurdistan-cross.jpg",
+                )}
+                alt=""
+                width="42"
+                height="42"
+                loading="lazy"
+              />
+            )}
             <div>
               <strong>{t.name}</strong>
               <p>{t.footer}</p>
             </div>
           </div>
           <div className="footer-links">
-            <a href="#about">{language === "ckb" ? "دەربارەی ئێمە" : language === "kmr" ? "Derbarê me" : "About"}</a>
-            <a href="#councils">{language === "ckb" ? "ئەنجومەنەکان" : language === "kmr" ? "Civînên gerdûnî" : "Ecumenical Councils"}</a>
+            <a href="#about">
+              {cms.text(
+                "general.footerAbout",
+                language,
+                language === "ckb"
+                  ? "دەربارەی ئێمە"
+                  : language === "kmr"
+                    ? "Derbarê me"
+                    : "About",
+              )}
+            </a>
+            <a href="#councils">
+              {cms.text(
+                "general.footerCouncils",
+                language,
+                language === "ckb"
+                  ? "ئەنجومەنەکان"
+                  : language === "kmr"
+                    ? "Civînên gerdûnî"
+                    : "Ecumenical Councils",
+              )}
+            </a>
             <a href="#sources">{t.sources}</a>
             <a href="#admin">{t.admin}</a>
             <span lang="en" dir="ltr">
@@ -295,41 +457,99 @@ function App() {
     </>
   );
 }
-function Appearance({ t, theme, setTheme, readerSize, setReaderSize, readerFont, setReaderFont, fontStatus, retryFont }) {
+function Appearance({
+  t,
+  theme,
+  setTheme,
+  readerSize,
+  setReaderSize,
+  readerFont,
+  setReaderFont,
+  fontStatus,
+  retryFont,
+}) {
   return (
     <div className="page appearance-page">
       <div className="appearance-heading">
-        <span className="eyebrow"><Settings2 size={15} />{t.personalSpace}</span>
-        <h1>{t.appearance}</h1><p>{t.appearanceIntro}</p>
+        <span className="eyebrow">
+          <Settings2 size={15} />
+          {t.personalSpace}
+        </span>
+        <h1>{t.appearance}</h1>
+        <p>{t.appearanceIntro}</p>
       </div>
       <section className="appearance-section" aria-labelledby="palette-heading">
-        <h2 id="palette-heading"><Palette size={21} />{t.displayColor}</h2>
-        <div className="theme-grid" role="group" aria-labelledby="palette-heading">
+        <h2 id="palette-heading">
+          <Palette size={21} />
+          {t.displayColor}
+        </h2>
+        <div
+          className="theme-grid"
+          role="group"
+          aria-labelledby="palette-heading"
+        >
           {themes.map(({ id, preview }) => (
-            <button key={id} type="button" className={`theme-card${theme === id ? " selected" : ""}`}
-              aria-pressed={theme === id} onClick={() => setTheme(id)}>
+            <button
+              key={id}
+              type="button"
+              className={`theme-card${theme === id ? " selected" : ""}`}
+              aria-pressed={theme === id}
+              onClick={() => setTheme(id)}
+            >
               <span className="theme-swatch" style={{ background: preview }}>
-                {theme === id && <span className="theme-check"><Check size={22} /></span>}
+                {theme === id && (
+                  <span className="theme-check">
+                    <Check size={22} />
+                  </span>
+                )}
               </span>
               <span className="theme-name">{t.themeNames[id]}</span>
             </button>
           ))}
         </div>
-        <p className="settings-caption" role="status">{t.savedOnDevice}</p>
+        <p className="settings-caption" role="status">
+          {t.savedOnDevice}
+        </p>
       </section>
-      <FontPicker t={t} selected={readerFont} onChange={setReaderFont} status={fontStatus} onRetry={retryFont} />
+      <FontPicker
+        t={t}
+        selected={readerFont}
+        onChange={setReaderFont}
+        status={fontStatus}
+        onRetry={retryFont}
+      />
       <section className="appearance-section" aria-labelledby="reader-heading">
-        <h2 id="reader-heading"><BookOpen size={21} />{t.reading}</h2>
+        <h2 id="reader-heading">
+          <BookOpen size={21} />
+          {t.reading}
+        </h2>
         <div className="reading-panel">
           <p>{t.readingSize}</p>
-          <div className="size-options" role="group" aria-labelledby="reader-heading">
-            {[["0.9", t.smallText], ["1", t.mediumText], ["1.15", t.largeText]].map(([value, label]) => (
-              <button type="button" key={value} aria-pressed={readerSize === value}
+          <div
+            className="size-options"
+            role="group"
+            aria-labelledby="reader-heading"
+          >
+            {[
+              ["0.9", t.smallText],
+              ["1", t.mediumText],
+              ["1.15", t.largeText],
+            ].map(([value, label]) => (
+              <button
+                type="button"
+                key={value}
+                aria-pressed={readerSize === value}
                 className={readerSize === value ? "selected" : ""}
-                onClick={() => setReaderSize(value)}>{label}</button>
+                onClick={() => setReaderSize(value)}
+              >
+                {label}
+              </button>
             ))}
           </div>
-          <div className="reading-preview"><Cross /><p>{t.principleBody}</p></div>
+          <div className="reading-preview">
+            <Cross />
+            <p>{t.principleBody}</p>
+          </div>
         </div>
       </section>
     </div>
@@ -428,7 +648,9 @@ function Fathers({ t, language }) {
                   {q.reference}
                   <ExternalLink size={14} />
                 </a>
-              ) : <span className="quote-reference">{q.reference}</span>}
+              ) : (
+                <span className="quote-reference">{q.reference}</span>
+              )}
             </article>
           ))}
         </div>
@@ -742,125 +964,35 @@ const blankPrayer = {
 };
 function Admin({ t, language, account }) {
   const { session, checking, allowed, error: accountError } = account;
-  const [error, setError] = useState(""),
-    [busy, setBusy] = useState(false),
-    [tab, setTab] = useState("quotes"),
-    [items, setItems] = useState([]),
-    [editing, setEditing] = useState(null),
-    [notice, setNotice] = useState(""),
-    [listLoading, setListLoading] = useState(false);
-  const token = session?.access_token;
-  async function load() {
-    setListLoading(true);
-    try {
-      const d = await api(`/admin/${tab}`, { token });
-      setItems(d.items);
-    } catch (e) {
-      setError(errorMessage(e, t));
-    } finally {
-      setListLoading(false);
-    }
-  }
-  useEffect(() => {
-    setEditing(null);
-    setItems([]);
-    setNotice("");
-    if (allowed) load();
-  }, [allowed, tab, token]);
+  const [busy, setBusy] = useState(false),
+    [error, setError] = useState("");
   async function login(e) {
     e.preventDefault();
     setBusy(true);
     setError("");
     const form = new FormData(e.currentTarget);
     try {
-      const { error } = await auth.auth.signInWithPassword({
+      const result = await auth.auth.signInWithPassword({
         email: form.get("email"),
         password: form.get("password"),
       });
-      if (error) throw error;
+      if (result.error) throw result.error;
     } catch (e) {
-      setError(errorMessage(e, t));
+      setError(e.message);
     } finally {
       setBusy(false);
     }
   }
-  async function save(e) {
-    e.preventDefault();
-    setBusy(true);
-    setError("");
-    try {
-      const { id, created_at, ...body } = editing;
-      await api(`/admin/${tab}${id ? `/${id}` : ""}`, {
-        method: id ? "PATCH" : "POST",
-        token,
-        body: JSON.stringify(body),
-      });
-      setEditing(null);
-      setNotice(t.saved);
-      await load();
-    } catch (e) {
-      setError(errorMessage(e, t));
-    } finally {
-      setBusy(false);
-    }
-  }
-  async function remove(item) {
-    if (!window.confirm(t.confirmDelete)) return;
-    setBusy(true);
-    setError("");
-    try {
-      await api(`/admin/${tab}/${item.id}`, { method: "DELETE", token });
-      setNotice(t.deleted);
-      await load();
-    } catch (e) {
-      setError(errorMessage(e, t));
-    } finally {
-      setBusy(false);
-    }
-  }
-  const fields =
-    tab === "quotes"
-      ? [
-          ["father", t.father],
-          ["text_ckb", t.textCkb, "textarea"],
-          ["text_kmr", t.textKmr, "textarea"],
-          ["text_en", t.textEn || copy.en.textEn, "textarea"],
-          ["reference", t.ref],
-          ["topic", t.topic],
-        ]
-      : tab === "prayers"
-        ? [
-            ["title_ckb", t.titleCkb],
-            ["title_kmr", t.titleKmr],
-            ["title_en", t.titleEn || copy.en.titleEn],
-            ["text_ckb", t.textCkb, "textarea"],
-            ["text_kmr", t.textKmr, "textarea"],
-            ["text_en", t.textEn || copy.en.textEn, "textarea"],
-            ["reference", t.ref],
-            ["source_url", t.url, "url"],
-            ["topic", t.topic],
-          ]
-        : [
-            ["title", t.title],
-            ["publisher", t.publisher],
-            ["url", t.url, "url"],
-            ["content", t.content, "textarea"],
-            ["content_ckb", t.textCkb, "textarea"],
-            ["content_kmr", t.textKmr, "textarea"],
-            ["keywords", t.keywords, "textarea"],
-          ];
-  const toggle = tab === "sources" ? "approved" : "published";
   return (
     <div className="page admin-page">
-      <PageHead icon={ShieldCheck} title={t.manage} />
       {checking ? (
         <p>{t.loading}</p>
       ) : !auth ? (
         <aside className="notice">{t.setup}</aside>
       ) : !session ? (
         <form className="login-form" onSubmit={login}>
-          <h2>{t.login}</h2>
-          <p className="owner-note">{t.ownerOnly}</p>
+          <h1>{t.login}</h1>
+          <p>{t.ownerOnly}</p>
           <label>
             {t.email}
             <input
@@ -892,206 +1024,38 @@ function Admin({ t, language, account }) {
             <button
               className="text-link"
               onClick={async () => {
-                setError("");
-                const { error } = await auth.auth.signOut();
-                if (error) setError(error.message);
+                const r = await auth.auth.signOut();
+                if (r.error) setError(r.error.message);
               }}
             >
               <LogOut size={16} />
               {t.signOut}
             </button>
           </div>
-          {allowed && (
-            <>
-              <div className="tabs">
-                <button
-                  className={tab === "prayers" ? "selected" : ""}
-                  onClick={() => setTab("prayers")}
-                >
-                  {t.prayers}
-                </button>
-                <button
-                  className={tab === "quotes" ? "selected" : ""}
-                  onClick={() => setTab("quotes")}
-                >
-                  {t.quotesTab}
-                </button>
-                <button
-                  className={tab === "sources" ? "selected" : ""}
-                  onClick={() => setTab("sources")}
-                >
-                  {t.sourcesTab}
-                </button>
-              </div>
-              <p className="editor-note">{tab === "quotes" ? t.quoteHint : t.sourceHint}</p>
-              {editing ? (
-                <form className="editor" onSubmit={save}>
-                  {fields.map(([key, label, type]) => (
-                    <label key={key}>
-                      {label}
-                      {type === "textarea" ? (
-                        <textarea
-                          required={!["text_en", "title_en"].includes(key)}
-                          rows={key === "content" ? 7 : 4}
-                          value={editing[key] || ""}
-                          dir={
-                            key === "text_ckb" || key === "content_ckb"
-                              ? "rtl"
-                              : key === "text_kmr" ||
-                                  key === "content_kmr" ||
-                                  key.endsWith("_en")
-                                ? "ltr"
-                                : undefined
-                          }
-                          maxLength={
-                            key.startsWith("content") ||
-                            (tab === "prayers" && key.startsWith("text_"))
-                              ? 12000
-                              : key === "keywords"
-                                ? 1500
-                                : 5000
-                          }
-                          onChange={(e) =>
-                            setEditing({ ...editing, [key]: e.target.value })
-                          }
-                        />
-                      ) : (
-                        <input
-                          required={!["text_en", "title_en"].includes(key)}
-                          type={type || "text"}
-                          value={editing[key] || ""}
-                          dir={type === "url" ? "ltr" : undefined}
-                          maxLength={
-                            key === "father"
-                              ? 160
-                              : key === "reference"
-                                ? 500
-                                : key === "topic"
-                                  ? 100
-                                  : 2000
-                          }
-                          onChange={(e) =>
-                            setEditing({ ...editing, [key]: e.target.value })
-                          }
-                        />
-                      )}
-                    </label>
-                  ))}
-                  <label className="checkbox">
-                    <input
-                      type="checkbox"
-                      checked={editing[toggle]}
-                      onChange={(e) =>
-                        setEditing({ ...editing, [toggle]: e.target.checked })
-                      }
-                    />
-                    {t[toggle]}
-                  </label>
-                  <div className="editor-actions">
-                    <button className="button" disabled={busy}>
-                      {t.save}
-                    </button>
-                    <button
-                      type="button"
-                      className="button secondary"
-                      disabled={busy}
-                      onClick={() => setEditing(null)}
-                    >
-                      {t.cancel}
-                    </button>
-                  </div>
-                </form>
-              ) : (
-                <>
-                  <button
-                    className="button"
-                    onClick={() =>
-                      setEditing({
-                        ...(tab === "quotes"
-                          ? blankQuote
-                          : tab === "prayers"
-                            ? blankPrayer
-                            : blankSource),
-                      })
-                    }
-                  >
-                    <Plus size={18} />
-                    {t.add}
-                  </button>
-                  {listLoading ? (
-                    <p>{t.loading}</p>
-                  ) : (
-                    <div className="admin-list">
-                      {!items.length && <p>{t.noRecords}</p>}
-                      {items.map((item) => (
-                        <article key={item.id}>
-                          <div>
-                            <strong>
-                              {item.father ||
-                                item.title ||
-                                item[`title_${language}`] ||
-                                item.title_ckb}
-                            </strong>
-                            <p className="record-preview">
-                              {item[`text_${language}`] ||
-                                item.content ||
-                                t.missingEnglish ||
-                                copy.en.missingEnglish}
-                            </p>
-                            <span
-                              className={
-                                item[toggle] ? "badge approved" : "badge"
-                              }
-                            >
-                              {item[toggle] ? t[toggle] : t.draft}
-                            </span>
-                          </div>
-                          <div className="record-actions">
-                            <button
-                              className="icon-button"
-                              title={t.edit}
-                              aria-label={t.edit}
-                              onClick={() => setEditing({ ...item })}
-                            >
-                              <PenLine size={18} />
-                            </button>
-                            <button
-                              className="icon-button danger"
-                              title={t.remove}
-                              aria-label={t.remove}
-                              disabled={busy}
-                              onClick={() => remove(item)}
-                            >
-                              <Trash2 size={18} />
-                            </button>
-                          </div>
-                        </article>
-                      ))}
-                    </div>
-                  )}
-                </>
-              )}
-            </>
+          {allowed ? (
+            <React.Suspense fallback={<p>{t.loading}</p>}>
+              <AdminWorkspace
+                token={session.access_token}
+                language={language}
+              />
+            </React.Suspense>
+          ) : (
+            !accountError && <p role="status">{t.loading}</p>
           )}
         </>
       )}
       {(error || accountError) && (
         <div className="error" role="alert">
-          {error || (accountError && errorMessage(accountError, t))}
+          {error || errorMessage(accountError, t)}
         </div>
-      )}
-      {notice && (
-        <p className="success" role="status">
-          <Check size={17} />
-          {notice}
-        </p>
       )}
     </div>
   );
 }
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App />
+    <EditorialProvider>
+      <App />
+    </EditorialProvider>
   </React.StrictMode>,
 );
-

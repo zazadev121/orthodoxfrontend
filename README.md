@@ -1,3 +1,17 @@
+# Complete editorial dashboard
+
+Open `#admin` and use the existing verified owner account. The seven management sections share the same relational author IDs and content database. Select an author when creating quotes, writings or Bible explanations; published entries then appear automatically in the general library and that author's profile. New records are drafts until you explicitly publish them.
+
+General Content Management lets you search by the visible wording or its identifier and edit each language independently. It includes navigation, settings, homepage descriptions, saint-section labels, Bible book labels, font labels, images and homepage section visibility. Existing text identifiers stay fixed so an accidental rename cannot disconnect an override. Images can be uploaded/replaced/cleared, and display-order fields control author/article order. Text is rendered verbatim, with no automatic translation or theology rewriting.
+
+Bible Management includes exact book/chapter/verse or verse-range explanations, multiple linked authors, source references, optional explicit verse revisions, dated daily verses and edition controls. Explanations expand inline on the reading page; author links open the same shared profiles. The original licensed Bible text and attribution are preserved.
+
+Archive actions hide content without permanently deleting it; restore returns it to draft. Revision history lets you copy an earlier version into the editor for manual review and saving. Content backups include drafts, archives and revision records; keep exports private. Unsaved edits trigger a leave warning.
+
+Run `npm test` and `npm run build`. Public pages use the read-only Supabase Edge reader, with the existing API as a deployment fallback; writes retain owner authentication. No test token, QA entry page, local environment file or fixture is deployed.
+
+## Existing project documentation
+
 # Orthodoxy in Kurdistan — frontend
 
 The header and admin route now share one Supabase session/role state. A signed-in owner sees “Admin panel” in the header and navigation; other signed-in users see “Account”. Prayers are linked from the homepage and main navigation, and reading them never requires login.
