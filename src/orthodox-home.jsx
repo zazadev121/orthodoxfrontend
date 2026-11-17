@@ -134,7 +134,7 @@ export const heritageWords = (language) =>
         teachingSub: "ناسینێکی سەرەتایی بۆ باوەڕی نێردراوان و کڵێسا.",
         councils: "حەوت ئەنجومەنە جیهانییەکان",
         councilSub: "پاراستنی باوەڕی کڵێسا لە سەدەکانی یەکەمدا.",
-        about: "دەربارەی ئۆرتۆدۆکسی ڕۆژهەڵات لە کوردستان",
+        about: "دەربارەی ئۆرتۆدۆکسی ڕۆم لە کوردستان",
         aboutText:
           "ئەم ماڵپەڕە سەرچاوەیەکی فێرکارییە بۆ ناساندنی باوەڕی ئۆرتۆدۆکسی ڕۆژهەڵات بە خوێنەرانی کورد. کتێبی پیرۆز، ژیانی پایەپیرۆزان، نوێژ و فێرکاری لە یەک شوێندا کۆدەکاتەوە.",
         aboutPolicy:
@@ -170,7 +170,7 @@ export const heritageWords = (language) =>
         councils: "The Seven Ecumenical Councils",
         councilSub:
           "Safeguarding the Church's confession through the early centuries.",
-        about: "About Eastern Orthodoxy in Kurdistan",
+        about: "About Rūm Orthodoxy In Kurdistan",
         aboutText:
           "This educational website introduces the Eastern Orthodox faith to Kurdish readers. It brings Scripture, the lives of the saints, prayers, and Christian teaching together in one place.",
         aboutPolicy:

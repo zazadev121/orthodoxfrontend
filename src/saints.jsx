@@ -36,8 +36,8 @@ export function SaintProfile({ language, route }) {
   useEffect(() => {
     if (!saint) return;
     try { localStorage.setItem("lastSaint", saint.id); setSaved(localStorage.getItem(`saint:${saint.id}:saved`) === "true"); } catch {}
-    document.title = `${saint.en} · Eastern Orthodoxy in Kurdistan`;
-    return () => { document.title = "Eastern Orthodoxy in Kurdistan"; };
+    document.title = `${saint.en} · Rūm Orthodoxy In Kurdistan`;
+    return () => { document.title = "Rūm Orthodoxy In Kurdistan"; };
   }, [saint]);
   if (!saint) return <div className="page"><h1>{w.unavailable}</h1><a className="button" href="#saints">{w.all}</a></div>;
   const credit = credits[saint.id];
