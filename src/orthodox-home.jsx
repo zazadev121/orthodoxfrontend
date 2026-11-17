@@ -170,7 +170,7 @@ export const heritageWords = (language) =>
         councils: "The Seven Ecumenical Councils",
         councilSub:
           "Safeguarding the Church's confession through the early centuries.",
-        about: "About Rūm Orthodoxy In Kurdistan",
+        about: "About Rum Orthodoxy In Kurdistan",
         aboutText:
           "This educational website introduces the Eastern Orthodox faith to Kurdish readers. It brings Scripture, the lives of the saints, prayers, and Christian teaching together in one place.",
         aboutPolicy:
