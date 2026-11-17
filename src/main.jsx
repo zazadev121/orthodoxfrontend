@@ -167,10 +167,20 @@ function App() {
       localStorage.setItem("language", language);
     } catch {}
   }, [language]);
+  const fatherQuotesLabel = cms.text(
+    "general.navFatherQuotes",
+    language,
+    language === "ckb" ? "وتەکانی باوکانی کڵێسا" : language === "kmr" ? "Gotinên Bavên Dêrê" : "Church Fathers’ Quotes",
+  );
+  const saintsQuotesLabel = cms.text(
+    "general.bottomSaintQuotes",
+    language,
+    language === "ckb" ? "وتەکانی پایەپیرۆزان" : language === "kmr" ? "Gotinên Pîrozan" : "Saints’ Quotes",
+  );
   const nav = [
     ["home", t.home],
     ["bible", t.bible],
-    ["fathers", t.fathers],
+    ["fathers", fatherQuotesLabel],
     [
       "saints",
       cms.text(
@@ -383,7 +393,7 @@ function App() {
         {[
           ["home", HomeIcon, t.home],
           ["bible", BookOpen, t.bible],
-          ["fathers", Library, t.fathers],
+          ["fathers", Library, saintsQuotesLabel],
           ["saints", Church, cms.text("general.navSaints", language, language === "ckb" ? "پایەپیرۆزان" : language === "kmr" ? "Pîroz" : "Saints")],
           ["prayers", Heart, t.prayers],
           ["appearance", Palette, t.appearance],
