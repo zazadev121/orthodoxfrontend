@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   BookOpen,
+  Church,
   MessageCircle,
   Library,
   ArrowUpRight,
@@ -233,8 +234,8 @@ function App() {
             <a
               key={id}
               href={`#${id}`}
-              className={page === id ? "active" : ""}
-              aria-current={page === id ? "page" : undefined}
+              className={page === id || (id === "saints" && page === "saint") ? "active" : ""}
+              aria-current={page === id || (id === "saints" && page === "saint") ? "page" : undefined}
             >
               {label}
             </a>
@@ -383,6 +384,7 @@ function App() {
           ["home", HomeIcon, t.home],
           ["bible", BookOpen, t.bible],
           ["fathers", Library, t.fathers],
+          ["saints", Church, t.saints],
           ["prayers", Heart, t.prayers],
           ["appearance", Palette, t.appearance],
         ].map(([id, Icon, label]) => (
