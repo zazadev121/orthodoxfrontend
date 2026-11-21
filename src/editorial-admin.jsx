@@ -17,7 +17,7 @@ import {
   useEditorialWords,
   notifyEditorialChange,
 } from "./editorial-context.jsx";
-import { authorName, textFor } from "./editorial.js";
+import { authorName, textFor, localizedError } from "./editorial.js";
 import {
   editorResources,
   newEditorialRecord,
@@ -178,7 +178,7 @@ export function AdminWorkspace({ token, language }) {
       setTotal(list.total ?? list.items.length);
       setAuthors(people);
     } catch (e) {
-      if (version === sequence.current) setError(e.message);
+      if (version === sequence.current) setError(localizedError(e, language));
     } finally {
       if (version === sequence.current) setLoading(false);
     }
@@ -264,7 +264,7 @@ export function AdminWorkspace({ token, language }) {
       notifyEditorialChange();
       await Promise.all([load(), cms.refresh()]);
     } catch (e) {
-      setError(e.message);
+      setError(localizedError(e, language));
     } finally {
       setBusy(false);
     }
@@ -281,7 +281,7 @@ export function AdminWorkspace({ token, language }) {
       await Promise.all([load(), cms.refresh()]);
       setNotice(w.saveNotice);
     } catch (e) {
-      setError(e.message);
+      setError(localizedError(e, language));
     } finally {
       setBusy(false);
     }
@@ -312,7 +312,7 @@ export function AdminWorkspace({ token, language }) {
           : { ...row, icon_url: media.url, icon_media_id: media.id },
       );
     } catch (e) {
-      setError(e.message);
+      setError(localizedError(e, language));
     } finally {
       setBusy(false);
       if (fileInput.current) fileInput.current.value = "";
@@ -332,7 +332,7 @@ export function AdminWorkspace({ token, language }) {
       a.click();
       URL.revokeObjectURL(url);
     } catch (e) {
-      setError(e.message || w.downloadFailed);
+      setError(language === "ka" ? w.downloadFailed : e.message || w.downloadFailed);
     } finally {
       setBusy(false);
     }
@@ -347,7 +347,7 @@ export function AdminWorkspace({ token, language }) {
       );
       setRevisions(r.items);
     } catch (e) {
-      setError(e.message);
+      setError(localizedError(e, language));
     } finally {
       setBusy(false);
     }
@@ -366,7 +366,10 @@ export function AdminWorkspace({ token, language }) {
     setRevisions(null);
   }
   function renderField(f) {
-    const key = f.translated ? `${f.base}_${formLanguage}` : f.key,
+    if (f.key === "review_note_ka" && formLanguage !== "ka") return null;
+    if (resource === "sources" && ["content","content_ckb","content_kmr","content_ka"].includes(f.key) && f.key !== (formLanguage === "en" ? "content" : `content_${formLanguage}`)) return null;
+    const localizedMetadata = formLanguage === "ka" && ["reference","topic","icon_alt","icon_credit","source_reference","birth_info","death_info","bible_references","father_references","council_references",...(resource === "sources" ? ["title","publisher"] : [])].includes(f.key);
+    const key = f.translated ? `${f.base}_${formLanguage}` : localizedMetadata ? `${f.key}_ka` : f.key,
       value = editing[key] ?? "",
       label = w[f.label] || f.label;
     const common = {
@@ -399,6 +402,7 @@ export function AdminWorkspace({ token, language }) {
                 text_en: String(e.target.checked),
                 text_ckb: String(e.target.checked),
                 text_kmr: String(e.target.checked),
+                text_ka: String(e.target.checked),
               }))
             }
           />
@@ -459,7 +463,7 @@ export function AdminWorkspace({ token, language }) {
         >
           {editionFor(passageEdition).books.map((b) => (
             <option key={b.id} value={b.id}>
-              {b.name} ({b.id})
+              {cms.text(`bible.book.${b.id}`, language, b.name)} ({b.id})
             </option>
           ))}
         </select>
@@ -512,7 +516,7 @@ export function AdminWorkspace({ token, language }) {
         >
           {scriptureEditions.map((e) => (
             <option key={e.id} value={e.id}>
-              {e.language === "ckb" ? "سۆرانی" : "English"} · {e.id}
+              {e.language === "ka" ? "ქართული" : e.language === "ckb" ? "سۆرانی" : language === "ka" ? "ინგლისური" : "English"} · {e.id}
             </option>
           ))}
         </select>
@@ -523,11 +527,11 @@ export function AdminWorkspace({ token, language }) {
           {(f.type === "kind"
             ? ["saint", "father", "saint-and-father"]
             : f.type === "category"
-              ? ["doctrine", "council"]
+              ? ["doctrine", "council", "history"]
               : ["text", "image", "visibility"]
           ).map((option) => (
             <option key={option} value={option}>
-              {option}
+              {language === "ka" ? ({saint:"წმინდანი",father:"ეკლესიის მამა","saint-and-father":"წმინდანი და ეკლესიის მამა",doctrine:"ღვთისმეტყველება",council:"კრება",history:"ეკლესიის ისტორია",text:"ტექსტი",image:"გამოსახულება",visibility:"ხილვადობა"}[option] || option) : option}
             </option>
           ))}
         </select>
@@ -590,7 +594,7 @@ export function AdminWorkspace({ token, language }) {
               ·{" "}
               {formLanguage === "ckb"
                 ? "سۆرانی"
-                : formLanguage === "kmr"
+                : formLanguage === "ka" ? "ქართული" : formLanguage === "kmr"
                   ? "Kurmancî"
                   : "English"}
             </small>
@@ -708,12 +712,13 @@ export function AdminWorkspace({ token, language }) {
                 <div
                   className="editorial-language-tabs"
                   role="group"
-                  aria-label="Translation"
+                  aria-label={language === "ka" ? "თარგმანი" : "Translation"}
                 >
                   {[
                     ["ckb", "سۆرانی"],
                     ["kmr", "Kurmancî"],
                     ["en", "English"],
+                    ["ka", "ქართული"],
                   ].map(([id, title]) => (
                     <button
                       key={id}

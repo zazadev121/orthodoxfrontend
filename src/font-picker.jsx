@@ -5,6 +5,7 @@ import { readerFonts } from "./reader-fonts.js";
 
 export function FontPicker({ t, selected, onChange, status, onRetry }) {
   const cms = useEditorial();
+  const language = document.documentElement.lang === "ka" ? "ka" : "ckb";
   return (
     <section className="appearance-section" aria-labelledby="font-heading">
       <h2 id="font-heading">
@@ -18,31 +19,31 @@ export function FontPicker({ t, selected, onChange, status, onRetry }) {
             type="button"
             key={font.id}
             className={`font-card${selected === font.id ? " selected" : ""}`}
-            aria-label={cms.text(`fonts.${font.id}.label`, "ckb", font.label)}
+            aria-label={cms.text(`fonts.${font.id}.label`, language, font.label)}
             aria-pressed={selected === font.id}
             onClick={() => onChange(font.id)}
           >
             <span className="font-card-heading">
               <span
-                lang={font.id === "nrt" ? "en" : "ckb"}
-                dir={font.id === "nrt" ? "ltr" : "rtl"}
+                lang={language === "ka" ? "ka" : font.id === "nrt" ? "en" : "ckb"}
+                dir={language === "ka" ? "ltr" : font.id === "nrt" ? "ltr" : "rtl"}
               >
-                {cms.text(`fonts.${font.id}.label`, "ckb", font.label)}
+                {cms.text(`fonts.${font.id}.label`, language, font.label)}
               </span>
               {selected === font.id && <Check size={18} />}
             </span>
             <span
               className="font-sample"
-              lang="ckb"
-              dir="rtl"
+              lang={language}
+              dir={language === "ka" ? "ltr" : "rtl"}
               style={{
-                "--sample-font": `"${font.family}", "Reader Naskh", "Noto Naskh Arabic", serif`,
+                "--sample-font": `"${font.family}", "Reader Naskh", "Noto Sans Georgian", "Noto Naskh Arabic", serif`,
               }}
             >
-              {cms.text("fonts.sample", "ckb", "دڵێکی پڕ لە خۆشەویستی")}
+              {cms.text("fonts.sample", language, language === "ka" ? "სიყვარულით სავსე გული" : "دڵێکی پڕ لە خۆشەویستی")}
             </span>
             <span className="font-source" lang="en" dir="ltr">
-              {cms.text(`fonts.${font.id}.source`, "en", font.sourceFamily)}
+              {cms.text(`fonts.${font.id}.source`, language === "ka" ? "ka" : "en", font.sourceFamily)}
             </span>
           </button>
         ))}

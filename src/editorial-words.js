@@ -1,3 +1,4 @@
+import { georgianEditorialWords } from "./georgian-copy.js";
 // Interface labels only. Religious content is never generated here.
 export const editorialWords = {
   en: {
@@ -295,5 +296,6 @@ export const editorialWords = {
   },
 };
 export function baseEditorialWords(language) {
+  if (language === "ka") return { ...georgianEditorialWords };
   return { ...editorialWords.en, ...editorialWords[language] };
 }

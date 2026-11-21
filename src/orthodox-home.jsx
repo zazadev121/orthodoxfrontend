@@ -1,3 +1,4 @@
+import { georgianHeritageWords } from "./georgian-copy.js";
 import React from "react";
 import { useEditorial, useEditorialWords } from "./editorial-context.jsx";
 import { AuthorCard } from "./editorial-public.jsx";
@@ -117,7 +118,7 @@ const lessons = [
   },
 ];
 export const heritageWords = (language) =>
-  language === "ckb"
+  language === "ka" ? georgianHeritageWords : language === "ckb"
     ? {
         welcome: "میراتێکی زیندوو · باوەڕێکی هەتاهەتایی",
         title: "ڕووناکیی ئۆرتۆدۆکسی، بە زمانی کوردی",
@@ -485,10 +486,10 @@ export function OrthodoxStudy({ language, page, route }) {
   return (
     <div className="page heritage-page study-page">
       <a className="text-link" href="#home">
-        ← {language === "ckb" ? "سەرەکی" : "Home"}
+        ← {language === "ka" ? "მთავარი" : language === "ckb" ? "سەرەکی" : "Home"}
       </a>
       <header className="heritage-heading">
-        <span className="eyebrow">EASTERN ORTHODOX FAITH & LIFE</span>
+        <span className="eyebrow">{language === "ka" ? "მართლმადიდებლური სარწმუნოება და ცხოვრება" : "EASTERN ORTHODOX FAITH & LIFE"}</span>
         <h1>
           {
             w[
@@ -518,7 +519,7 @@ export function OrthodoxStudy({ language, page, route }) {
           <h2>
             {language === "ckb"
               ? "سەرچاوە و بەرپرسیارێتی"
-              : "Sources and editorial care"}
+              : language === "ka" ? "წყაროები და სარედაქციო პასუხისმგებლობა" : "Sources and editorial care"}
           </h2>
           <p>{w.aboutPolicy}</p>
           <div className="about-actions">
@@ -526,7 +527,7 @@ export function OrthodoxStudy({ language, page, route }) {
               {w.sources}
             </a>
             <a className="button secondary" href="#appearance">
-              {language === "ckb" ? "فۆنت و ڕەنگ" : "Fonts and appearance"}
+              {language === "ka" ? "შრიფტები და გარეგნობა" : language === "ckb" ? "فۆنت و ڕەنگ" : "Fonts and appearance"}
             </a>
           </div>
           <a href="#saints" className="text-link">

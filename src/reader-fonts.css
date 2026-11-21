@@ -11,19 +11,19 @@
 @font-face { font-family: "Reader Rabar"; src: url("/fonts/rabar.woff") format("woff"); font-weight: 400; font-style: normal; font-display: swap; }
 @font-face { font-family: "Reader Unikurd"; src: url("/fonts/unikurd.woff") format("woff"); font-weight: 400; font-style: normal; font-display: swap; }
 @font-face { font-family: "Reader Bukra"; src: url("/fonts/bukra.woff") format("woff"); font-weight: 400; font-style: normal; font-display: swap; }
-:root { --reading-font: "Reader Speda", "Noto Naskh Arabic", "Noto Sans", serif; --reading-leading: 2; }
-:root[data-reader-font="naskh"] { --reading-font: "Reader Naskh", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; }
-:root[data-reader-font="kufi"] { --reading-font: "Reader Kufi", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; }
-:root[data-reader-font="sans"] { --reading-font: "Reader Sans", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; }
-:root[data-reader-font="vazir"] { --reading-font: "Reader Vazir", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; }
-:root[data-reader-font="readex"] { --reading-font: "Reader Readex", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; }
-:root[data-reader-font="nrt"] { --reading-font: "Reader NRT", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; }
-:root[data-reader-font="speda"] { --reading-font: "Reader Speda", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; }
-:root[data-reader-font="rudaw"] { --reading-font: "Reader Rudaw", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; }
-:root[data-reader-font="nastaliq"] { --reading-font: "Reader Nastaliq", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; }
-:root[data-reader-font="rabar"] { --reading-font: "Reader Rabar", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; }
-:root[data-reader-font="unikurd"] { --reading-font: "Reader Unikurd", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; }
-:root[data-reader-font="bukra"] { --reading-font: "Reader Bukra", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans", serif; }
+:root { --reading-font: "Reader Speda", "Noto Naskh Arabic", "Noto Sans Georgian", "Noto Sans", serif; --reading-leading: 2; }
+:root[data-reader-font="naskh"] { --reading-font: "Reader Naskh", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans Georgian", "Noto Sans", serif; }
+:root[data-reader-font="kufi"] { --reading-font: "Reader Kufi", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans Georgian", "Noto Sans", serif; }
+:root[data-reader-font="sans"] { --reading-font: "Reader Sans", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans Georgian", "Noto Sans", serif; }
+:root[data-reader-font="vazir"] { --reading-font: "Reader Vazir", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans Georgian", "Noto Sans", serif; }
+:root[data-reader-font="readex"] { --reading-font: "Reader Readex", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans Georgian", "Noto Sans", serif; }
+:root[data-reader-font="nrt"] { --reading-font: "Reader NRT", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans Georgian", "Noto Sans", serif; }
+:root[data-reader-font="speda"] { --reading-font: "Reader Speda", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans Georgian", "Noto Sans", serif; }
+:root[data-reader-font="rudaw"] { --reading-font: "Reader Rudaw", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans Georgian", "Noto Sans", serif; }
+:root[data-reader-font="nastaliq"] { --reading-font: "Reader Nastaliq", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans Georgian", "Noto Sans", serif; }
+:root[data-reader-font="rabar"] { --reading-font: "Reader Rabar", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans Georgian", "Noto Sans", serif; }
+:root[data-reader-font="unikurd"] { --reading-font: "Reader Unikurd", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans Georgian", "Noto Sans", serif; }
+:root[data-reader-font="bukra"] { --reading-font: "Reader Bukra", "Reader Naskh", "Noto Naskh Arabic", "Noto Sans Georgian", "Noto Sans", serif; }
 
 :root[data-reader-font="nastaliq"] { --reading-leading: 2.8; }
 main :is(.scripture-chapter p, .scripture-chapter h2, .scripture-chapter h3, .scripture-chapter summary, .daily-verse blockquote, .daily-reference, .quote blockquote, .quote h3, .prayer-text, .prayer summary h2, .reading-preview p, .principle p, .hero-text > p, .path p, .record-preview, .message p) { font-family: var(--reading-font); line-height: var(--reading-leading); letter-spacing: normal; }
@@ -47,3 +47,7 @@ html, body, #root, #root * { font-family: var(--reading-font) !important; }
 html { text-rendering: optimizeLegibility; }
 body { font-kerning: normal; }
 html[lang="ckb"] #root { letter-spacing: normal; }
+
+@font-face { font-family: "Noto Sans Georgian"; src: url("/fonts/noto-sans-georgian.ttf") format("truetype"); font-weight: 100 900; font-style: normal; font-display: swap; }
+html[lang="ka"] { --reading-leading: 1.8; }
+html[lang="ka"] #root { letter-spacing: normal; }

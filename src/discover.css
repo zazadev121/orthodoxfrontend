@@ -1,0 +1,162 @@
+/* The Discover surface follows the supplied dark reference without changing
+   the visitor's saved theme or the design of any other route. */
+html[data-page="discover"] {
+  color-scheme: dark;
+  background: #101012;
+}
+html[data-page="discover"] body {
+  background: #101012;
+  color: #f7f6f3;
+}
+html[data-page="discover"] body::before { display: none; }
+html[data-page="discover"] .header {
+  background: #101012;
+  border-color: #28282a;
+  color: #f7f6f3;
+}
+html[data-page="discover"] .header :is(.brand,.brand span,.icon-button,.admin-signin,.language,.mobile-menu) { color: #dededf; }
+html[data-page="discover"] .header :is(.icon-button,.admin-signin,.language) { background: #101012; border-color: #404043; }
+html[data-page="discover"] .header .navigation a { color: #b9b9be; }
+html[data-page="discover"] .header .navigation a.active { color: #fff; }
+html[data-page="discover"] .header .navigation a.active::after { background: #fff; }
+html[data-page="discover"] footer { background: #101012; color: #aaaab0; border-color: #28282a; }
+html[data-page="discover"] footer :is(strong,a) { color: #d5d5d8; }
+html[data-page="discover"] .bottom-navigation { background: #202022; border-color: #36363a; }
+html[data-page="discover"] .bottom-navigation a { color: #a8a8ad; }
+html[data-page="discover"] .bottom-navigation a.active { color: #fff; }
+html[data-page="discover"] .bottom-navigation a.active svg { filter: none; }
+
+.discover-page {
+  max-width: 900px;
+  margin-inline: auto;
+  padding: 30px 28px 54px;
+  color: #f7f6f3;
+  background: #101012;
+}
+#root .discover-title {
+  margin: 0 0 27px;
+  color: #fff;
+  font-size: clamp(2.2rem,5vw,3rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -.025em;
+}
+html[data-page="discover"] #root .header .discover-title { margin: 0; font-size: clamp(1.8rem,4vw,2.65rem); }
+.discover-search {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 60px;
+  padding: 11px 22px;
+  border: 1px solid #37373a;
+  border-radius: 999px;
+  background: #0c0c0e;
+  box-shadow: inset 0 0 0 2px #121214,0 1px 1px #ffffff07;
+  color: #919197;
+  margin-bottom: 24px;
+}
+.discover-search svg { flex: 0 0 auto; }
+#root .discover-search input {
+  border: 0;
+  padding: 0;
+  min-height: 32px;
+  width: 100%;
+  min-width: 0;
+  outline: none;
+  box-shadow: none;
+  background: transparent;
+  color: #fff;
+  font-size: 1.15rem;
+  line-height: 1.5;
+}
+.discover-search input::placeholder { color: #8c8c92; opacity: 1; }
+.discover-search:focus-within { border-color: #a4a4ab; box-shadow: 0 0 0 2px #ffffff18; }
+.discover-categories { display: flex; flex-direction: column; gap: 18px; }
+.discover-card {
+  display: flex;
+  align-items: center;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 218px;
+  border: 1px solid #4d45361a;
+  border-radius: 28px;
+  color: #fff;
+  background: #312b1e;
+  text-decoration: none;
+}
+.discover-card > img {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(.72) brightness(.84);
+}
+.discover-card::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(90deg,rgba(9,9,11,.96) 0%,rgba(9,9,11,.83) 32%,rgba(9,9,11,.36) 67%,rgba(9,9,11,.06) 100%);
+}
+.discover-card-content { padding: 25px 30px; width: min(81%,620px); text-align: start; }
+#root .discover-card h2 {
+  margin: 0 0 10px;
+  color: #fff;
+  font-size: clamp(1.8rem,3.6vw,2.5rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -.025em;
+  text-wrap: balance;
+}
+#root .discover-card p { margin: 0; max-width: 520px; color: #c4c4c8; font-size: 1rem; line-height: 1.5; }
+.discover-card:focus-visible { outline: 2px solid #fff; outline-offset: 5px; }
+.discover-card:hover { border-color: #8e8370; }
+.discover-secondary { padding: 26px 4px 0; display: flex; justify-content: space-between; gap: 20px; align-items: start; flex-wrap: wrap; font-size: .85rem; color: #a9a9af; }
+.discover-secondary > a { color: #d6d6da; text-decoration: underline; text-underline-offset: 4px; }
+.discover-credits { max-width: 500px; }
+.discover-credits summary { cursor: pointer; }
+.discover-credits p,.discover-credits a { display: block; font-size: .8rem; line-height: 1.6; margin-top: 12px; color: #aaaab0; }
+.discover-empty { padding: 30px 5px; color: #bbb; }
+.discover-back { display: inline-block; margin-bottom: 24px; }
+.discover-collection > p > .button { margin-bottom: 24px; }
+.discover-writing-author a { color: var(--gold); }
+.discover-writing-list .lesson-card > h2 { font-size: 1.25rem; line-height: 1.5; }
+
+[dir="rtl"] .discover-card::after { background: linear-gradient(270deg,rgba(9,9,11,.96) 0%,rgba(9,9,11,.83) 32%,rgba(9,9,11,.36) 67%,rgba(9,9,11,.06) 100%); }
+
+@media (max-width: 640px) {
+  .discover-page { padding: 25px 20px 35px; }
+  .discover-search { min-height: 56px; padding: 10px 19px; gap: 11px; margin-bottom: 20px; }
+  #root .discover-search input { font-size: 1.1rem; }
+  .discover-categories { gap: 16px; }
+  .discover-card { min-height: 185px; border-radius: 28px; }
+  .discover-card-content { width: 87%; padding: 21px 22px; }
+  #root .discover-card h2 { font-size: 1.95rem; margin-bottom: 9px; line-height: 1.1; }
+  #root .discover-card p { font-size: .91rem; line-height: 1.45; }
+  .discover-secondary { gap: 18px; }
+  html[lang="ka"] #root .discover-card h2 { font-size: 1.65rem; line-height: 1.2; }
+}
+@media (max-width: 370px) {
+  .discover-page { padding-inline: 16px; }
+  .discover-card-content { width: 94%; padding-inline: 20px; }
+  #root .discover-card h2 { font-size: 1.8rem; }
+  #root .discover-card p { font-size: .88rem; }
+}
+@media (prefers-reduced-motion: reduce) { .discover-card,.discover-search { transition: none; } }
+
+/* Keep the compact floating navigation shown in the supplied mobile reference. */
+html[data-page="discover"] #root .discover-header-title { margin: 0; color: #fff; font-size: clamp(1.8rem,4vw,2.65rem); line-height: 1.15; font-weight: 700; }
+html[data-page="discover"][lang="en"][data-reader-font="speda"] #root :is(.discover-header-title,.discover-card h2) { font-family: Georgia,"Times New Roman",serif !important; }
+html[data-page="discover"] #root .discover-card p { line-height: 1.5; }
+@media(max-width:800px) {
+  html[data-page="discover"] .bottom-navigation { inset-inline: 12px; bottom: calc(10px + env(safe-area-inset-bottom)); border: 1px solid #36363a; border-radius: 28px; padding: 14px 6px; box-shadow: 0 4px 22px #0005; }
+  html[data-page="discover"] .bottom-navigation a { font-size: .68rem; }
+  html[data-page="discover"] .bottom-navigation a.active { font-weight: 700; }
+  html[data-page="discover"] .header { justify-content: space-between; }
+}
+
+#root label.discover-search { display: flex; flex-direction: row; align-items: center; gap: 14px; }

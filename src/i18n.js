@@ -1,3 +1,4 @@
+import { georgianCopy } from "./georgian-copy.js";
 export const copy = {
   en: {
     readingFont: "Website font",
@@ -507,5 +508,6 @@ export const copy = {
     skip: "Derbasî naverokê bibe",
     back: "Vegere destpêkê",
   },
+  ka: georgianCopy,
 };
 

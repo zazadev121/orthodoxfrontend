@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useEditorialWords } from "./editorial-context.jsx";
-import { authorName, textFor, profileHref } from "./editorial.js";
+import { authorName, textFor, profileHref, metadataFor } from "./editorial.js";
 export function VerseExplanations({
   verse,
   explanations,
@@ -63,6 +63,7 @@ export function VerseExplanations({
                 <p className="editorial-verbatim">
                   {textFor(item, "body", language) || w.missingTranslation}
                 </p>
+                {language === "ka" && item.review_note_ka && <p className="editorial-review-note" role="note">{item.review_note_ka}</p>}
                 <span className="passage-range" dir="ltr">
                   {item.book} {item.chapter}:{item.verse_start}
                   {item.verse_end !== item.verse_start
@@ -76,10 +77,10 @@ export function VerseExplanations({
                     target="_blank"
                     rel="noreferrer"
                   >
-                    {item.reference} ↗
+                    {metadataFor(item, "reference", language)} ↗
                   </a>
                 ) : (
-                  <p className="editorial-verbatim">{item.reference}</p>
+                  <p className="editorial-verbatim">{metadataFor(item, "reference", language)}</p>
                 )}
               </article>
             ))

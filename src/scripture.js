@@ -1,4 +1,6 @@
-import { scriptureEditions } from "./scripture-data.js";
+import { scriptureEditions as originalEditions } from "./scripture-data.js";
+import { georgianScriptureEdition } from "./georgian-scripture-data.js";
+const scriptureEditions = [...originalEditions, georgianScriptureEdition];
 
 export { scriptureEditions };
 const cacheKey = "scripture-chapters-v1";
@@ -29,7 +31,7 @@ export function readingFromLocation(language) {
   const query = new URLSearchParams(location.hash.split("?")[1] || "");
   if (query.has("book") || query.has("translation")) return normalizeReading(Object.fromEntries(query), language);
   try {
-    const saved = JSON.parse(localStorage.getItem("scripture-position"));
+    const saved = JSON.parse(localStorage.getItem(language === "ka" ? "scripture-position:ka" : "scripture-position"));
     if (saved) return normalizeReading(saved, language);
   } catch {}
   return normalizeReading({}, language);
@@ -60,9 +62,10 @@ export async function loadChapter(reading, { signal, fetcher = fetch, now = Date
   const cached = readCache().find(row => row?.key === key && validChapter(row.data, reading));
   if (cached && now - cached.savedAt < week) return { data: cached.data, offline: false };
   try {
-    const response = await fetcher(`https://bible.helloao.org/api/${key}.simple.json`, { signal });
+    const response = await fetcher(reading.translation === "ka_ogb" ? `/scripture/ka_ogb/${reading.book}.json` : `https://bible.helloao.org/api/${key}.simple.json`, { signal });
     if (!response.ok) throw Error(`Scripture request failed (${response.status})`);
-    const data = await response.json();
+    const raw = await response.json();
+    const data = reading.translation === "ka_ogb" ? {translation:raw.translation,book:raw.book,chapter:raw.chapters?.find(ch => ch.number === reading.chapter)} : raw;
     if (!validChapter(data, reading)) throw Error("Scripture response did not match the requested chapter");
     try {
       const rows = readCache().filter(row => row?.key !== key);

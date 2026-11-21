@@ -1,3 +1,5 @@
+import { DiscoverPage, ReadingLibrary, HistoryLibrary, discoverWords } from "./discover.jsx";
+import { localizedError, metadataFor } from "./editorial.js";
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
@@ -148,6 +150,7 @@ function App() {
   });
   const [route, setRoute] = useState(() => location.hash.slice(1) || "home");
   const page = route.split("?")[0];
+  useEffect(() => { document.documentElement.dataset.page = page; }, [page]);
   const [menu, setMenu] = useState(false);
   const t = cms.words(copy[language], "ui", language);
   const ew = useEditorialWords(language);
@@ -162,6 +165,7 @@ function App() {
   }, []);
   useEffect(() => {
     document.documentElement.lang = language;
+    document.title = t.name;
     document.documentElement.dir = language === "ckb" ? "rtl" : "ltr";
     try {
       localStorage.setItem("language", language);
@@ -170,17 +174,17 @@ function App() {
   const fatherQuotesLabel = cms.text(
     "general.navFatherQuotes",
     language,
-    language === "ckb" ? "وتەکانی باوکانی کڵێسا" : language === "kmr" ? "Gotinên Bavên Dêrê" : "Church Fathers’ Quotes",
+    language === "ckb" ? "وتەکانی باوکانی کڵێسا" : language === "ka" ? "ეკლესიის მამათა გამონათქვამები" : language === "kmr" ? "Gotinên Bavên Dêrê" : "Church Fathers’ Quotes",
   );
   const saintsQuotesLabel = cms.text(
     "general.bottomSaintQuotes",
     language,
-    language === "ckb" ? "وتەکانی پایەپیرۆزان" : language === "kmr" ? "Gotinên Pîrozan" : "Saints’ Quotes",
+    language === "ckb" ? "وتەکانی پایەپیرۆزان" : language === "ka" ? "წმინდანთა გამონათქვამები" : language === "kmr" ? "Gotinên Pîrozan" : "Saints’ Quotes",
   );
   const nav = [
     ["home", t.home],
     ["bible", t.bible],
-    ["fathers", fatherQuotesLabel],
+    ["discover", cms.text("general.navDiscover", language, discoverWords(language).title)],
     [
       "saints",
       cms.text(
@@ -188,7 +192,7 @@ function App() {
         language,
         language === "ckb"
           ? "پایەپیرۆزان"
-          : language === "kmr"
+          : language === "ka" ? "წმინდანები" : language === "kmr"
             ? "Pîroz"
             : "Saints",
       ),
@@ -212,6 +216,7 @@ function App() {
       </a>
       <header className="header">
         <a href="#home" className="brand">
+          {page === "discover" ? <h1 className="discover-header-title">{cms.text("discover.title", language, discoverWords(language).title)}</h1> : <>
           {cms.text("general.brandImage", language, "/kurdistan-cross.jpg") && (
             <img
               className="brand-cross"
@@ -235,6 +240,7 @@ function App() {
               )}
             </small>
           </span>
+          </>}
         </a>
         <nav
           aria-label={t.home}
@@ -283,13 +289,18 @@ function App() {
           </a>
           <select
             className="language"
-            aria-label={t.chooseLanguage || "Language / زمان"}
+            aria-label={t.languageLabel || t.chooseLanguage || "Language / زمان"}
             value={language}
-            onChange={(e) => setLanguage(e.target.value)}
+            onChange={(e) => {
+              const next = e.target.value;
+              if (next === "ka" && page === "bible") location.hash = "bible?translation=ka_ogb&book=JHN&chapter=1";
+              setLanguage(next);
+            }}
           >
             <option value="ckb">سۆرانی</option>
             <option value="kmr">Kurmancî</option>
             <option value="en">English</option>
+            <option value="ka">ქართული</option>
           </select>
           <button
             className="mobile-menu icon-button"
@@ -307,7 +318,7 @@ function App() {
         {cms.ready === null &&
         !["admin", "appearance", "bible"].includes(page) ? (
           <div className="page">
-            <p role="status">{cms.error ? cms.error.message : t.loading}</p>
+            <p role="status">{cms.error ? localizedError(cms.error, language) : t.loading}</p>
             {cms.error && (
               <button
                 className="button"
@@ -331,6 +342,12 @@ function App() {
           />
         ) : page === "home" ? (
           <OrthodoxHome t={t} language={language} />
+        ) : page === "discover" ? (
+          <DiscoverPage language={language} hideHeading />
+        ) : page === "reading" ? (
+          <ReadingLibrary language={language} />
+        ) : page === "history" ? (
+          <HistoryLibrary language={language} />
         ) : page === "saints" ? (
           cms.ready ? (
             <AuthorLibrary language={language} />
@@ -382,7 +399,7 @@ function App() {
         ) : page === "admin" ? (
           <Admin t={t} language={language} account={account} />
         ) : page === "sources" ? (
-          <Sources t={t} />
+          <Sources t={t} language={language} />
         ) : (
           <div className="page">
             <a href="#home">{t.back}</a>
@@ -393,8 +410,8 @@ function App() {
         {[
           ["home", HomeIcon, t.home],
           ["bible", BookOpen, t.bible],
-          ["fathers", Library, saintsQuotesLabel],
-          ["saints", Church, cms.text("general.navSaints", language, language === "ckb" ? "پایەپیرۆزان" : language === "kmr" ? "Pîroz" : "Saints")],
+          ["discover", Library, cms.text("general.navDiscover", language, discoverWords(language).title)],
+          ["saints", Church, cms.text("general.navSaints", language, language === "ckb" ? "پایەپیرۆزان" : language === "ka" ? "წმინდანები" : language === "kmr" ? "Pîroz" : "Saints")],
           ["prayers", Heart, t.prayers],
           ["appearance", Palette, t.appearance],
         ].map(([id, Icon, label]) => (
@@ -440,7 +457,7 @@ function App() {
               {cms.text(
                 "general.footerAbout",
                 language,
-                language === "ckb"
+                language === "ka" ? "ჩვენ შესახებ" : language === "ckb"
                   ? "دەربارەی ئێمە"
                   : language === "kmr"
                     ? "Derbarê me"
@@ -451,7 +468,7 @@ function App() {
               {cms.text(
                 "general.footerCouncils",
                 language,
-                language === "ckb"
+                language === "ka" ? "მსოფლიო საეკლესიო კრებები" : language === "ckb"
                   ? "ئەنجومەنەکان"
                   : language === "kmr"
                     ? "Civînên gerdûnî"
@@ -461,7 +478,7 @@ function App() {
             <a href="#sources">{t.sources}</a>
             <a href="#admin">{t.admin}</a>
             <span lang="en" dir="ltr">
-              © {new Date().getFullYear()} Rum Orthodoxy In Kurdistan
+              © {new Date().getFullYear()} {language === "ka" ? t.name : "Rum Orthodoxy In Kurdistan"}
             </span>
           </div>
         </div>
@@ -917,7 +934,7 @@ function Chat({ t, language }) {
     </div>
   );
 }
-function Sources({ t }) {
+function Sources({ t, language }) {
   const [sources, setSources] = useState([]),
     [error, setError] = useState("");
   useEffect(() => {
@@ -933,8 +950,8 @@ function Sources({ t }) {
         {sources.map((s) => (
           <a key={s.id} href={s.url} target="_blank" rel="noreferrer">
             <div>
-              <h2>{s.title}</h2>
-              <p>{s.publisher}</p>
+              <h2>{metadataFor(s, "title", language)}</h2>
+              <p>{metadataFor(s, "publisher", language)}</p>
             </div>
             <ExternalLink size={19} />
           </a>
@@ -990,7 +1007,7 @@ function Admin({ t, language, account }) {
       });
       if (result.error) throw result.error;
     } catch (e) {
-      setError(e.message);
+      setError(localizedError(e, language));
     } finally {
       setBusy(false);
     }

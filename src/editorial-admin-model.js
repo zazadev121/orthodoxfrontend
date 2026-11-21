@@ -1,4 +1,4 @@
-export const languageFields = ["en", "ckb", "kmr"];
+export const languageFields = ["en", "ckb", "kmr", "ka"];
 const translated = (base, label, large = false) => ({
   base,
   label,
@@ -54,6 +54,7 @@ export const editorResources = {
       translated("text", "body", true),
       ...source,
       field("topic", "topic"),
+      field("review_note_ka", "editorialNote", "textarea"),
     ],
   },
   prayers: {
@@ -63,6 +64,7 @@ export const editorResources = {
       translated("text", "body", true),
       ...source,
       field("topic", "topic"),
+      field("review_note_ka", "editorialNote", "textarea"),
     ],
   },
   doctrines: {
@@ -101,6 +103,7 @@ export const editorResources = {
       translated("title", "title"),
       translated("body", "body", true),
       ...source,
+      field("review_note_ka", "editorialNote", "textarea"),
       field("sort_order", "order", "number"),
     ],
   },
@@ -156,6 +159,8 @@ export const editorResources = {
       field("content", "body", "textarea"),
       field("content_ckb", "body", "textarea"),
       field("content_kmr", "body", "textarea"),
+      field("content_ka", "body", "textarea"),
+
       field("keywords", "topic", "textarea"),
     ],
     toggle: "approved",

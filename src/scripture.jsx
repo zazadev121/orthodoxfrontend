@@ -26,14 +26,14 @@ import {
   loadChapter,
 } from "./scripture.js";
 
-function Attribution({ edition, compact = false }) {
+function Attribution({ edition, language, compact = false }) {
   return (
     <div
       className={`scripture-attribution${compact ? " compact" : ""}`}
       lang="en"
       dir="ltr"
     >
-      {edition.language === "ckb" ? (
+      {edition.language === "ka" ? (<span>{language === "ka" ? "ძველი ქართული ახალი აღთქმა · ისტორიული ტექსტი · საჯარო საკუთრება. ციფრული წყარო: pumenis/random-access-ogb (MIT)." : "Old Georgian New Testament · Historical public-domain text · Digital source: pumenis/random-access-ogb (MIT)."}</span>) : edition.language === "ckb" ? (
         <>
           <span>Biblica® Open Kurdi Sorani Standard Version™</span>
           <span>Copyright © 1998, 2011, 2016, 2020 by Biblica, Inc.</span>
@@ -52,14 +52,14 @@ function Attribution({ edition, compact = false }) {
           </a>
         </>
       ) : (
-        <span>World English Bible Updated · Public domain</span>
+        <span>{language === "ka" ? "მსოფლიო ინგლისური ბიბლიის განახლებული გამოცემა · საჯარო საკუთრება" : "World English Bible Updated · Public domain"}</span>
       )}
       {!compact && (
         <span>
           <a href={edition.licenseUrl} target="_blank" rel="noreferrer">
-            Source &amp; license
+            {language === "ka" ? "წყარო და ლიცენზია" : "Source & license"}
           </a>{" "}
-          · Text supplied by AO Lab / eBible.org
+          · {edition.language === "ka" ? "pumenis/random-access-ogb" : language === "ka" ? "ტექსტის მომწოდებელი: AO Lab / eBible.org" : "Text supplied by AO Lab / eBible.org"}
         </span>
       )}
     </div>
@@ -117,7 +117,7 @@ export function DailyVerse({ t, language }) {
         </span>
         <time dateTime={localDateKey(date)}>
           {date.toLocaleDateString(
-            language === "en" ? "en-GB" : language === "ckb" ? "ckb" : "ku",
+            language === "ka" ? "ka-GE" : language === "en" ? "en-GB" : language === "ckb" ? "ckb" : "ku",
             { day: "numeric", month: "long", year: "numeric" },
           )}
         </time>
@@ -132,7 +132,7 @@ export function DailyVerse({ t, language }) {
           lang={edition.language}
         >
           {chosen ? (
-            chosen.reference
+            language === "ka" ? chosen.reference_ka || `${cms.text(`bible.book.${book.id}`, "ka", book.name)} ${chosen.chapter}:${chosen.verse_start}` : chosen.reference
           ) : (
             <>
               {cms.text(`bible.book.${book.id}`, edition.language, book.name)}{" "}
@@ -159,7 +159,7 @@ export function DailyVerse({ t, language }) {
                 ? cms.editions.find((e) => e.id === edition.id)?.[
                     `title_${language}`
                   ]
-                : edition.language === "ckb"
+                : edition.language === "ka" ? t.georgianEdition : edition.language === "ckb"
                   ? t.soraniEdition
                   : t.englishEdition}
             </option>
@@ -167,7 +167,7 @@ export function DailyVerse({ t, language }) {
         </select>
         <span>{t.dailyRefresh}</span>
       </div>
-      <Attribution edition={edition} compact />
+      <Attribution edition={edition} language={language} compact />
     </section>
   );
 }
@@ -211,7 +211,7 @@ export function BibleReader({ t, language }) {
     setReading(next);
     history.replaceState(null, "", readingHref(next));
     try {
-      localStorage.setItem("scripture-position", JSON.stringify(next));
+      localStorage.setItem(language === "ka" ? "scripture-position:ka" : "scripture-position", JSON.stringify(next));
     } catch {}
   }
   useEffect(() => {
@@ -230,7 +230,7 @@ export function BibleReader({ t, language }) {
     setError(false);
     setResult(null);
     try {
-      localStorage.setItem("scripture-position", JSON.stringify(reading));
+      localStorage.setItem(language === "ka" ? "scripture-position:ka" : "scripture-position", JSON.stringify(reading));
     } catch {}
     loadChapter(reading, { signal: controller.signal })
       .then((data) => {
@@ -309,7 +309,7 @@ export function BibleReader({ t, language }) {
                   ? cms.editions.find((e) => e.id === edition.id)?.[
                       `title_${language}`
                     ]
-                  : edition.language === "ckb"
+                  : edition.language === "ka" ? t.georgianEdition : edition.language === "ckb"
                     ? t.soraniEdition
                     : t.englishEdition}
               </option>
@@ -420,7 +420,7 @@ export function BibleReader({ t, language }) {
             >
               <div className="chapter-title">
                 <span>
-                  {edition.language === "ckb"
+                  {edition.language === "ka" ? t.georgianEdition : edition.language === "ckb"
                     ? t.soraniEdition
                     : t.englishEdition}
                 </span>
@@ -450,7 +450,7 @@ export function BibleReader({ t, language }) {
                       className={`scripture-verse${reading.verse === row.number ? " highlighted" : ""}`}
                     >
                       <sup>{row.number}</sup>
-                      <span>{override ? override.text : row.text}</span>
+                      <span>{override ? override.text : row.text || (edition.language === "ka" ? t.sourceVerseMissing : "")}</span>
                     </p>
                     {override && (
                       <BibleRevision
@@ -488,7 +488,8 @@ export function BibleReader({ t, language }) {
           </>
         )}
       </div>
-      <Attribution edition={edition} />
+      <Attribution edition={edition} language={language} />
+            {edition.language === "ka" && <p className="reader-language-note">{language === "ka" ? t.georgianScope : "This historical Old Georgian edition contains the 27 New Testament books. It is not a newly commissioned modern Georgian translation."}</p>}
       <p className="reader-scope editorial-verbatim">
         {editionSetting
           ? editionSetting[`description_${language}`]

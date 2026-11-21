@@ -14,7 +14,7 @@ export function matchesAuthor(author, query) {
   const text = searchKey(
     [
       ...["name", "title", "position"].flatMap((base) =>
-        ["en", "ckb", "kmr"].map((lang) => author[`${base}_${lang}`] || ""),
+        ["en", "ckb", "kmr", "ka"].map((lang) => author[`${base}_${lang}`] || ""),
       ),
       ...(author.aliases || []),
     ].join(" "),
@@ -25,6 +25,7 @@ export function matchesAuthor(author, query) {
   );
 }
 export function authorName(author, language = "en") {
+  if (language === "ka") return author?.name_ka || "ქართული სახელი ჯერ არ არის დამატებული";
   return (
     author?.[`name_${language}`] ||
     author?.name_en ||
@@ -57,4 +58,19 @@ export function mergeWords(base, blocks, prefix, language) {
     return row ? (row[`text_${language}`] ?? value) : value;
   }
   return walk(base, prefix);
+}
+
+export function metadataFor(row, field, language) {
+  return language === "ka" ? (row?.[`${field}_ka`] || "") : (row?.[field] || "");
+}
+export function localizedError(error, language) {
+  if (language !== "ka") return error?.message || String(error || "");
+  const messages = {
+    AUTHOR_NOT_FOUND: "არჩეული ავტორი ვერ მოიძებნა ან არქივშია გადატანილი.",
+    DUPLICATE_RECORD: "ასეთი ჩანაწერი უკვე არსებობს. შეცვალეთ არსებული ჩანაწერი.",
+    PASSAGE_VERIFICATION_UNAVAILABLE: "ბიბლიური ადგილის გადამოწმება ვერ მოხერხდა. ტექსტი არ შეცვლილა. ხელახლა სცადეთ.",
+    CMS_MIGRATION_REQUIRED: "შინაარსის მართვის სისტემა დროებით მიუწვდომელია.",
+    EDITORIAL_CONFLICT: "ჩანაწერი სხვა სესიაში შეიცვალა. შეინახეთ თქვენი ტექსტის ასლი და განაახლეთ გვერდი.",
+  };
+  return messages[error?.code] || (error?.status === 401 ? "ამ მოქმედებისთვის საჭიროა ანგარიშში შესვლა." : "მოთხოვნა ვერ შესრულდა. ხელახლა სცადეთ.");
 }
