@@ -160,3 +160,11 @@ html[data-page="discover"] #root .discover-card p { line-height: 1.5; }
 }
 
 #root label.discover-search { display: flex; flex-direction: row; align-items: center; gap: 14px; }
+@media (max-width:800px) {
+  html[data-page="discover"] .header .brand { width: auto; max-width: calc(100% - 208px); min-width: 0; }
+  html[data-page="discover"] .header-actions { margin-inline-start: 0; }
+  html[data-page="discover"] #root .discover-header-title { font-size: 1.8rem; }
+}
+@media (max-width:640px) {
+  #root .discover-card p { font-size: 1.05rem; }
+}
