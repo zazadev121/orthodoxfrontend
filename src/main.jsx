@@ -1064,6 +1064,7 @@ function Admin({ t, language, account }) {
           {allowed ? (
             <React.Suspense fallback={<p>{t.loading}</p>}>
               <AdminWorkspace
+                ownerId={session.user.id}
                 token={session.access_token}
                 language={language}
               />

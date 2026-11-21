@@ -1892,3 +1892,12 @@ html[lang="en"] .appearance-page :is(h1, h2, .theme-name), html[lang="kmr"] .app
 
 html[data-theme="charcoal"] body { background: var(--paper); }
 html[data-theme="charcoal"] body::before { display: none; }
+
+.source-disclosure { margin-block: 12px; color: var(--muted); font-size: .9rem; }
+.source-disclosure > summary { cursor: pointer; width: fit-content; color: var(--muted); font-size: .9rem; }
+.source-disclosure[open] > summary { margin-bottom: 12px; }
+.source-disclosure a { overflow-wrap: anywhere; }
+.draft-recovery { border: 1px solid var(--line); border-radius: 16px; padding: 20px; margin-block: 20px; background: var(--surface); }
+.draft-recovery > div { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding-block: 12px; border-top: 1px solid var(--line); }
+.draft-recovery time { color: var(--muted); font-size: .85rem; }
+.draft-status { color: var(--muted); font-size: .9rem; line-height: 1.6; }

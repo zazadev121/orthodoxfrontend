@@ -93,7 +93,7 @@ const lessons = [
     title: ["The Incarnation", "مرۆڤبوونی وشە"],
     text: [
       "The eternal Son truly became human for our salvation, remaining truly God. Jesus Christ is one Person in two natures.",
-      "کوڕی هەتاهەتایی بۆ ڕزگاریی ئێمە بەڕاستی بوو بە مرۆڤ، لە کاتێکدا بەڕاستی خودا مایەوە. عیسای مەسیح یەک کەسە لە دوو سروشتدا.",
+      "کوڕی هەتاهەتایی بۆ ڕزگاریی ئێمە بەڕاستی بوو بە مرۆڤ، لە کاتێکدا بەڕاستی خودا مایەوە. یەشوای مەسیح یەک کەسە لە دوو سروشتدا.",
     ],
     scripture: "John 1:14",
     url: "https://www.newadvent.org/fathers/2802.htm",

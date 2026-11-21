@@ -162,6 +162,7 @@ export function QuoteCard({ quote, language }) {
         )}
       </h3>
       <p>{metadataFor(quote, "topic", language)}</p>
+      <details className="source-disclosure"><summary>{w.source}</summary>
       {quote.source_url ? (
         <a href={quote.source_url} target="_blank" rel="noreferrer">
           {metadataFor(quote, "reference", language)}
@@ -169,7 +170,7 @@ export function QuoteCard({ quote, language }) {
         </a>
       ) : (
         <p className="quote-reference">{metadataFor(quote, "reference", language)}</p>
-      )}
+      )}</details>
     </article>
   );
 }
@@ -376,7 +377,7 @@ export function AuthorProfile({ language, route }) {
           ) : (
             <BookOpen size={64} />
           )}
-          <figcaption className="editorial-verbatim">
+          <figcaption className="editorial-verbatim"><details className="source-disclosure"><summary>{w.iconCredit}</summary>
             {metadataFor(a, "icon_credit", language)}
             {a.icon_source && (
               <>
@@ -396,7 +397,7 @@ export function AuthorProfile({ language, route }) {
                 </a>
               </>
             )}
-          </figcaption>
+          </details></figcaption>
         </figure>
         <div className="profile-heading">
           <span className="eyebrow">
@@ -496,15 +497,15 @@ export function AuthorProfile({ language, route }) {
         </section>
       )}
       {(a.source_reference || a.source_url) && (
-        <aside className="profile-sources">
-          <h2>{w.source}</h2>
+        <details className="profile-sources source-disclosure">
+          <summary>{w.source}</summary>
           <p className="editorial-verbatim">{metadataFor(a, "source_reference", language)}</p>
           {a.source_url && (
             <a href={a.source_url} target="_blank" rel="noreferrer">
               {w.read} ↗
             </a>
           )}
-        </aside>
+        </details>
       )}
     </article>
   );
@@ -641,7 +642,7 @@ export function EditorialArticle({ language, route, writing = false }) {
               width="720"
               height="480"
             />
-            <figcaption className="icon-credit">{metadataFor(item, "icon_credit", language)}</figcaption>
+            <figcaption className="icon-credit"><details className="source-disclosure"><summary>{w.iconCredit}</summary>{metadataFor(item, "icon_credit", language)}</details></figcaption>
           </figure>
         )}
         <h1>{textFor(item, "title", language) || w.missingTranslation}</h1>
@@ -653,13 +654,14 @@ export function EditorialArticle({ language, route, writing = false }) {
         <p className="editorial-verbatim">
           {textFor(item, "body", language) || w.missingTranslation}
         </p>
+        <details className="source-disclosure article-sources"><summary>{w.source}</summary>
         {[
           [w.bibleReferences, "bible_references"],
           [w.fatherReferences, "father_references"],
           [w.councilReferences, "council_references"],
           [w.source, "reference"],
         ]
-          .filter(([, key]) => item[key])
+          .filter(([, key]) => metadataFor(item,key,language))
           .map(([label, key]) => (
             <section key={key}>
               <h2>{label}</h2>
@@ -676,6 +678,7 @@ export function EditorialArticle({ language, route, writing = false }) {
             {w.source} ↗
           </a>
         )}
+        </details>
         {authors.length > 0 && (
           <section>
             <h2>{w.links}</h2>
@@ -760,6 +763,7 @@ export function PrayerFeed({ language, t }) {
               {textFor(p, "text", language) || w.missingTranslation}
             </p>
             {language === "ka" && p.review_note_ka && <p className="editorial-review-note" role="note">{p.review_note_ka}</p>}
+            <details className="source-disclosure"><summary>{w.source}</summary>
             {p.source_url ? (
               <a
                 className="text-link"
@@ -771,7 +775,7 @@ export function PrayerFeed({ language, t }) {
               </a>
             ) : (
               <p className="editorial-verbatim">{metadataFor(p, "reference", language)}</p>
-            )}
+            )}</details>
           </details>
         ))}
       </div>

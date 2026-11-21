@@ -1,3 +1,4 @@
+import { readDrafts, writeDraft, removeDraft } from "./editorial-drafts.js";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Upload,
@@ -73,7 +74,7 @@ async function allAdminAuthors(token) {
   }
   return items;
 }
-export function AdminWorkspace({ token, language }) {
+export function AdminWorkspace({ token, language, ownerId }) {
   const cms = useEditorial(),
     w = useEditorialWords(language);
   const [section, setSection] = useState("saints"),
@@ -88,6 +89,8 @@ export function AdminWorkspace({ token, language }) {
     [editing, setEditing] = useState(null),
     [baseline, setBaseline] = useState(""),
     [formLanguage, setFormLanguage] = useState(language);
+  const [draftId,setDraftId]=useState(null), [recovery,setRecovery]=useState(()=>readDrafts(ownerId)), [draftState,setDraftState]=useState(null);
+  useEffect(()=>setRecovery(readDrafts(ownerId)),[ownerId]);
   const [status, setStatus] = useState(null),
     [busy, setBusy] = useState(false),
     [loading, setLoading] = useState(false),
@@ -104,6 +107,20 @@ export function AdminWorkspace({ token, language }) {
   const sequence = useRef(0),
     fileInput = useRef(null);
   const dirty = editing && JSON.stringify(editing) !== baseline;
+  useEffect(()=>{
+    if (!dirty || !draftId || !ownerId) return;
+    const ok=writeDraft(ownerId,{id:draftId,resource,record:editing,baseline,language:formLanguage,savedAt:new Date().toISOString()});
+    setDraftState(ok ? "saved" : "unavailable");
+    if(ok)setRecovery(readDrafts(ownerId));
+  },[dirty,editing,baseline,draftId,ownerId,resource,formLanguage]);
+  function recoverDraft(entry){
+    if(!leave())return;
+    setEditing(structuredClone(entry.record));setBaseline(entry.baseline);setDraftId(entry.id);setFormLanguage(entry.language||language);setRevisions(null);setError("");
+  }
+  function discardDraft(entry){
+    if(!window.confirm(w.discardDraftConfirm))return;
+    removeDraft(ownerId,entry.resource,entry.id);setRecovery(readDrafts(ownerId));
+  }
   useEffect(() => {
     const stop = (e) => {
       if (dirty) {
@@ -191,6 +208,7 @@ export function AdminWorkspace({ token, language }) {
   }, [token, resource, page, archived, searchQuery]);
   function begin(item) {
     const value = item ? structuredClone(item) : newEditorialRecord(resource);
+    setDraftId(value.id || crypto.randomUUID());setDraftState(null);
     setEditing(value);
     setBaseline(JSON.stringify(value));
     setRevisions(null);
@@ -239,6 +257,7 @@ export function AdminWorkspace({ token, language }) {
         method: creating ? "POST" : "PATCH",
         body: JSON.stringify(savePayload(editing)),
       });
+      removeDraft(ownerId,resource,draftId);setRecovery(readDrafts(ownerId));setDraftState(null);
       setEditing(null);
       setBaseline("");
       setNotice(w.saveNotice);
@@ -697,6 +716,15 @@ export function AdminWorkspace({ token, language }) {
               {notice}
             </p>
           )}
+          {!editing && recovery.some(d=>d.resource===resource) && <aside className="draft-recovery">
+            <h3>{w.draftRecovery}</h3><p>{w.draftHelp}</p>
+            {recovery.filter(d=>d.resource===resource).map(d=><div key={d.id}>
+              <strong>{itemTitle(d.record,language) || w.draft}</strong>
+              <time dateTime={d.savedAt}>{new Date(d.savedAt).toLocaleString(language==="ka"?"ka-GE":language==="ckb"?"ckb":language==="kmr"?"ku":"en-GB")}</time>
+              <button type="button" className="button secondary" onClick={()=>recoverDraft(d)}>{w.recoverDraft}</button>
+              <button type="button" className="text-link" onClick={()=>discardDraft(d)}>{w.discardDraft}</button>
+            </div>)}
+          </aside>}
           {status && !status.ready ? (
             <div className="notice">
               <p>{w.migration}</p>
@@ -707,6 +735,7 @@ export function AdminWorkspace({ token, language }) {
             </div>
           ) : editing ? (
             <form className="editorial-form" onSubmit={save}>
+              {dirty && draftState && <p className={draftState==="saved"?"draft-status":"error"} role="status">{draftState==="saved"?w.draftSaved:w.draftUnavailable}</p>}
               <div className="editorial-form-toolbar">
                 <p>{w.exact}</p>
                 <div
