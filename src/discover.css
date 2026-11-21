@@ -1,41 +1,30 @@
-/* The Discover surface follows the supplied dark reference without changing
-   the visitor's saved theme or the design of any other route. */
-html[data-page="discover"] {
-  color-scheme: dark;
-  background: #101012;
-}
-html[data-page="discover"] body {
-  background: #101012;
-  color: #f7f6f3;
-}
+/* Discover shares the visitor's saved palette with every other page. */
+html[data-page="discover"] { background: var(--paper); }
+html[data-page="discover"] body { background: var(--paper); color: var(--text); }
 html[data-page="discover"] body::before { display: none; }
-html[data-page="discover"] .header {
-  background: #101012;
-  border-color: #28282a;
-  color: #f7f6f3;
-}
-html[data-page="discover"] .header :is(.brand,.brand span,.icon-button,.admin-signin,.language,.mobile-menu) { color: #dededf; }
-html[data-page="discover"] .header :is(.icon-button,.admin-signin,.language) { background: #101012; border-color: #404043; }
-html[data-page="discover"] .header .navigation a { color: #b9b9be; }
-html[data-page="discover"] .header .navigation a.active { color: #fff; }
-html[data-page="discover"] .header .navigation a.active::after { background: #fff; }
-html[data-page="discover"] footer { background: #101012; color: #aaaab0; border-color: #28282a; }
-html[data-page="discover"] footer :is(strong,a) { color: #d5d5d8; }
-html[data-page="discover"] .bottom-navigation { background: #202022; border-color: #36363a; }
-html[data-page="discover"] .bottom-navigation a { color: #a8a8ad; }
-html[data-page="discover"] .bottom-navigation a.active { color: #fff; }
+html[data-page="discover"] .header { background: var(--paper); border-color: var(--line); color: var(--text); }
+html[data-page="discover"] .header :is(.brand,.brand span,.icon-button,.admin-signin,.language,.mobile-menu) { color: var(--text); }
+html[data-page="discover"] .header :is(.icon-button,.admin-signin,.language) { background: var(--paper); border-color: var(--line); }
+html[data-page="discover"] .header .navigation a { color: var(--muted); }
+html[data-page="discover"] .header .navigation a.active { color: var(--text); }
+html[data-page="discover"] .header .navigation a.active::after { background: var(--text); }
+html[data-page="discover"] footer { background: var(--paper); color: var(--muted); border-color: var(--line); }
+html[data-page="discover"] footer :is(strong,a) { color: var(--text); }
+html[data-page="discover"] .bottom-navigation { background: var(--surface); border-color: var(--line); }
+html[data-page="discover"] .bottom-navigation a { color: var(--muted); }
+html[data-page="discover"] .bottom-navigation a.active { color: var(--text); }
 html[data-page="discover"] .bottom-navigation a.active svg { filter: none; }
 
 .discover-page {
   max-width: 900px;
   margin-inline: auto;
   padding: 30px 28px 54px;
-  color: #f7f6f3;
-  background: #101012;
+  color: var(--text);
+  background: var(--paper);
 }
 #root .discover-title {
   margin: 0 0 27px;
-  color: #fff;
+  color: var(--text);
   font-size: clamp(2.2rem,5vw,3rem);
   font-weight: 700;
   line-height: 1.15;
@@ -49,11 +38,11 @@ html[data-page="discover"] #root .header .discover-title { margin: 0; font-size:
   width: 100%;
   min-height: 60px;
   padding: 11px 22px;
-  border: 1px solid #37373a;
+  border: 1px solid var(--line);
   border-radius: 999px;
-  background: #0c0c0e;
-  box-shadow: inset 0 0 0 2px #121214,0 1px 1px #ffffff07;
-  color: #919197;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 2px var(--paper),0 1px 1px #ffffff07;
+  color: var(--muted);
   margin-bottom: 24px;
 }
 .discover-search svg { flex: 0 0 auto; }
@@ -66,12 +55,12 @@ html[data-page="discover"] #root .header .discover-title { margin: 0; font-size:
   outline: none;
   box-shadow: none;
   background: transparent;
-  color: #fff;
+  color: var(--text);
   font-size: 1.15rem;
   line-height: 1.5;
 }
-.discover-search input::placeholder { color: #8c8c92; opacity: 1; }
-.discover-search:focus-within { border-color: #a4a4ab; box-shadow: 0 0 0 2px #ffffff18; }
+.discover-search input::placeholder { color: var(--muted); opacity: 1; }
+.discover-search:focus-within { border-color: var(--muted); box-shadow: 0 0 0 2px #ffffff18; }
 .discover-categories { display: flex; flex-direction: column; gap: 18px; }
 .discover-card {
   display: flex;
@@ -113,14 +102,14 @@ html[data-page="discover"] #root .header .discover-title { margin: 0; font-size:
   text-wrap: balance;
 }
 #root .discover-card p { margin: 0; max-width: 520px; color: #c4c4c8; font-size: 1rem; line-height: 1.5; }
-.discover-card:focus-visible { outline: 2px solid #fff; outline-offset: 5px; }
+.discover-card:focus-visible { outline: 2px solid var(--text); outline-offset: 5px; }
 .discover-card:hover { border-color: #8e8370; }
-.discover-secondary { padding: 26px 4px 0; display: flex; justify-content: space-between; gap: 20px; align-items: start; flex-wrap: wrap; font-size: .85rem; color: #a9a9af; }
-.discover-secondary > a { color: #d6d6da; text-decoration: underline; text-underline-offset: 4px; }
+.discover-secondary { padding: 26px 4px 0; display: flex; justify-content: space-between; gap: 20px; align-items: start; flex-wrap: wrap; font-size: .85rem; color: var(--muted); }
+.discover-secondary > a { color: var(--text); text-decoration: underline; text-underline-offset: 4px; }
 .discover-credits { max-width: 500px; }
 .discover-credits summary { cursor: pointer; }
-.discover-credits p,.discover-credits a { display: block; font-size: .8rem; line-height: 1.6; margin-top: 12px; color: #aaaab0; }
-.discover-empty { padding: 30px 5px; color: #bbb; }
+.discover-credits p,.discover-credits a { display: block; font-size: .8rem; line-height: 1.6; margin-top: 12px; color: var(--muted); }
+.discover-empty { padding: 30px 5px; color: var(--muted); }
 .discover-back { display: inline-block; margin-bottom: 24px; }
 .discover-collection > p > .button { margin-bottom: 24px; }
 .discover-writing-author a { color: var(--gold); }
@@ -149,11 +138,11 @@ html[data-page="discover"] #root .header .discover-title { margin: 0; font-size:
 @media (prefers-reduced-motion: reduce) { .discover-card,.discover-search { transition: none; } }
 
 /* Keep the compact floating navigation shown in the supplied mobile reference. */
-html[data-page="discover"] #root .discover-header-title { margin: 0; color: #fff; font-size: clamp(1.8rem,4vw,2.65rem); line-height: 1.15; font-weight: 700; }
+html[data-page="discover"] #root .discover-header-title { margin: 0; color: var(--text); font-size: clamp(1.8rem,4vw,2.65rem); line-height: 1.15; font-weight: 700; }
 html[data-page="discover"][lang="en"][data-reader-font="speda"] #root :is(.discover-header-title,.discover-card h2) { font-family: Georgia,"Times New Roman",serif !important; }
 html[data-page="discover"] #root .discover-card p { line-height: 1.5; }
 @media(max-width:800px) {
-  html[data-page="discover"] .bottom-navigation { inset-inline: 12px; bottom: calc(10px + env(safe-area-inset-bottom)); border: 1px solid #36363a; border-radius: 28px; padding: 14px 6px; box-shadow: 0 4px 22px #0005; }
+  html[data-page="discover"] .bottom-navigation { inset-inline: 12px; bottom: calc(10px + env(safe-area-inset-bottom)); border: 1px solid var(--line); border-radius: 28px; padding: 14px 6px; box-shadow: 0 4px 22px #0005; }
   html[data-page="discover"] .bottom-navigation a { font-size: .68rem; }
   html[data-page="discover"] .bottom-navigation a.active { font-weight: 700; }
   html[data-page="discover"] .header { justify-content: space-between; }

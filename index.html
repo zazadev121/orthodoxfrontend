@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ckb" dir="rtl" data-reader-font="speda" data-theme="traditional">
+<html lang="ckb" dir="rtl" data-reader-font="speda" data-theme="charcoal">
   <head>
     <meta charset="UTF-8" />
     <script>
@@ -7,7 +7,7 @@
         const saved = localStorage.getItem("theme");
         const themes = ["traditional", "amethyst", "midnight", "slate", "burgundy", "forest", "ocean", "ivory", "charcoal", "coffee"];
         document.documentElement.dataset.theme = themes.includes(saved) ? saved
-          : saved === "light" ? "ivory" : saved === "dark" ? "midnight" : "traditional";
+          : saved === "light" ? "ivory" : saved === "dark" ? "midnight" : "charcoal";
         const fonts = ["naskh", "kufi", "sans", "vazir", "readex", "nrt", "speda", "rudaw", "nastaliq", "rabar", "unikurd", "bukra"];
         const font = localStorage.getItem("readerFont");
         document.documentElement.dataset.readerFont = fonts.includes(font) ? font : "speda";
@@ -17,7 +17,7 @@
     </script>
     <link rel="preload" href="/fonts/speda.woff" as="font" type="font/woff" crossorigin />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#182e40" />
+    <meta name="theme-color" content="#101012" />
     <link rel="icon" type="image/jpeg" href="/kurdistan-cross.jpg" />
     <link rel="apple-touch-icon" href="/kurdistan-cross.jpg" />
     <meta

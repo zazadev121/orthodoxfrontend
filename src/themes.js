@@ -45,7 +45,7 @@ export function initialTheme() {
     if (saved === "light") return "ivory";
     if (saved === "dark") return "midnight";
   } catch {}
-  return "traditional";
+  return "charcoal";
 }
 export function initialReaderSize() {
   try {
