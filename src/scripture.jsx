@@ -65,7 +65,7 @@ function Attribution({ edition, language, compact = false }) {
     </div>
   );
 }
-export function DailyVerse({ t, language }) {
+export function DailyVerse({ t, language, compact = false }) {
   const cms = useEditorial();
   const [date, setDate] = useState(() => new Date());
   const [translation, setTranslation] = useState(
@@ -147,6 +147,13 @@ export function DailyVerse({ t, language }) {
           <ArrowUpRight size={16} />
         </a>
       </div>
+      {compact && <details className="daily-options"><summary>{t.dailyTranslation}</summary><DailyVerseOptions t={t} language={language} translation={translation} setTranslation={setTranslation} available={available} cms={cms} edition={edition} /></details>}
+      {!compact && <DailyVerseOptions t={t} language={language} translation={translation} setTranslation={setTranslation} available={available} cms={cms} edition={edition} />}
+    </section>
+  );
+}
+function DailyVerseOptions({t,language,translation,setTranslation,available,cms,edition}) {
+  return <>
       <div className="daily-meta">
         <select
           aria-label={t.dailyTranslation}
@@ -168,8 +175,7 @@ export function DailyVerse({ t, language }) {
         <span>{t.dailyRefresh}</span>
       </div>
       <Attribution edition={edition} language={language} compact />
-    </section>
-  );
+  </>;
 }
 export function BibleReader({ t, language }) {
   const cms = useEditorial(),

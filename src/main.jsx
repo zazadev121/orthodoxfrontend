@@ -40,6 +40,7 @@ import { Saints, SaintProfile } from "./saints.jsx";
 import "./style.css";
 import "./reader-fonts.css";
 import "./heritage.css";
+import "./home.css";
 import {
   EditorialProvider,
   useEditorial,

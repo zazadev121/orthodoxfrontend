@@ -1,7 +1,7 @@
 import { georgianHeritageWords } from "./georgian-copy.js";
 import React from "react";
 import { useEditorial, useEditorialWords } from "./editorial-context.jsx";
-import { AuthorCard } from "./editorial-public.jsx";
+import { discoverWords } from "./discover.jsx";
 import { authorName, profileHref, textFor } from "./editorial.js";
 import {
   ArrowUpRight,
@@ -252,8 +252,8 @@ export function OrthodoxHome({ t, language }) {
                 <BookOpen size={18} />
                 {w.begin}
               </a>
-              <a className="heritage-quiet-link" href="#saints">
-                {w.discover}
+              <a className="button secondary" href="#discover">
+                {cms.text("discover.title",language,discoverWords(language).title)}
                 <ArrowUpRight size={16} />
               </a>
             </div>
@@ -291,7 +291,7 @@ export function OrthodoxHome({ t, language }) {
           )}
         </section>
       )}
-      {cms.visible("daily") && <DailyVerse t={t} language={language} />}
+      {cms.visible("daily") && <DailyVerse t={t} language={language} compact />}
       {cms.visible("paths") && (
         <section className="heritage-section">
           <SectionHeading
@@ -313,9 +313,8 @@ export function OrthodoxHome({ t, language }) {
                 cms.ready ? ew.doctrineTitle : w.teaching,
                 w.teachingSub,
               ],
-            ].map(([id, Icon, title, body], i) => (
+            ].map(([id, Icon, title, body]) => (
               <a className="heritage-path" href={`#${id}`} key={id}>
-                <span className="path-number">0{i + 1}</span>
                 <Icon size={26} />
                 <h3>{title}</h3>
                 <p className="editorial-verbatim">{body}</p>
@@ -341,12 +340,16 @@ export function OrthodoxHome({ t, language }) {
             action={cms.ready ? ew.exploreAuthors : w.all}
             href="#saints"
           />
-          <div className="saints-grid featured-saints">
+          <div className="home-saints-grid">
             {cms.ready
               ? cms.authors
+                  .filter(a=>a.icon_url)
                   .slice(0, 4)
                   .map((a) => (
-                    <AuthorCard key={a.id} author={a} language={language} />
+                    <a className="home-saint" key={a.id} href={profileHref(a)}>
+                      <div className="home-saint-image">{a.icon_url ? <img src={a.icon_url} alt="" width="320" height="400" loading="lazy" decoding="async" /> : <Church size={32} />}</div>
+                      <div><h3>{authorName(a,language)}</h3><p>{textFor(a,"title",language) || textFor(a,"feast",language)}</p></div>
+                    </a>
                   ))
               : saints
                   .slice(0, 4)
@@ -443,14 +446,11 @@ export function OrthodoxHome({ t, language }) {
       {cms.visible("about") && (
         <section className="heritage-section about-feature">
           <Church size={34} />
-          <div>
-            <SectionHeading title={w.about} />
+          <details className="home-faith-statement">
+            <summary><h2>{w.about}</h2><span>{w.more}</span></summary>
             <p className="editorial-verbatim">{w.aboutText}</p>
-            <a className="text-link" href="#about">
-              {w.more}
-              <ArrowUpRight size={16} />
-            </a>
-          </div>
+            <a className="text-link" href="#about">{w.more}</a>
+          </details>
         </section>
       )}
     </div>
