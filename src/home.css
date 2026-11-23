@@ -154,6 +154,13 @@
 .heritage-home .teaching-preview > a .eyebrow { color: var(--gold); font-size: .9rem; }
 #root .heritage-home .teaching-preview h3 { margin: 14px 0 8px; font-size: 1.23rem; line-height: 1.55; }
 #root .heritage-home .teaching-preview p { margin: 0; color: var(--muted); font-size: .96rem; line-height: 1.8; }
+.heritage-home .teaching-preview h3, .heritage-home .teaching-preview p {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -webkit-line-clamp: 3;
+}
+.heritage-home .teaching-preview p { -webkit-line-clamp: 4; }
 .heritage-home .teaching-preview > a > svg { display: block; margin-top: auto; align-self: flex-end; color: var(--gold); }
 .heritage-home .councils-feature { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 25px; margin-top: 72px; padding: 32px 38px; border: 1px solid var(--line); border-radius: 20px; background: var(--surface); }
 .heritage-home .councils-feature .eyebrow { display: block; color: var(--gold); font-size: .9rem; }

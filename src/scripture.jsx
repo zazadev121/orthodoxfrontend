@@ -107,6 +107,9 @@ export function DailyVerse({ t, language, compact = false }) {
       setTranslation(available[0].id);
   }, [cms.ready, cms.editions, translation]);
   const book = edition.books.find((b) => b.id === verse.book);
+  const soraniDate = language === "ckb"
+    ? `${String(date.getDate()).replace(/\d/g, (digit) => "٠١٢٣٤٥٦٧٨٩"[digit])}ی ${["کانوونی دووەم", "شوبات", "ئازار", "نیسان", "ئایار", "حوزەیران", "تەمووز", "ئاب", "ئەیلوول", "تشرینی یەکەم", "تشرینی دووەم", "کانوونی یەکەم"][date.getMonth()]} ${String(date.getFullYear()).replace(/\d/g, (digit) => "٠١٢٣٤٥٦٧٨٩"[digit])}`
+    : null;
   if (cms.ready && !available.length) return null;
   return (
     <section className="daily-verse" aria-labelledby="daily-title">
@@ -116,7 +119,7 @@ export function DailyVerse({ t, language, compact = false }) {
           {t.dailyVerse}
         </span>
         <time dateTime={localDateKey(date)}>
-          {date.toLocaleDateString(
+          {soraniDate || date.toLocaleDateString(
             language === "ka" ? "ka-GE" : language === "en" ? "en-GB" : language === "ckb" ? "ckb" : "ku",
             { day: "numeric", month: "long", year: "numeric" },
           )}

@@ -864,6 +864,12 @@ function Chat({ t, language }) {
                   </div>
                   <div className="answer-message">
                     <strong>{t.answer}</strong>
+                    {m.mode === "ai-explanation" && <p className="ai-answer-label" role="note">{{
+                      en: "AI explanation · No verified source was found for this answer.",
+                      ka: "AI განმარტება · ამ პასუხისთვის გადამოწმებული წყარო ვერ მოიძებნა.",
+                      ckb: "ڕوونکردنەوەی AI · بۆ ئەم وەڵامە سەرچاوەیەکی پشتڕاستکراوە نەدۆزرایەوە.",
+                      kmr: "Şîroveya AI · Ji bo vê bersivê çavkaniyeke piştrastkirî nehat dîtin.",
+                    }[language]}</p>}
                     <p>{m.answer}</p>
                     {m.citations.length > 0 && (
                       <div className="citations">
