@@ -37,7 +37,7 @@ export function VerseExplanations({
     try {
       setAi(await api("/bible/explain", {
         method: "POST",
-        body: JSON.stringify({ book, chapter, verse, edition, language, verseText }),
+        body: JSON.stringify({ book, chapter, verse, edition, verseText }),
       }));
     } catch {
       setAiError(true);
@@ -49,7 +49,6 @@ export function VerseExplanations({
     en: ["AI explanation from an Orthodox perspective", "Explain with AI", "AI explanation is temporarily unavailable. Try again.", "Based on the linked Orthodox source; this is an AI summary, not a quotation from a saint."],
     ka: ["AI განმარტება მართლმადიდებლური ხედვით", "AI-ით განმარტება", "AI განმარტება დროებით მიუწვდომელია. სცადეთ ხელახლა.", "დაფუძნებულია მითითებულ მართლმადიდებლურ წყაროზე; ეს არის AI-ის შეჯამება და არა წმინდანის ციტატა."],
     ckb: ["ڕوونکردنەوەی AI لە ڕوانگەی ئۆرتۆدۆکسەوە", "بە AI ڕوونی بکەرەوە", "ڕوونکردنەوەی AI ئێستا بەردەست نییە. دووبارە هەوڵ بدەرەوە.", "پشت بە سەرچاوە ئۆرتۆدۆکسە بەستراوە؛ ئەمە پوختەی AI ـە، نەک وتەی ڕاستەوخۆی پیرۆزێک."],
-    kmr: ["Şîroveya AI ji nêrîna Ortodoks", "Bi AI rave bike", "Şîroveya AI niha ne amade ye. Dîsa biceribîne.", "Li ser çavkaniya Ortodoks a girêdayî ye; ev kurteya AI ye, ne gotina rasterast a pîrozekî."],
   }[language] || [];
   return (
     <div
@@ -120,7 +119,7 @@ export function VerseExplanations({
             ))}
             {!ai && <button className="button secondary verse-ai-button" type="button" disabled={aiLoading} onClick={explainWithAi}>{aiLoading ? w.loading : words[1]}</button>}
             {aiError && <p role="alert">{words[2]} <button className="text-link" type="button" onClick={explainWithAi}>{w.retry}</button></p>}
-            {ai && <div className="verse-ai-result"><h4>{words[0]}</h4><p>{ai.explanation}</p><p className="verse-ai-disclaimer">{ai.grounded_in_commentary ? words[3] : ({en:"AI interpretation using general Orthodox guidance; no verse-specific Father commentary is cited.",ka:"AI-ის განმარტება ზოგადი მართლმადიდებლური მიდგომით; ამ მუხლის შესახებ მამათა კონკრეტული კომენტარი მითითებული არ არის.",ckb:"لێکدانەوەی AI بەپێی ڕێنمایی گشتیی ئۆرتۆدۆکس؛ لێدوانی تایبەتیی باوکانی کڵێسا بۆ ئەم ئایەتە نەهاتووە.",kmr:"Şîroveya AI li gorî rêberiya giştî ya Ortodoks; şîroveya taybet a Bavên Dêrê ji bo vê ayetê nehatiye nîşandan."})[language]}</p><a href={ai.source_url} target="_blank" rel="noreferrer">{ai.source_title}</a></div>}
+            {ai && <div className="verse-ai-result"><h4>{words[0]}</h4><p lang={ai.language} dir={ai.language === "ckb" ? "rtl" : "ltr"}>{ai.explanation}</p><p className="verse-ai-disclaimer">{ai.grounded_in_commentary ? words[3] : ({en:"AI interpretation of this verse; no verse-specific Church Father commentary was found.",ka:"ამ მუხლის AI განმარტება; ეკლესიის მამათა კონკრეტული კომენტარი ვერ მოიძებნა.",ckb:"لێکدانەوەی AI بۆ ئەم ئایەتە؛ لێدوانی تایبەتیی باوکانی کڵێسا نەدۆزرایەوە."})[language]}</p>{ai.source_url && <a href={ai.source_url} target="_blank" rel="noreferrer">{ai.source_title}</a>}</div>}
             </>
           )}
         </div>
