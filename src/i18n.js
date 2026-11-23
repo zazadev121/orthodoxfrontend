@@ -90,7 +90,7 @@ export const copy = {
     fathersDesc:
       "Church Fathers’ quotations with authors, references and source links.",
     aiDesc:
-      "Ask about the faith and read answers selected from approved Eastern Orthodox sources.",
+      "Ask a question. Read sourced answers when available or a clearly marked AI explanation.",
     explore: "Explore",
     principle: "Read. Understand. Live.",
     principleBody:
@@ -99,7 +99,7 @@ export const copy = {
       "A place to learn about the Eastern Orthodox faith in the Kurdish language.",
     sources: "Sources",
     sourcePolicy:
-      "Only approved Eastern Orthodox source passages are used for answers. When the available evidence is insufficient, the assistant declines to answer.",
+      "Answers use approved Orthodox passages when available. Otherwise, AI explains in its own words and clearly marks that no source was verified.",
     bibleTitle: "The Bible",
     bibleIntro: "Choose a translation to read on its provider’s website.",
     soraniBible: "The Bible in Sorani",
@@ -121,7 +121,7 @@ export const copy = {
     reference: "Source reference",
     aiTitle: "Ask. Grow in understanding.",
     aiIntro:
-      "Answers are selected from approved Eastern Orthodox source summaries in your chosen language.",
+      "Read approved Orthodox source passages when available, or a clearly labeled AI explanation in your chosen language.",
     prompt: "Write your question…",
     send: "Send question",
     thinking: "Finding a source passage…",
@@ -262,7 +262,7 @@ export const copy = {
       "کتێبی پیرۆز بخوێنەوە، لە باوکانی کڵێسا فێر ببە و پرسیارەکانت لە ڕووناکیی نەریتی ئۆرتۆدۆکسی ڕۆژهەڵاتدا بپرسە.",
     fathersDesc: "وتەکانی باوکانی کڵێسا، لەگەڵ ناوی نووسەر و سەرچاوە.",
     aiDesc:
-      "پرسیارەکانت بپرسە؛ وەڵامەکان لەسەر بنەمای سەرچاوە پەسەندکراوەکانن.",
+      "پرسیارەکانت بپرسە؛ ئەگەر سەرچاوە هەبێت دەردەکەوێت، ئەگەر نەبێت وەڵامی AI دیاری دەکرێت.",
     explore: "بیکەرەوە",
     principle: "خوێندنەوە، تێگەیشتن، ژیان.",
     principleBody:
@@ -270,7 +270,7 @@ export const copy = {
     footer: "شوێنێک بۆ فێربوون و ناسینی باوەڕی ئۆرتۆدۆکسی ڕۆژهەڵات بە زمانی کوردی.",
     sources: "سەرچاوەکان",
     sourcePolicy:
-      "تەنها سەرچاوە پەسەندکراوە ئۆرتۆدۆکسەکانی ڕۆژهەڵات بۆ وەڵامەکان بەکاردێن. ئەگەر بەڵگەی پێویست نەبێت، وەڵام نادرێتەوە.",
+      "ئەگەر سەرچاوەیەکی ئۆرتۆدۆکسی پەسەندکراو هەبێت، وەڵام لەسەر بنەمای ئەوە دەبێت. ئەگەر نەبێت، AI بە وشەی خۆی ڕوونی دەکاتەوە و دیاری دەکات سەرچاوەیەکی پشتڕاستکراوەی نییە.",
     bibleTitle: "وشەی خودا، بە زمانی تۆ.",
     bibleIntro: "وەرگێڕانێک هەڵبژێرە و لە ماڵپەڕی بڵاوکەرەوە بیخوێنەوە.",
     soraniBible: "کتێبی پیرۆز بە سۆرانی",
@@ -291,7 +291,7 @@ export const copy = {
     reference: "سەرچاوەی وتە",
     aiTitle: "بپرسە. بە تێگەیشتن نزیک ببەوە.",
     aiIntro:
-      "پرسیارەکانت بپرسە؛ وەڵامەکان لە پوختە پەسەندکراوە کوردییەکانی سەرچاوە ئۆرتۆدۆکسەکانی ڕۆژهەڵات هەڵدەبژێردرێن.",
+      "پرسیارەکانت بپرسە؛ ئەگەر سەرچاوەی پشتڕاستکراوە هەبێت پیشان دەدرێت، ئەگەر نەبێت وەڵامی AI بە ڕوونی جیا دەکرێتەوە.",
     prompt: "پرسیارەکەت بنووسە…",
     send: "ناردنی پرسیار",
     thinking: "لە ئامادەکردنی وەڵامدایە…",
@@ -427,7 +427,7 @@ export const copy = {
     journeyBody:
       "Pirtûka Pîroz bixwîne, ji Bavên Dêrê hîn bibe û pirsên xwe di ronahiya kevneşopiya Ortodoksa Rojhilatê de bipirse.",
     fathersDesc: "Gotinên Bavên Dêrê, bi navê nivîskar û çavkaniyê.",
-    aiDesc: "Pirsên xwe bipirse; bersiv li ser çavkaniyên pejirandî ava dibin.",
+    aiDesc: "Pirsên xwe bipirse; dema çavkanî tune be şîroveya AI bi awayekî eşkere tê nîşankirin.",
     explore: "Veke",
     principle: "Bixwîne, fêm bike, bijî.",
     principleBody:
@@ -435,7 +435,7 @@ export const copy = {
     footer: "Cihek ji bo hînbûn û naskirina baweriya Ortodoksa Rojhilatê bi zimanê Kurdî.",
     sources: "Çavkanî",
     sourcePolicy:
-      "Tenê çavkaniyên Ortodoksa Rojhilatê ên pejirandî ji bo bersivan tên bikaranîn. Dema delîl têr nebin, bersiv nayê dayîn.",
+      "Gava çavkaniyên Ortodoks ên pejirandî hebin, bersiv li wan ava dibe. Heke tune bin, AI bi gotinên xwe rave dike û diyar dike ku çavkaniyek nehat piştrastkirin.",
     bibleTitle: "Peyva Xwedê, bi zimanê te.",
     bibleIntro: "Wergerekê hilbijêre û li malpera weşanger bixwîne.",
     soraniBible: "Pirtûka Pîroz bi Soranî",
@@ -456,7 +456,7 @@ export const copy = {
     reference: "Çavkaniya gotinê",
     aiTitle: "Bipirse. Bi fêmkirinê nêzîktir bibe.",
     aiIntro:
-      "Pirsên xwe bipirse; bersiv ji kurteyên Kurdî yên pejirandî yên çavkaniyên Ortodoksa Rojhilatê tên hilbijartin.",
+      "Pirsên xwe bipirse; çavkaniyên pejirandî gava hebin tên nîşandan, wekî din şîroveya AI bi awayekî eşkere tê nîşankirin.",
     prompt: "Pirsa xwe binivîse…",
     send: "Pirsê bişîne",
     thinking: "Bersiv tê amadekirin…",

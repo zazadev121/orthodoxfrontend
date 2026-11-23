@@ -210,6 +210,12 @@ export function OrthodoxHome({ t, language }) {
   const cms = useEditorial(),
     ew = useEditorialWords(language);
   const w = cms.words(heritageWords(language), "home", language);
+  const labels = {
+    en: { scripture: "SCRIPTURE & TRADITION", saints: "THE COMMUNION OF SAINTS", prayer: "A MOMENT OF STILLNESS", teaching: "THE FAITH OF THE CHURCH" },
+    ckb: { scripture: "کتێبی پیرۆز و نەریتی کڵێسا", saints: "کۆمەڵی پایەپیرۆزان", prayer: "کاتێک بۆ نوێژ", teaching: "باوەڕی کڵێسا" },
+    kmr: { scripture: "PIRTÛKA PÎROZ Û KEVNEŞOPÎ", saints: "CIVATA PÎROZAN", prayer: "DEMEK JI BO DUA", teaching: "BAWERIYA DÊRÊ" },
+    ka: { scripture: "წმინდა წერილი და გადმოცემა", saints: "წმინდანთა დასი", prayer: "ლოცვის დრო", teaching: "ეკლესიის სარწმუნოება" },
+  }[language] || {};
   const featured =
     cms.authors.find(
       (a) =>
@@ -279,7 +285,7 @@ export function OrthodoxHome({ t, language }) {
             label={cms.text(
               "general.scriptureLabel",
               language,
-              "SCRIPTURE & TRADITION",
+              labels.scripture,
             )}
             title={w.journey}
             description={w.sub}
@@ -311,7 +317,7 @@ export function OrthodoxHome({ t, language }) {
             label={cms.text(
               "general.saintsLabel",
               language,
-              "THE COMMUNION OF SAINTS",
+              labels.saints,
             )}
             title={w.saints}
             description={w.saintSub}
@@ -348,7 +354,7 @@ export function OrthodoxHome({ t, language }) {
               {cms.text(
                 "general.prayerLabel",
                 language,
-                "A MOMENT OF STILLNESS",
+                labels.prayer,
               )}
             </span>
             <h2>{w.prayerTitle}</h2>
@@ -366,7 +372,7 @@ export function OrthodoxHome({ t, language }) {
             label={cms.text(
               "general.teachingLabel",
               language,
-              "THE FAITH OF THE CHURCH",
+              labels.teaching,
             )}
             title={cms.ready ? ew.doctrineTitle : w.teaching}
             description={w.teachingSub}
