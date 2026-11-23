@@ -1,7 +1,6 @@
 import { georgianHeritageWords } from "./georgian-copy.js";
 import React from "react";
 import { useEditorial, useEditorialWords } from "./editorial-context.jsx";
-import { discoverWords } from "./discover.jsx";
 import { authorName, profileHref, textFor } from "./editorial.js";
 import {
   ArrowUpRight,
@@ -10,10 +9,8 @@ import {
   Heart,
   Library,
   ScrollText,
-  ShieldCheck,
 } from "lucide-react";
 import { DailyVerse } from "./scripture.jsx";
-import { SaintCard, saintWords } from "./saints.jsx";
 import { saints, localized } from "./saints-data.js";
 export const councilSource =
   "https://www.oca.org/orthodoxy/the-orthodox-faith/doctrine-scripture/sources-of-christian-doctrine/the-councils";
@@ -244,7 +241,7 @@ export function OrthodoxHome({ t, language }) {
       {cms.visible("hero") && (
         <section className="heritage-hero">
           <div className="heritage-hero-copy">
-            <div className="home-chapter-label"><span>✣</span><span>{language === "ka" ? "წმინდა წერილი · წმინდა გადმოცემა" : language === "ckb" ? "کتێبی پیرۆز · نەریتی پیرۆز" : language === "kmr" ? "Pirtûka Pîroz · Kevneşopiya Pîroz" : "SCRIPTURE · TRADITION · PRAYER"}</span></div>
+            <div className="home-chapter-label"><span aria-hidden="true">✣</span><span>{language === "ka" ? "წმინდა წერილი · წმინდა გადმოცემა" : language === "ckb" ? "کتێبی پیرۆز · نەریتی پیرۆز" : language === "kmr" ? "Pirtûka Pîroz · Kevneşopiya Pîroz" : "SCRIPTURE · TRADITION · PRAYER"}</span></div>
             <span className="eyebrow">{w.welcome}</span>
             <h1>{w.title}</h1>
             <p className="editorial-verbatim">{w.intro}</p>
@@ -253,53 +250,31 @@ export function OrthodoxHome({ t, language }) {
                 <BookOpen size={18} />
                 {w.begin}
               </a>
-              <a className="button secondary" href="#discover">
-                {cms.text("discover.title",language,discoverWords(language).title)}
-                <ArrowUpRight size={16} />
+              <a className="button secondary" href="#saints">
+                {w.discover}
               </a>
             </div>
-            <nav className="home-hero-links" aria-label={language === "ka" ? "გამოიკვლიეთ" : language === "ckb" ? "بگەڕێ" : "Explore"}>
-              <a href="#bible"><BookOpen size={18}/>{t.bible}</a>
-              <a href="#saints"><Church size={18}/>{w.saints}</a>
-              <a href="#prayers"><Heart size={18}/>{w.prayerTitle}</a>
-            </nav>
-            <span className="heritage-seal">
-              <ShieldCheck size={15} />
-              {cms.text(
-                "general.heroSeal",
-                language,
-                language === "ckb"
-                  ? "کتێبی پیرۆز · نەریتی پیرۆز · ژیانی کڵێسا"
-                  : "HOLY SCRIPTURE · HOLY TRADITION · LIFE IN CHRIST",
-              )}
-            </span>
+            <div className="home-hero-rail"><span>{t.bible}</span><span>{w.saints}</span><span>{w.prayerTitle}</span></div>
           </div>
           {cms.visible("heroArt") && heroIcon && (
             <div className="heritage-hero-art">
-              <img
-                src={heroIcon}
-                width="300"
-                height="450"
-                fetchPriority="high"
-                alt={heroName}
-              />
-              <span>{heroName}</span>
-              <a
+              <a className="home-icon-link"
                 href={
                   cms.ready && featured
                     ? profileHref(featured)
                     : "#saint?id=gregory-theologian"
                 }
+                aria-label={`${heroName} · ${w.more}`}
               >
-                {w.more} ↗
+                <img src={heroIcon} width="300" height="450" fetchPriority="high" alt="" />
+                <span className="home-icon-caption">{heroName}<span>{w.more} <ArrowUpRight size={16} /></span></span>
               </a>
             </div>
           )}
         </section>
       )}
-      {cms.visible("daily") && <DailyVerse t={t} language={language} compact />}
       {cms.visible("paths") && (
-        <section className="heritage-section">
+        <section className="heritage-section home-path-section">
           <SectionHeading
             label={cms.text(
               "general.scriptureLabel",
@@ -319,20 +294,17 @@ export function OrthodoxHome({ t, language }) {
                 cms.ready ? ew.doctrineTitle : w.teaching,
                 w.teachingSub,
               ],
-            ].map(([id, Icon, title, body]) => (
-              <a className="heritage-path" href={`#${id}`} key={id}>
-                <Icon size={26} />
-                <h3>{title}</h3>
-                <p className="editorial-verbatim">{body}</p>
-                <span className="text-link">
-                  {w.more}
-                  <ArrowUpRight size={16} />
-                </span>
+            ].map(([id, Icon, title, body], index) => (
+              <a className={`heritage-path${index === 0 ? " heritage-path-primary" : ""}`} href={`#${id}`} key={id}>
+                <span className="home-path-icon"><Icon size={index === 0 ? 32 : 26} /></span>
+                <span className="home-path-copy"><h3>{title}</h3><p className="editorial-verbatim">{body}</p></span>
+                <span className="home-path-action" aria-hidden="true"><ArrowUpRight size={20} /></span>
               </a>
             ))}
           </div>
         </section>
       )}
+      {cms.visible("daily") && <DailyVerse t={t} language={language} compact />}
       {cms.visible("saints") && (
         <section className="heritage-section">
           <SectionHeading
@@ -351,20 +323,19 @@ export function OrthodoxHome({ t, language }) {
               ? cms.authors
                   .filter(a=>a.icon_url)
                   .slice(0, 4)
-                  .map((a) => (
-                    <a className="home-saint" key={a.id} href={profileHref(a)}>
+                  .map((a, index) => (
+                    <a className={`home-saint${index === 0 ? " home-saint-featured" : ""}`} key={a.id} href={profileHref(a)}>
                       <div className="home-saint-image">{a.icon_url ? <img src={a.icon_url} alt="" width="320" height="400" loading="lazy" decoding="async" /> : <Church size={32} />}</div>
-                      <div><h3>{authorName(a,language)}</h3><p>{textFor(a,"title",language) || textFor(a,"feast",language)}</p></div>
+                      <div className="home-saint-copy"><h3>{authorName(a,language)}</h3><p>{textFor(a,"title",language) || textFor(a,"feast",language)}</p><span aria-hidden="true"><ArrowUpRight size={18} /></span></div>
                     </a>
                   ))
               : saints
                   .slice(0, 4)
-                  .map((saint) => (
-                    <SaintCard
-                      key={saint.id}
-                      saint={saint}
-                      language={language}
-                    />
+                  .map((saint, index) => (
+                    <a className={`home-saint${index === 0 ? " home-saint-featured" : ""}`} key={saint.id} href={`#saint?id=${saint.id}`}>
+                      <div className="home-saint-image"><img src={`/icons/${saint.id}.webp`} alt="" width="320" height="400" loading="lazy" decoding="async" /></div>
+                      <div className="home-saint-copy"><h3>{language === "ckb" ? saint.ckb : saint.en}</h3><p>{language === "ckb" ? saint.feast?.[1] : saint.feast?.[0]}</p><span aria-hidden="true"><ArrowUpRight size={18} /></span></div>
+                    </a>
                   ))}
           </div>
         </section>
