@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { api } from "./api.js";
 import { useEditorialWords } from "./editorial-context.jsx";
 import { authorName, textFor, profileHref, metadataFor } from "./editorial.js";
@@ -9,9 +10,9 @@ export function VerseExplanations({
   error,
   retry,
   language,
-  onOpen,
   passageKey,
   book,
+  bookName,
   chapter,
   edition,
   verseText,
@@ -21,16 +22,30 @@ export function VerseExplanations({
   const w = useEditorialWords(language),
     [ai, setAi] = useState(null),
     [aiLoading, setAiLoading] = useState(false),
-    [aiError, setAiError] = useState(false);
+    [aiError, setAiError] = useState(false),
+    [expanded, setExpanded] = useState({});
+  const closeRef = useRef(null);
   const rows = explanations.filter(
     (item) => item.verse_start <= verse && item.verse_end >= verse,
   );
   const id = `explanation-${passageKey}-${verse}`;
-  const hasLocalized = rows.some((item) => textFor(item, "body", language)?.trim());
   useEffect(() => {
     setAi(null);
     setAiError(false);
+    setExpanded({});
   }, [book, chapter, verse, edition, language]);
+  useEffect(() => {
+    if (!open) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeRef.current?.focus();
+    const onKeyDown = (event) => { if (event.key === "Escape") onToggle(); };
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open, onToggle]);
   async function explainWithAi() {
     setAiLoading(true);
     setAiError(false);
@@ -50,27 +65,25 @@ export function VerseExplanations({
     ka: ["AI განმარტება მართლმადიდებლური ხედვით", "AI-ით განმარტება", "AI განმარტება დროებით მიუწვდომელია. სცადეთ ხელახლა.", "დაფუძნებულია მითითებულ მართლმადიდებლურ წყაროზე; ეს არის AI-ის შეჯამება და არა წმინდანის ციტატა."],
     ckb: ["ڕوونکردنەوەی AI لە ڕوانگەی ئۆرتۆدۆکسەوە", "بە AI ڕوونی بکەرەوە", "ڕوونکردنەوەی AI ئێستا بەردەست نییە. دووبارە هەوڵ بدەرەوە.", "پشت بە سەرچاوە ئۆرتۆدۆکسە بەستراوە؛ ئەمە پوختەی AI ـە، نەک وتەی ڕاستەوخۆی پیرۆزێک."],
   }[language] || [];
-  return (
-    <div
-      className="verse-explanations"
-      dir={language === "ckb" ? "rtl" : "ltr"}
-      lang={language}
-    >
-      <button
-        className="verse-explanation-toggle"
-        type="button"
-        aria-expanded={open}
-        aria-controls={id}
-        onClick={() => {
-          onToggle();
-          if (!open) onOpen?.(verse);
-        }}
-      >
-        {w.explain}
-        {rows.length > 0 && ` (${rows.length})`}
-      </button>
-      {open && (
-        <div className="verse-explanation-panel" id={id}>
+  const ui = {
+    en: { label: "Patristic commentary", close: "Close explanation", more: "Continue reading", less: "Show less", ai: "AI explanation" },
+    ka: { label: "ეკლესიის მამათა განმარტება", close: "განმარტების დახურვა", more: "კითხვის გაგრძელება", less: "ნაკლების ჩვენება", ai: "AI განმარტება" },
+    ckb: { label: "ڕوونکردنەوەی باوکانی کڵێسا", close: "داخستنی ڕوونکردنەوە", more: "درێژەی خوێندنەوە", less: "کەمتر پیشان بدە", ai: "ڕوونکردنەوەی AI" },
+  }[language] || {};
+  useEffect(() => {
+    if (open && !loading && !error && !rows.length && !ai && !aiLoading && !aiError) explainWithAi();
+  }, [open, loading, error, rows.length, book, chapter, verse, edition]);
+  if (!open) return null;
+  return createPortal(
+    <div className="verse-sheet-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onToggle(); }}>
+      <section className="verse-sheet" id={id} role="dialog" aria-modal="true" aria-labelledby={`${id}-title`} dir={language === "ckb" ? "rtl" : "ltr"} lang={language}>
+        <div className="verse-sheet-handle" aria-hidden="true" />
+        <header className="verse-sheet-header">
+          <div><span className="verse-sheet-kicker">{ui.label}</span><h2 id={`${id}-title`}>{bookName || book} <bdi>{chapter}:{verse}</bdi></h2></div>
+          <button ref={closeRef} className="verse-sheet-close" type="button" onClick={onToggle} aria-label={ui.close}>×</button>
+        </header>
+        <div className="verse-sheet-scroll">
+          <blockquote className="verse-sheet-verse" lang={{eng_webu:"en",ckb_bib:"ckb",ka_ogb:"ka"}[edition]} dir={edition === "ckb_bib" ? "rtl" : "ltr"}>{verseText}</blockquote>
           {loading ? (
             <p role="status">{w.loading}</p>
           ) : error ? (
@@ -82,20 +95,18 @@ export function VerseExplanations({
             </div>
           ) : (
             <>
-            {!rows.length && <p>{w.noExplanation}</p>}
+            {!rows.length && <p className="verse-sheet-empty">{w.noExplanation}</p>}
             {rows.map((item) => (
-              <article key={item.id}>
-                <h4>
-                  <a href={profileHref(item.author)}>
-                    {authorName(item.author, language)}
-                  </a>
-                </h4>
-                {textFor(item, "title", language) && (
-                  <h5>{textFor(item, "title", language)}</h5>
-                )}
-                <p className="editorial-verbatim">
-                  {textFor(item, "body", language) || w.missingTranslation}
-                </p>
+              <article className="verse-father-card" key={item.id}>
+                <div className="verse-father-byline">
+                  {item.author?.icon_url ? <img src={item.author.icon_url} alt="" /> : <span className="verse-father-monogram" aria-hidden="true">✣</span>}
+                  <div><h3><a href={profileHref(item.author)}>{authorName(item.author, language)}</a></h3><p>{metadataFor(item, "reference", language)}</p></div>
+                </div>
+                <div className={`verse-father-reading${expanded[item.id] ? " expanded" : ""}`}>
+                  {textFor(item, "title", language) && <h4>{textFor(item, "title", language)}</h4>}
+                  <p className="editorial-verbatim">{textFor(item, "body", language) || w.missingTranslation}</p>
+                </div>
+                {((textFor(item, "body", language) || "").length > 220) && <button className="verse-read-more" type="button" aria-expanded={!!expanded[item.id]} onClick={() => setExpanded((current) => ({ ...current, [item.id]: !current[item.id] }))}>{expanded[item.id] ? ui.less : ui.more} <span aria-hidden="true">⌄</span></button>}
                 {language === "ka" && item.review_note_ka && <p className="editorial-review-note" role="note">{item.review_note_ka}</p>}
                 <span className="passage-range" dir="ltr">
                   {item.book} {item.chapter}:{item.verse_start}
@@ -117,15 +128,15 @@ export function VerseExplanations({
                 )}
               </article>
             ))}
-            {!ai && <button className="button secondary verse-ai-button" type="button" disabled={aiLoading} onClick={explainWithAi}>{aiLoading ? w.loading : words[1]}</button>}
+            {!ai && (aiLoading ? <p role="status" className="verse-sheet-loading">{w.loading}</p> : rows.length > 0 && <button className="button secondary verse-ai-button" type="button" onClick={explainWithAi}>{words[1]}</button>)}
             {aiError && <p role="alert">{words[2]} <button className="text-link" type="button" onClick={explainWithAi}>{w.retry}</button></p>}
-            {ai && <div className="verse-ai-result"><h4>{words[0]}</h4><p lang={ai.language} dir={ai.language === "ckb" ? "rtl" : "ltr"}>{ai.explanation}</p><p className="verse-ai-disclaimer">{ai.grounded_in_commentary ? words[3] : ({en:"AI interpretation of this verse; no verse-specific Church Father commentary was found.",ka:"ამ მუხლის AI განმარტება; ეკლესიის მამათა კონკრეტული კომენტარი ვერ მოიძებნა.",ckb:"لێکدانەوەی AI بۆ ئەم ئایەتە؛ لێدوانی تایبەتیی باوکانی کڵێسا نەدۆزرایەوە."})[language]}</p>{ai.source_url && <a href={ai.source_url} target="_blank" rel="noreferrer">{ai.source_title}</a>}</div>}
+            {ai && <div className="verse-ai-result"><span className="verse-ai-badge">{ui.ai}</span><h3>{words[0]}</h3><p lang={ai.language} dir={ai.language === "ckb" ? "rtl" : "ltr"}>{ai.explanation}</p><p className="verse-ai-disclaimer">{ai.grounded_in_commentary ? words[3] : ({en:"AI interpretation of this verse; no verse-specific Church Father commentary was found.",ka:"ამ მუხლის AI განმარტება; ეკლესიის მამათა კონკრეტული კომენტარი ვერ მოიძებნა.",ckb:"لێکدانەوەی AI بۆ ئەم ئایەتە؛ لێدوانی تایبەتیی باوکانی کڵێسا نەدۆزرایەوە."})[language]}</p>{ai.source_url && <a href={ai.source_url} target="_blank" rel="noreferrer">{ai.source_title}</a>}</div>}
             </>
           )}
         </div>
-      )}
+      </section>
     </div>
-  );
+    , document.body);
 }
 export function BibleRevision({ override, original, language }) {
   const w = useEditorialWords(language);
