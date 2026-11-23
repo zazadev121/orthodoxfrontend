@@ -185,6 +185,7 @@ export function BibleReader({ t, language }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [attempt, setAttempt] = useState(0);
+  const [openVerse, setOpenVerse] = useState(null);
   const edition = editionFor(reading.translation);
   const book = edition.books.find((b) => b.id === reading.book);
   const bookName = cms.text(
@@ -270,6 +271,7 @@ export function BibleReader({ t, language }) {
   function navigate(next) {
     const safe = normalizeReading(next, language);
     setReading(safe);
+    setOpenVerse(null);
     // Shareable passages, including links from the daily verse, stay on this site.
     history.replaceState(null, "", readingHref(safe));
   }
@@ -451,13 +453,15 @@ export function BibleReader({ t, language }) {
                   <React.Fragment
                     key={`${reading.book}-${reading.chapter}-${row.number}`}
                   >
-                    <p
+                    <div
                       id={`scripture-verse-${row.number}`}
                       className={`scripture-verse${reading.verse === row.number ? " highlighted" : ""}`}
                     >
-                      <sup>{row.number}</sup>
-                      <span>{override ? override.text : row.text || (edition.language === "ka" ? t.sourceVerseMissing : "")}</span>
-                    </p>
+                      <button className="scripture-verse-trigger" type="button" aria-expanded={openVerse === row.number} aria-controls={`explanation-${reading.book}-${reading.chapter}-${row.number}`} onClick={() => { setOpenVerse(openVerse === row.number ? null : row.number); rememberVerse(row.number); }}>
+                        <sup>{row.number}</sup>
+                        <span>{override ? override.text : row.text || (edition.language === "ka" ? t.sourceVerseMissing : "")}</span>
+                      </button>
+                    </div>
                     {override && (
                       <BibleRevision
                         override={override}
@@ -475,6 +479,12 @@ export function BibleReader({ t, language }) {
                         language={language}
                         onOpen={rememberVerse}
                         passageKey={`${reading.book}-${reading.chapter}`}
+                        book={reading.book}
+                        chapter={reading.chapter}
+                        edition={reading.translation}
+                        verseText={override ? override.text : row.text}
+                        open={openVerse === row.number}
+                        onToggle={() => setOpenVerse(openVerse === row.number ? null : row.number)}
                       />
                     )}
                     {!!row.footnotes?.length && (

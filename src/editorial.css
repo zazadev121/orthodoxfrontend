@@ -349,8 +349,16 @@
 .verse-explanations {
   margin: 0 44px 12px;
 }
+.scripture-verse-trigger { display:flex; align-items:baseline; gap:12px; width:100%; padding:0; text-align:start; border:0; background:transparent; color:inherit; font:inherit; line-height:inherit; cursor:pointer; }
+.scripture-verse-trigger > span { white-space:pre-wrap; }
+.scripture-verse-trigger:hover { color:var(--gold); }
+.scripture-verse-trigger:focus-visible { outline:2px solid var(--gold); outline-offset:3px; border-radius:5px; }
+.verse-ai-button { margin-top:16px; }
+.verse-ai-result { margin-top:18px; padding-top:16px; border-top:1px solid var(--line); }
+.verse-ai-result .verse-ai-disclaimer { color:var(--muted); font-size:.83rem !important; }
+.verse-ai-result a { color:var(--gold); overflow-wrap:anywhere; }
 #root .verse-explanation-toggle {
-  font-size: 0.76rem;
+  font-size: 0.9rem;
   padding: 5px 0;
   min-height: 32px;
   background: transparent;

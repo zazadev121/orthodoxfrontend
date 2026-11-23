@@ -244,6 +244,7 @@ export function OrthodoxHome({ t, language }) {
       {cms.visible("hero") && (
         <section className="heritage-hero">
           <div className="heritage-hero-copy">
+            <div className="home-chapter-label"><span>✣</span><span>{language === "ka" ? "წმინდა წერილი · წმინდა გადმოცემა" : language === "ckb" ? "کتێبی پیرۆز · نەریتی پیرۆز" : language === "kmr" ? "Pirtûka Pîroz · Kevneşopiya Pîroz" : "SCRIPTURE · TRADITION · PRAYER"}</span></div>
             <span className="eyebrow">{w.welcome}</span>
             <h1>{w.title}</h1>
             <p className="editorial-verbatim">{w.intro}</p>
@@ -257,6 +258,11 @@ export function OrthodoxHome({ t, language }) {
                 <ArrowUpRight size={16} />
               </a>
             </div>
+            <nav className="home-hero-links" aria-label={language === "ka" ? "გამოიკვლიეთ" : language === "ckb" ? "بگەڕێ" : "Explore"}>
+              <a href="#bible"><BookOpen size={18}/>{t.bible}</a>
+              <a href="#saints"><Church size={18}/>{w.saints}</a>
+              <a href="#prayers"><Heart size={18}/>{w.prayerTitle}</a>
+            </nav>
             <span className="heritage-seal">
               <ShieldCheck size={15} />
               {cms.text(
