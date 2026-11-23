@@ -24,46 +24,73 @@ export function VerseExplanations({
     [aiLoading, setAiLoading] = useState(false),
     [aiError, setAiError] = useState(false),
     [expanded, setExpanded] = useState({});
-  const closeRef = useRef(null);
+  const closeRef = useRef(null), sheetRef = useRef(null),
+    toggleRef = useRef(onToggle), requestRef = useRef(null);
+  toggleRef.current = onToggle;
   const rows = explanations.filter(
     (item) => item.verse_start <= verse && item.verse_end >= verse,
   );
   const id = `explanation-${passageKey}-${verse}`;
   useEffect(() => {
+    requestRef.current?.abort();
     setAi(null);
+    setAiLoading(false);
     setAiError(false);
     setExpanded({});
+    return () => requestRef.current?.abort();
   }, [book, chapter, verse, edition, language]);
   useEffect(() => {
     if (!open) return;
+    const previousFocus = document.activeElement;
     const previousOverflow = document.body.style.overflow;
+    const root = document.getElementById("root");
+    const previousInert = root?.inert;
     document.body.style.overflow = "hidden";
-    closeRef.current?.focus();
-    const onKeyDown = (event) => { if (event.key === "Escape") onToggle(); };
+    if (root) root.inert = true;
+    closeRef.current?.focus({ preventScroll: true });
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") { event.preventDefault(); toggleRef.current(); }
+      if (event.key !== "Tab") return;
+      const focusable = [...sheetRef.current.querySelectorAll('a[href], button:not(:disabled), [tabindex="0"]')]
+        .filter((element) => element.getClientRects().length);
+      const first = focusable[0], last = focusable.at(-1);
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault(); last?.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault(); first?.focus();
+      }
+    };
     window.addEventListener("keydown", onKeyDown);
     return () => {
       document.body.style.overflow = previousOverflow;
+      if (root) root.inert = previousInert;
       window.removeEventListener("keydown", onKeyDown);
+      if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
     };
-  }, [open, onToggle]);
+  }, [open]);
   async function explainWithAi() {
+    requestRef.current?.abort();
+    const controller = new AbortController();
+    requestRef.current = controller;
     setAiLoading(true);
     setAiError(false);
     try {
-      setAi(await api("/bible/explain", {
+      const result = await api("/bible/explain", {
+        signal: controller.signal,
         method: "POST",
         body: JSON.stringify({ book, chapter, verse, edition, verseText }),
-      }));
+      });
+      if (!controller.signal.aborted) setAi(result);
     } catch {
-      setAiError(true);
+      if (!controller.signal.aborted) setAiError(true);
     } finally {
-      setAiLoading(false);
+      if (!controller.signal.aborted) setAiLoading(false);
     }
   }
   const words = {
     en: ["AI explanation from an Orthodox perspective", "Explain with AI", "AI explanation is temporarily unavailable. Try again.", "Based on the linked Orthodox source; this is an AI summary, not a quotation from a saint."],
     ka: ["AI განმარტება მართლმადიდებლური ხედვით", "AI-ით განმარტება", "AI განმარტება დროებით მიუწვდომელია. სცადეთ ხელახლა.", "დაფუძნებულია მითითებულ მართლმადიდებლურ წყაროზე; ეს არის AI-ის შეჯამება და არა წმინდანის ციტატა."],
-    ckb: ["ڕوونکردنەوەی AI لە ڕوانگەی ئۆرتۆدۆکسەوە", "بە AI ڕوونی بکەرەوە", "ڕوونکردنەوەی AI ئێستا بەردەست نییە. دووبارە هەوڵ بدەرەوە.", "پشت بە سەرچاوە ئۆرتۆدۆکسە بەستراوە؛ ئەمە پوختەی AI ـە، نەک وتەی ڕاستەوخۆی پیرۆزێک."],
+    ckb: ["ڕوونکردنەوەی AI لە ڕوانگەی ئۆرتۆدۆکسەوە", "بە AI ڕوونی بکەرەوە", "ڕوونکردنەوەی AI ئێستا بەردەست نییە. دووبارە هەوڵ بدەرەوە.", "پشت بە سەرچاوە ئۆرتۆدۆکسە بەستراوە؛ ئەمە پوختەی AI ـە، نەک وتەی ڕاستەوخۆی پایەپیرۆزێک."],
   }[language] || [];
   const ui = {
     en: { label: "Patristic commentary", close: "Close explanation", more: "Continue reading", less: "Show less", ai: "AI explanation" },
@@ -72,11 +99,11 @@ export function VerseExplanations({
   }[language] || {};
   useEffect(() => {
     if (open && !loading && !error && !rows.length && !ai && !aiLoading && !aiError) explainWithAi();
-  }, [open, loading, error, rows.length, book, chapter, verse, edition]);
+  }, [open, loading, error, rows.length, book, chapter, verse, edition, language, ai, aiLoading, aiError]);
   if (!open) return null;
   return createPortal(
     <div className="verse-sheet-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onToggle(); }}>
-      <section className="verse-sheet" id={id} role="dialog" aria-modal="true" aria-labelledby={`${id}-title`} dir={language === "ckb" ? "rtl" : "ltr"} lang={language}>
+      <section ref={sheetRef} className="verse-sheet" id={id} role="dialog" aria-modal="true" aria-labelledby={`${id}-title`} dir={language === "ckb" ? "rtl" : "ltr"} lang={language}>
         <div className="verse-sheet-handle" aria-hidden="true" />
         <header className="verse-sheet-header">
           <div><span className="verse-sheet-kicker">{ui.label}</span><h2 id={`${id}-title`}>{bookName || book} <bdi>{chapter}:{verse}</bdi></h2></div>
@@ -102,7 +129,7 @@ export function VerseExplanations({
                   {item.author?.icon_url ? <img src={item.author.icon_url} alt="" /> : <span className="verse-father-monogram" aria-hidden="true">✣</span>}
                   <div><h3><a href={profileHref(item.author)}>{authorName(item.author, language)}</a></h3><p>{metadataFor(item, "reference", language)}</p></div>
                 </div>
-                <div className={`verse-father-reading${expanded[item.id] ? " expanded" : ""}`}>
+                <div className={`verse-father-reading${(textFor(item, "body", language) || "").length > 220 ? " collapsible" : ""}${expanded[item.id] ? " expanded" : ""}`}>
                   {textFor(item, "title", language) && <h4>{textFor(item, "title", language)}</h4>}
                   <p className="editorial-verbatim">{textFor(item, "body", language) || w.missingTranslation}</p>
                 </div>
