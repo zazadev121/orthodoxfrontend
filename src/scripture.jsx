@@ -483,6 +483,7 @@ export function BibleReader({ t, language }) {
                         onOpen={rememberVerse}
                         passageKey={`${reading.book}-${reading.chapter}`}
                         book={reading.book}
+                        bookName={bookName}
                         chapter={reading.chapter}
                         edition={reading.translation}
                         verseText={override ? override.text : row.text}
