@@ -153,7 +153,14 @@ function App() {
   const page = route.split("?")[0];
   useEffect(() => { document.documentElement.dataset.page = page; }, [page]);
   const [menu, setMenu] = useState(false);
-  const t = cms.words(copy[language], "ui", language);
+  const t = {
+    ...cms.words(copy[language], "ui", language),
+    aiIntro: copy[language].aiIntro,
+    aiDesc: copy[language].aiDesc,
+    sourcePolicy: copy[language].sourcePolicy,
+    intro: copy[language].intro,
+    prayersIntro: copy[language].prayersIntro,
+  };
   const ew = useEditorialWords(language);
   useEffect(() => {
     const handle = () => {
@@ -299,7 +306,6 @@ function App() {
             }}
           >
             <option value="ckb">سۆرانی</option>
-            <option value="kmr">Kurmancî</option>
             <option value="en">English</option>
             <option value="ka">ქართული</option>
           </select>
