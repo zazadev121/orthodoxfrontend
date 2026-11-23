@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { api } from "./api.js";
 import { useEditorialWords } from "./editorial-context.jsx";
 import { authorName, textFor, profileHref, metadataFor } from "./editorial.js";
 export function VerseExplanations({
@@ -10,13 +11,46 @@ export function VerseExplanations({
   language,
   onOpen,
   passageKey,
+  book,
+  chapter,
+  edition,
+  verseText,
+  open,
+  onToggle,
 }) {
   const w = useEditorialWords(language),
-    [open, setOpen] = useState(false);
+    [ai, setAi] = useState(null),
+    [aiLoading, setAiLoading] = useState(false),
+    [aiError, setAiError] = useState(false);
   const rows = explanations.filter(
     (item) => item.verse_start <= verse && item.verse_end >= verse,
   );
   const id = `explanation-${passageKey}-${verse}`;
+  const hasLocalized = rows.some((item) => textFor(item, "body", language)?.trim());
+  useEffect(() => {
+    setAi(null);
+    setAiError(false);
+  }, [book, chapter, verse, edition, language]);
+  async function explainWithAi() {
+    setAiLoading(true);
+    setAiError(false);
+    try {
+      setAi(await api("/bible/explain", {
+        method: "POST",
+        body: JSON.stringify({ book, chapter, verse, edition, language, verseText }),
+      }));
+    } catch {
+      setAiError(true);
+    } finally {
+      setAiLoading(false);
+    }
+  }
+  const words = {
+    en: ["AI explanation from an Orthodox perspective", "Explain with AI", "AI explanation is temporarily unavailable. Try again.", "Based on the linked Orthodox source; this is an AI summary, not a quotation from a saint."],
+    ka: ["AI განმარტება მართლმადიდებლური ხედვით", "AI-ით განმარტება", "AI განმარტება დროებით მიუწვდომელია. სცადეთ ხელახლა.", "დაფუძნებულია მითითებულ მართლმადიდებლურ წყაროზე; ეს არის AI-ის შეჯამება და არა წმინდანის ციტატა."],
+    ckb: ["ڕوونکردنەوەی AI لە ڕوانگەی ئۆرتۆدۆکسەوە", "بە AI ڕوونی بکەرەوە", "ڕوونکردنەوەی AI ئێستا بەردەست نییە. دووبارە هەوڵ بدەرەوە.", "پشت بە سەرچاوە ئۆرتۆدۆکسە بەستراوە؛ ئەمە پوختەی AI ـە، نەک وتەی ڕاستەوخۆی پیرۆزێک."],
+    kmr: ["Şîroveya AI ji nêrîna Ortodoks", "Bi AI rave bike", "Şîroveya AI niha ne amade ye. Dîsa biceribîne.", "Li ser çavkaniya Ortodoks a girêdayî ye; ev kurteya AI ye, ne gotina rasterast a pîrozekî."],
+  }[language] || [];
   return (
     <div
       className="verse-explanations"
@@ -29,7 +63,7 @@ export function VerseExplanations({
         aria-expanded={open}
         aria-controls={id}
         onClick={() => {
-          setOpen(!open);
+          onToggle();
           if (!open) onOpen?.(verse);
         }}
       >
@@ -47,10 +81,10 @@ export function VerseExplanations({
                 {w.retry}
               </button>
             </div>
-          ) : !rows.length ? (
-            <p>{w.noExplanation}</p>
           ) : (
-            rows.map((item) => (
+            <>
+            {!rows.length && <p>{w.noExplanation}</p>}
+            {rows.map((item) => (
               <article key={item.id}>
                 <h4>
                   <a href={profileHref(item.author)}>
@@ -83,7 +117,11 @@ export function VerseExplanations({
                   <p className="editorial-verbatim">{metadataFor(item, "reference", language)}</p>
                 )}
               </article>
-            ))
+            ))}
+            {!ai && <button className="button secondary verse-ai-button" type="button" disabled={aiLoading} onClick={explainWithAi}>{aiLoading ? w.loading : words[1]}</button>}
+            {aiError && <p role="alert">{words[2]} <button className="text-link" type="button" onClick={explainWithAi}>{w.retry}</button></p>}
+            {ai && <div className="verse-ai-result"><h4>{words[0]}</h4><p>{ai.explanation}</p><p className="verse-ai-disclaimer">{ai.grounded_in_commentary ? words[3] : ({en:"AI interpretation using general Orthodox guidance; no verse-specific Father commentary is cited.",ka:"AI-ის განმარტება ზოგადი მართლმადიდებლური მიდგომით; ამ მუხლის შესახებ მამათა კონკრეტული კომენტარი მითითებული არ არის.",ckb:"لێکدانەوەی AI بەپێی ڕێنمایی گشتیی ئۆرتۆدۆکس؛ لێدوانی تایبەتیی باوکانی کڵێسا بۆ ئەم ئایەتە نەهاتووە.",kmr:"Şîroveya AI li gorî rêberiya giştî ya Ortodoks; şîroveya taybet a Bavên Dêrê ji bo vê ayetê nehatiye nîşandan."})[language]}</p><a href={ai.source_url} target="_blank" rel="noreferrer">{ai.source_title}</a></div>}
+            </>
           )}
         </div>
       )}
