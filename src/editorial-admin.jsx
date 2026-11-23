@@ -745,7 +745,6 @@ export function AdminWorkspace({ token, language, ownerId }) {
                 >
                   {[
                     ["ckb", "سۆرانی"],
-                    ["kmr", "Kurmancî"],
                     ["en", "English"],
                     ["ka", "ქართული"],
                   ].map(([id, title]) => (
