@@ -216,6 +216,16 @@ export function OrthodoxHome({ t, language }) {
     kmr: { scripture: "PIRTÛKA PÎROZ Û KEVNEŞOPÎ", saints: "CIVATA PÎROZAN", prayer: "DEMEK JI BO DUA", teaching: "BAWERIYA DÊRÊ" },
     ka: { scripture: "წმინდა წერილი და გადმოცემა", saints: "წმინდანთა დასი", prayer: "ლოცვის დრო", teaching: "ეკლესიის სარწმუნოება" },
   }[language] || {};
+  const homeLabel = (key, field) => {
+    const english = {
+      scripture: "SCRIPTURE & TRADITION",
+      saints: "THE COMMUNION OF SAINTS",
+      prayer: "A MOMENT OF STILLNESS",
+      teaching: "THE FAITH OF THE CHURCH",
+    }[field];
+    const value = cms.text(key, language, labels[field] || english);
+    return language !== "en" && value === english ? labels[field] : value;
+  };
   const featured =
     cms.authors.find(
       (a) =>
@@ -282,11 +292,7 @@ export function OrthodoxHome({ t, language }) {
       {cms.visible("paths") && (
         <section className="heritage-section home-path-section">
           <SectionHeading
-            label={cms.text(
-              "general.scriptureLabel",
-              language,
-              labels.scripture,
-            )}
+            label={homeLabel("general.scriptureLabel", "scripture")}
             title={w.journey}
             description={w.sub}
           />
@@ -314,11 +320,7 @@ export function OrthodoxHome({ t, language }) {
       {cms.visible("saints") && (
         <section className="heritage-section">
           <SectionHeading
-            label={cms.text(
-              "general.saintsLabel",
-              language,
-              labels.saints,
-            )}
+            label={homeLabel("general.saintsLabel", "saints")}
             title={w.saints}
             description={w.saintSub}
             action={cms.ready ? ew.exploreAuthors : w.all}
@@ -351,11 +353,7 @@ export function OrthodoxHome({ t, language }) {
           <Heart size={32} />
           <div>
             <span className="eyebrow">
-              {cms.text(
-                "general.prayerLabel",
-                language,
-                labels.prayer,
-              )}
+              {homeLabel("general.prayerLabel", "prayer")}
             </span>
             <h2>{w.prayerTitle}</h2>
             <p className="editorial-verbatim">{w.prayerText}</p>
@@ -369,11 +367,7 @@ export function OrthodoxHome({ t, language }) {
       {cms.visible("doctrine") && (
         <section className="heritage-section">
           <SectionHeading
-            label={cms.text(
-              "general.teachingLabel",
-              language,
-              labels.teaching,
-            )}
+            label={homeLabel("general.teachingLabel", "teaching")}
             title={cms.ready ? ew.doctrineTitle : w.teaching}
             description={w.teachingSub}
             action={w.more}
