@@ -226,24 +226,14 @@ export function OrthodoxHome({ t, language }) {
     const value = cms.text(key, language, labels[field] || english);
     return language !== "en" && value === english ? labels[field] : value;
   };
-  const featured =
-    cms.authors.find(
-      (a) =>
-        a.slug ===
-        cms.text("home.featuredAuthor", language, "gregory-theologian"),
-    ) || cms.authors[0];
-  const heroIcon =
-    cms.text("home.heroImage", language, "") ||
-    (cms.ready ? featured?.icon_url || "" : "/icons/gregory-theologian.webp");
-  const heroName = cms.text(
-    "home.heroCaption",
-    language,
-    cms.ready
-      ? authorName(featured, language)
-      : language === "ckb"
-        ? "پایەپیرۆز گریگۆری باوەڕناس"
-        : "Saint Gregory the Theologian",
-  );
+  const homeIdentity = {
+    ckb: { name: "ئۆرتۆدۆکسی ڕۆم لە کوردستان", line: "باوەڕی کڵێسا بە زمانی کوردی", intro: "ئەم پەیجە بۆ هەموو ئەو کەسانەیە کە دەیانەوێت مەسیح و باوەڕی کڵێسای ئۆرتۆدۆکسی بناسن. لێرە دەتوانیت کتێبی پیرۆز بخوێنیتەوە و لە ژیان و فێرکارییەکانی باوکانی کڵێسا و پایەپیرۆزان فێر ببیت", explore: "گەشتێک بە ناو سایتەکەدا", about: "دەربارەی ئێمە" },
+    en: { name: "Orthodoxy in Kurdistan", line: "The faith of the Church in the Kurdish language", intro: "A place for everyone seeking to know Christ and the Orthodox Christian faith. Read Holy Scripture, discover the lives of the saints, and explore the teachings of the Church Fathers.", explore: "Explore the library", about: "About us" },
+    ka: { name: "მართლმადიდებლობა ქურთისტანში", line: "ეკლესიის სარწმუნოება ქურთულ ენაზე", intro: "სივრცე ყველასთვის, ვისაც სურს ქრისტესა და მართლმადიდებლური სარწმუნოების გაცნობა. წაიკითხეთ წმინდა წერილი, გაეცანით წმინდანთა ცხოვრებასა და ეკლესიის მამათა სწავლებას.", explore: "ბიბლიოთეკის გაცნობა", about: "ჩვენ შესახებ" },
+    kmr: { name: "Ortodoksî li Kurdistanê", line: "Baweriya Dêrê bi zimanê Kurdî", intro: "Cihê her kesê ku dixwaze Mesîh û baweriya Ortodoks nas bike. Pirtûka Pîroz bixwîne û jiyana pîrozan û hînkirinên Bavên Dêrê nas bike.", explore: "Pirtûkxaneyê bibîne", about: "Derbarê me" }
+  }[language] || {};
+  const identity = (key) => cms.text("home.identity." + key, language, homeIdentity[key]);
+  const crossImage = cms.text("general.brandImage", language, "/kurdistan-cross.jpg") || "/kurdistan-cross.jpg";
   const preview = cms.ready
     ? cms.doctrines.filter((d) => d.category === "doctrine").slice(0, 2)
     : lessons.slice(0, 2);
@@ -255,40 +245,23 @@ export function OrthodoxHome({ t, language }) {
   return (
     <div className="heritage-home">
       {cms.visible("hero") && (
-        <section className="heritage-hero">
+        <section className="heritage-hero home-centered-cover">
           <div className="heritage-hero-copy">
-            <div className="home-chapter-label"><span aria-hidden="true">✣</span><span>{language === "ka" ? "წმინდა წერილი · წმინდა გადმოცემა" : language === "ckb" ? "کتێبی پیرۆز · نەریتی پیرۆز" : language === "kmr" ? "Pirtûka Pîroz · Kevneşopiya Pîroz" : "SCRIPTURE · TRADITION · PRAYER"}</span></div>
-            <span className="eyebrow">{w.welcome}</span>
-            <h1>{w.title}</h1>
-            <p className="editorial-verbatim">{w.intro}</p>
+            {cms.visible("heroArt") && <div className="home-cross-stage"><img className="home-cross-emblem" src={crossImage} alt="" width="300" height="300" fetchPriority="high" /></div>}
+            <div className="home-chapter-label"><span>{identity("line")}</span></div>
+            <h1>{identity("name")}</h1>
+            {language !== "en" && <div className="home-english-brand" lang="en" dir="ltr">Orthodoxy in Kurdistan</div>}
+            <div className="home-cover-rule" aria-hidden="true"><span>✣</span></div>
+            <p className="editorial-verbatim">{identity("intro")}</p>
             <div className="hero-actions">
-              <a className="button gold" href="#bible">
-                <BookOpen size={18} />
-                {w.begin}
-              </a>
-              <a className="button secondary" href="#saints">
-                {w.discover}
-              </a>
+              <a className="button gold" href="/bible/"><BookOpen size={18} />{w.begin}</a>
+              <a className="button secondary" href="/discover/">{identity("explore")}<ArrowUpRight size={16} /></a>
             </div>
-            <div className="home-hero-rail"><span>{t.bible}</span><span>{w.saints}</span><span>{w.prayerTitle}</span></div>
+            <div className="home-hero-rail"><a href="/saints/">{w.saints}</a><a href="/fathers/">{t.fathers}</a><a href="/prayers/">{w.prayerTitle}</a></div>
           </div>
-          {cms.visible("heroArt") && heroIcon && (
-            <div className="heritage-hero-art">
-              <a className="home-icon-link"
-                href={
-                  cms.ready && featured
-                    ? profileHref(featured)
-                    : "#saint?id=gregory-theologian"
-                }
-                aria-label={`${heroName} · ${w.more}`}
-              >
-                <img src={heroIcon} width="300" height="450" fetchPriority="high" alt="" />
-                <span className="home-icon-caption">{heroName}<span>{w.more} <ArrowUpRight size={16} /></span></span>
-              </a>
-            </div>
-          )}
         </section>
       )}
+      {cms.visible("daily") && <DailyVerse t={t} language={language} compact />}
       {cms.visible("paths") && (
         <section className="heritage-section home-path-section">
           <SectionHeading
@@ -307,7 +280,7 @@ export function OrthodoxHome({ t, language }) {
                 w.teachingSub,
               ],
             ].map(([id, Icon, title, body], index) => (
-              <a className={`heritage-path${index === 0 ? " heritage-path-primary" : ""}`} href={`#${id}`} key={id}>
+              <a className={`heritage-path${index === 0 ? " heritage-path-primary" : ""}`} href={`/${id}/`} key={id}>
                 <span className="home-path-icon"><Icon size={index === 0 ? 32 : 26} /></span>
                 <span className="home-path-copy"><h3>{title}</h3><p className="editorial-verbatim">{body}</p></span>
                 <span className="home-path-action" aria-hidden="true"><ArrowUpRight size={20} /></span>
@@ -316,7 +289,6 @@ export function OrthodoxHome({ t, language }) {
           </div>
         </section>
       )}
-      {cms.visible("daily") && <DailyVerse t={t} language={language} compact />}
       {cms.visible("saints") && (
         <section className="heritage-section">
           <SectionHeading
@@ -324,7 +296,7 @@ export function OrthodoxHome({ t, language }) {
             title={w.saints}
             description={w.saintSub}
             action={cms.ready ? ew.exploreAuthors : w.all}
-            href="#saints"
+            href="/saints/"
           />
           <div className="home-saints-grid">
             {cms.ready
@@ -358,7 +330,7 @@ export function OrthodoxHome({ t, language }) {
             <h2>{w.prayerTitle}</h2>
             <p className="editorial-verbatim">{w.prayerText}</p>
           </div>
-          <a className="button secondary" href="#prayers">
+          <a className="button secondary" href="/prayers/">
             {w.prayerAction}
             <ArrowUpRight size={16} />
           </a>
@@ -371,7 +343,7 @@ export function OrthodoxHome({ t, language }) {
             title={cms.ready ? ew.doctrineTitle : w.teaching}
             description={w.teachingSub}
             action={w.more}
-            href="#doctrine"
+            href="/doctrine/"
           />
           <div className="teaching-preview">
             {preview.map((item, i) => (
@@ -408,7 +380,7 @@ export function OrthodoxHome({ t, language }) {
             <span className="eyebrow">{w.seven}</span>
             <h2>{w.councils}</h2>
             <p className="editorial-verbatim">{w.councilSub}</p>
-            <a className="text-link" href="#councils">
+            <a className="text-link" href="/councils/">
               {w.more}
               <ArrowUpRight size={16} />
             </a>
@@ -426,7 +398,7 @@ export function OrthodoxHome({ t, language }) {
           <details className="home-faith-statement">
             <summary><h2>{w.about}</h2><span>{w.more}</span></summary>
             <p className="editorial-verbatim">{w.aboutText}</p>
-            <a className="text-link" href="#about">{w.more}</a>
+            <a className="text-link" href="/about/">{w.more}</a>
           </details>
         </section>
       )}
@@ -507,7 +479,7 @@ export function OrthodoxStudy({ language, page, route }) {
               {language === "ka" ? "შრიფტები და გარეგნობა" : language === "ckb" ? "فۆنت و ڕەنگ" : "Fonts and appearance"}
             </a>
           </div>
-          <a href="#saints" className="text-link">
+          <a href="/saints/" className="text-link">
             {w.all} ↗
           </a>
         </div>

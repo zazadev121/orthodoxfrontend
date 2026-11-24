@@ -225,3 +225,50 @@
 @media (prefers-reduced-motion: reduce) {
   .heritage-home :is(.heritage-path, .home-saint) { transition: none; }
 }
+
+/* Centered identity cover and editorial home refresh. */
+.heritage-home .home-centered-cover { display: block; min-height: 0; border-radius: 28px; background: radial-gradient(ellipse at 50% 22%, color-mix(in srgb, var(--gold) 13%, transparent), transparent 56%), var(--surface); }
+.heritage-home .home-centered-cover .heritage-hero-copy { align-items: center; text-align: center; padding: clamp(36px, 6vw, 78px) clamp(20px, 5vw, 64px) 36px; }
+.home-cross-stage { width: clamp(178px, 28vw, 300px); aspect-ratio: 1; display: grid; place-items: center; margin: 0 auto 29px; position: relative; isolation: isolate; }
+.home-cross-stage::before { content: ""; position: absolute; inset: -18%; z-index: -1; background: radial-gradient(circle, color-mix(in srgb, var(--gold) 24%, transparent), transparent 68%); pointer-events: none; }
+.home-cross-emblem { width: 100%; height: 100%; object-fit: contain; border-radius: 18%; box-shadow: 0 12px 32px #0002; }
+.heritage-home .home-centered-cover .home-chapter-label { justify-content: center; font-weight: 500; font-size: .92rem; }
+.heritage-home .home-centered-cover .home-chapter-label span:first-child { font-size: inherit; line-height: 1.8; }
+#root .heritage-home .home-centered-cover h1 { max-width: 950px; font-size: clamp(2.05rem, 5.2vw, 4.4rem); line-height: 1.5; margin: 10px 0 4px; text-wrap: balance; }
+.home-english-brand { font-family: Georgia, serif; font-size: clamp(.94rem, 2vw, 1.25rem); letter-spacing: .09em; color: var(--muted); }
+.home-cover-rule { display: flex; align-items: center; gap: 12px; color: var(--gold); margin: 20px auto; }
+.home-cover-rule::before,.home-cover-rule::after { content: ""; width: 58px; height: 1px; background: var(--gold); opacity: .5; }
+#root .heritage-home .home-centered-cover p { max-width: 720px; margin: 0 auto 26px; line-height: 2.1; }
+.heritage-home .home-centered-cover .hero-actions { justify-content: center; }
+.heritage-home .home-centered-cover .home-hero-rail { width: auto; margin: 32px auto 0; padding-top: 18px; border-top: 1px solid var(--line); justify-content: center; }
+.home-centered-cover .home-hero-rail a:hover { color: var(--gold); text-decoration: underline; }
+.heritage-home .home-centered-cover .home-hero-rail a + a::before { content: "·"; color: var(--gold); margin-inline-end: 18px; }
+.heritage-home .daily-verse { margin-top: 24px; border-radius: 22px; background: radial-gradient(ellipse at 100% 0%, color-mix(in srgb, var(--gold) 9%, transparent), transparent 65%), var(--surface); }
+.heritage-home .heritage-paths { grid-template-columns: repeat(3,minmax(0,1fr)); grid-template-rows: auto; }
+.heritage-home .heritage-path,.heritage-home .heritage-path-primary { grid-row: auto; flex-direction: column; justify-content: flex-start; min-height: 245px; padding: 25px; gap: 15px; }
+.heritage-home .heritage-path-primary .home-path-icon { width: 52px; height: 52px; margin: 0; border-radius: 14px; }
+.heritage-home .home-path-action,.heritage-home .heritage-path-primary .home-path-action { align-self: flex-start; margin: auto 0 0; }
+#root .heritage-home .heritage-path-primary h3 { font-size: 1.3rem; }
+.heritage-home .home-saints-grid { grid-template-columns: repeat(4,minmax(0,1fr)); grid-template-rows: auto; }
+.heritage-home .home-saint,.heritage-home .home-saint-featured { grid-row: auto; flex-direction: column; }
+.heritage-home .home-saint .home-saint-image { width: 100%; height: clamp(150px,22vw,245px); flex: none; min-height: 0; background: radial-gradient(ellipse,#cda66a55,transparent 70%),#2b251f; }
+.heritage-home .home-saint .home-saint-image img { max-height: 100%; object-fit: contain; filter: drop-shadow(0 5px 10px #0006); }
+.heritage-home .home-saint .home-saint-copy { padding: 18px; justify-content: flex-start; }
+#root .heritage-home .home-saint h3 { font-size: 1.07rem; }
+.heritage-home .home-saint-copy > span { margin-top: auto; padding-top: 10px; }
+.heritage-home .heritage-prayer-band,.heritage-home .councils-feature,.heritage-home .about-feature { border-radius: 24px; }
+@media(max-width:850px) {
+ .heritage-home .heritage-paths { grid-template-columns: 1fr; }
+ .heritage-home .heritage-path,.heritage-home .heritage-path-primary { min-height: 0; }
+ .heritage-home .home-saints-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media(max-width:600px) {
+ .heritage-home .home-centered-cover { border-radius: 20px; }
+ .heritage-home .home-centered-cover .heritage-hero-copy { padding: 34px 18px 25px; }
+ .home-cross-stage { width: min(66%,220px); margin-bottom: 20px; }
+ .heritage-home .home-centered-cover .home-hero-rail { font-size: .8rem; gap: 8px 12px; }
+ .heritage-home .home-centered-cover .home-hero-rail a + a::before { margin-inline-end: 12px; }
+ .heritage-home .home-saint .home-saint-copy { padding: 12px; }
+ .heritage-home .home-saint .home-saint-image { height: 170px; padding: 12px; }
+ #root .heritage-home .home-saint h3 { font-size: .91rem; }
+}
