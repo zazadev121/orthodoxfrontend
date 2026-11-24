@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { api } from "./api.js";
-import { useEditorialWords } from "./editorial-context.jsx";
+import { useEditorial, useEditorialWords } from "./editorial-context.jsx";
+import { fathers, patristicSources } from "./patristic-sources.js";
 import { authorName, textFor, profileHref, metadataFor } from "./editorial.js";
 export function VerseExplanations({
   verse,
@@ -24,6 +25,9 @@ export function VerseExplanations({
     [aiError, setAiError] = useState(false),
     [expanded, setExpanded] = useState({});
   const requestRef = useRef(null);
+  const cms = useEditorial();
+  const sources = open ? patristicSources(book, chapter, verse) : [];
+  const sourceWords = ({en:["Historical homilies & commentaries","Related passage; not necessarily a direct explanation of every verse.","Read full English source","Historical English excerpt"],ckb:["وتار و لێکدانەوە مێژووییەکان","ئەم سەرچاوەیە پەیوەندی بە بەشەکەوە هەیە؛ نەک بە ناچاری ڕوونکردنەوەی هەر ئایەتێک.","سەرچاوەی تەواو بە ئینگلیزی","دەقێکی مێژوویی بە ئینگلیزی"],ka:["ისტორიული ქადაგებები და კომენტარები","დაკავშირებული მონაკვეთი; არა აუცილებლად თითოეული მუხლის პირდაპირი განმარტება.","სრული ინგლისური წყარო","ისტორიული ინგლისური ამონარიდი"]})[language] || ["Historical homilies & commentaries","Related passage; not necessarily a direct explanation of every verse.","Read full English source","Historical English excerpt"];
   const rows = explanations.filter(
     (item) => item.verse_start <= verse && item.verse_end >= verse,
   );
@@ -92,7 +96,7 @@ export function VerseExplanations({
             </div>
           ) : (
             <>
-            {!rows.length && <p className="verse-sheet-empty">{w.noExplanation}</p>}
+            {!rows.length && !sources.length && <p className="verse-sheet-empty">{w.noExplanation}</p>}
             {[...groups.entries()].map(([key, entries]) => {
               const author = entries[0].author;
               return <div className="study-father-group" key={key}>
@@ -134,6 +138,19 @@ export function VerseExplanations({
             {ai && <div className="verse-ai-result"><span className="verse-ai-badge">{ui.ai}</span><h3>{words[0]}</h3><p className="verse-ai-notice" role="note" lang={aiLanguage} dir={aiLanguage === "ckb" ? "rtl" : "ltr"}><strong>{aiNotice}</strong></p><p lang={ai.language} dir={ai.language === "ckb" ? "rtl" : "ltr"}>{ai.explanation}</p><p className="verse-ai-disclaimer">{ai.grounded_in_commentary ? words[3] : ({en:"AI interpretation of this verse; no verse-specific Church Father commentary was found.",ka:"ამ მუხლის AI განმარტება; ეკლესიის მამათა კონკრეტული კომენტარი ვერ მოიძებნა.",ckb:"لێکدانەوەی AI بۆ ئەم ئایەتە؛ لێدوانی تایبەتیی باوکانی کڵێسا نەدۆزرایەوە."})[language]}</p>{ai.source_url && <a href={ai.source_url} target="_blank" rel="noreferrer">{ai.source_title}</a>}</div>}
             </>
           )}
+          {!!sources.length && <section className="study-historical-sources">
+            <h3>{sourceWords[0]}</h3><p className="study-source-reference">{sourceWords[1]}</p>
+            {Object.entries(fathers).map(([key,fallback]) => {
+              const matches = sources.filter(s=>s.author===key);
+              if(!matches.length)return null;
+              const author = cms.authors.find(a=>a.slug===fallback.slug || a.name_en===fallback.name_en) || fallback;
+              const icon = author.icon_url || fallback.icon_url;
+              return <div className="study-father-group" key={key}>
+                <div className="verse-father-byline">{icon ? <img src={icon} alt="" loading="lazy" /> : <span className="verse-father-monogram" aria-hidden="true">✣</span>}<h3>{authorName(author,language)}</h3></div>
+                {matches.map(s=><article className="verse-father-card" key={s.number}><p lang="en" dir="ltr" className="study-source-reference">{s.reference} · John {s.range}</p>{s.excerpt && <><p className="study-source-reference">{sourceWords[3]}</p><blockquote lang="en" dir="ltr" className="editorial-verbatim">{s.excerpt}</blockquote></>}<a href={s.url} target="_blank" rel="noreferrer" className="text-link">{sourceWords[2]} ↗</a></article>)}
+              </div>;
+            })}
+          </section>}
         </div>}
       </section>;
 }

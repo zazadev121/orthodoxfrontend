@@ -60,6 +60,7 @@ const AdminWorkspace = React.lazy(() =>
   })),
 );
 import "./editorial.css";
+import "./bible-reader-study.css";
 function errorMessage(error, t) {
   return (
     {
