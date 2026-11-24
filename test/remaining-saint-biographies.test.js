@@ -1,0 +1,4 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import {remainingBiographies,withRemainingBiography,extraSaintSources} from "../src/remaining-saint-biographies.js";
+test("23 expansion biographies preserve editor changes",()=>{assert.equal(Object.keys(remainingBiographies).length,23);for(const [slug,row] of Object.entries(remainingBiographies)){const a={slug,biography_ckb:row.original,biography_en:"unchanged",source_url:row.originalSource};const next=withRemainingBiography(a);assert.equal(next.biography_ckb,row.biography);assert.equal(next.biography_en,"unchanged");assert.equal(withRemainingBiography({...a,biography_ckb:"owner text"}).biography_ckb,"owner text");assert.ok(row.source.startsWith("https://"));assert.ok(extraSaintSources(next).every(x=>x.startsWith("https://")));}});

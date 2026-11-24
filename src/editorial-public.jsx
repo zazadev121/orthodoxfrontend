@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { withClimacusContent } from "./climacus-content.js";
 import { withExpandedBiography } from "./expanded-saint-biographies.js";
+import { withRemainingBiography, extraSaintSources } from "./remaining-saint-biographies.js";
 import { ArrowUpRight, BookOpen, Bookmark, Check, Search } from "lucide-react";
 import {
   useEditorial,
@@ -327,7 +328,7 @@ export function AuthorProfile({ language, route }) {
   const resource = useEditorialResource(
       "/authors/" + encodeURIComponent(identifier),
     ),
-    a = withExpandedBiography(withClimacusContent(resource.data?.author));
+    a = withRemainingBiography(withExpandedBiography(withClimacusContent(resource.data?.author)));
   const [saved, setSaved] = useState(false);
   useEffect(() => {
     if (!a) return;
@@ -501,10 +502,11 @@ export function AuthorProfile({ language, route }) {
           ))}
         </section>
       )}
-      {(a.source_reference || a.source_url) && (
+      {(a.source_reference || a.source_url || extraSaintSources(a).length > 0) && (
         <details className="profile-sources source-disclosure">
           <summary>{w.source}</summary>
           <p className="editorial-verbatim">{metadataFor(a, "source_reference", language)}</p>
+          {extraSaintSources(a).map(url => <p key={url}><a className="text-link" href={url} target="_blank" rel="noreferrer">{new URL(url).hostname} ↗</a></p>)}
           {a.source_url && (
             <a href={a.source_url} target="_blank" rel="noreferrer">
               {w.read} ↗
