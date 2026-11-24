@@ -33,3 +33,46 @@
 .study-historical-sources {border-top:1px solid var(--line);margin-block-start:20px;padding-block-start:16px}
 .study-historical-sources > h3 {margin:0 0 8px;font-size:1rem;color:var(--text)}
 .study-historical-sources blockquote {margin:10px 0;padding-inline-start:12px;border-inline-start:2px solid var(--gold);font-family:Georgia,serif;line-height:1.8}
+
+/* Scripture is a distinct editorial reading room. Loaded after global themes. */
+#root .bible-reader-page{max-width:1120px;margin-inline:auto;padding-block-start:20px}
+#root .study-masthead{display:flex;align-items:center;justify-content:space-between;gap:24px;background:#50202a;color:#fff6e8;padding:clamp(22px,5vw,44px);border:1px solid #8e7051;border-block-start:4px solid #b7955b;margin:0 0 22px;border-radius:2px}
+#root .study-masthead-copy{min-width:0}
+#root .study-kicker{display:block;color:#e6c995;font-size:.72rem;font-weight:600;letter-spacing:.11em;line-height:1.6}
+#root .study-masthead h1{color:#fff6e8;font-size:clamp(2rem,5vw,3.4rem);line-height:1.2;margin:12px 0 8px;font-weight:500;letter-spacing:normal}
+html[lang=en] #root .study-masthead h1{font-family:Georgia,"Times New Roman",serif}
+#root .study-masthead p{color:#f0ddc6;margin:0;font-size:.95rem;line-height:1.65}
+#root .study-masthead-mark{width:clamp(54px,12vw,112px);height:auto;color:#d6b77c;flex:none}
+#root .bible-reader-page .reader-controls{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr) minmax(85px,.4fr);align-items:end;gap:18px;background:var(--surface);border-radius:2px;padding:18px 22px;border-block-end:2px solid var(--gold)}
+#root .study-control-label{display:block;color:var(--muted);font-size:.83rem;font-weight:600;margin-bottom:6px}
+#root .study-edition-control{position:relative;min-width:0}
+#root .study-edition-button,#root .study-edition-option{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;text-align:start;width:100%;border:1px solid var(--line);background:var(--paper);color:var(--text);padding:9px 12px;min-height:48px;border-radius:3px;line-height:1.5}
+#root .study-edition-title{font-size:.87rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#root .study-edition-code{font-size:.68rem;font-weight:700;letter-spacing:.04em;padding:4px 6px;border:1px solid var(--line);color:var(--gold);white-space:nowrap}
+#root .study-edition-options{position:absolute;z-index:25;inset-inline-start:0;inset-block-start:100%;margin-top:8px;width:max(100%,300px);max-width:min(360px,calc(100vw - 44px));padding:12px;background:var(--surface);border:1px solid var(--line);box-shadow:0 8px 24px #0003}
+#root .study-edition-options[hidden]{display:none}
+#root .study-edition-options>p{font-size:.78rem;margin:0 0 8px;color:var(--muted)}
+#root .study-edition-option{margin-top:6px;background:transparent}
+#root .study-edition-option[aria-pressed=true]{border-color:var(--gold);background:var(--subtle)}
+#root .study-edition-option strong,#root .study-edition-option small{display:block;overflow-wrap:anywhere}
+#root .study-edition-option strong{font-weight:600;font-size:.85rem}
+#root .study-edition-option small{color:var(--muted);font-size:.75rem}
+#root .study-edition-check{color:var(--gold)}
+#root .bible-reader-page .chapter-navigation{max-width:860px;margin:24px auto}
+#root .bible-reader-page .chapter-navigation .button{border-radius:3px}
+#root .bible-reader-page .scripture-chapter{max-width:860px;margin:auto;padding:clamp(22px,5vw,58px);border:1px solid var(--line);border-block-start:3px solid var(--gold);border-radius:2px;background:var(--surface)}
+#root .bible-reader-page .chapter-title{padding:8px 0 32px;margin:0 0 22px;border-bottom:1px solid var(--line)}
+#root .bible-reader-page .chapter-title h2{font-size:clamp(2.1rem,5vw,3.3rem);line-height:1.3;font-weight:500;margin:12px 0}
+#root .scripture-chapter[lang=en] .chapter-title h2{font-family:Georgia,"Times New Roman",serif}
+#root .study-chapter-kicker{color:var(--gold);font-size:.76rem;letter-spacing:.1em;font-weight:600}
+#root .study-chapter-edition{display:block;font-size:.76rem;color:var(--muted);line-height:1.7}
+#root .bible-reader-page .scripture-verse{padding:16px 0 12px;font-size:calc(clamp(1.12rem,2.2vw,1.27rem) * var(--reader-scale));line-height:1.85;border-radius:0}
+#root .bible-reader-page .scripture-verse-trigger{display:grid;grid-template-columns:2.25ch minmax(0,1fr);gap:12px;line-height:1.85;text-align:start}
+#root .bible-reader-page .scripture-verse-trigger sup{font-size:.7em;color:var(--gold);font-variant-numeric:tabular-nums}
+#root .bible-reader-page .study-commentary-toggle{margin-inline-start:calc(2.25ch + 12px);min-height:32px;font-size:.74rem;color:var(--gold);padding:4px 8px;border:1px solid transparent;border-radius:2px}
+#root .bible-reader-page .study-commentary-toggle:hover,#root .bible-reader-page .study-commentary-toggle[aria-expanded=true]{border-color:var(--line);background:var(--subtle)}
+#root .bible-reader-page .study-commentary{padding:20px;border:1px solid var(--line);border-inline-start:3px solid var(--gold);margin-block-end:22px}
+#root .bible-reader-page .study-father-group .verse-father-byline img{width:48px;height:60px;border-radius:2px}
+#root .study-chapter-footer{max-width:860px;margin:30px auto 0;text-align:center;color:var(--muted);font-size:.8rem}
+#root .study-chapter-footer>.chapter-navigation{margin:14px 0 0}
+@media(max-width:680px){#root .bible-reader-page .reader-controls{grid-template-columns:minmax(0,1fr) 90px;padding:12px;gap:12px}#root .study-edition-control{grid-column:1/-1}#root .study-edition-options{width:100%}#root .bible-reader-page .reader-controls label:first-child{grid-column:auto}#root .bible-reader-page .scripture-chapter{padding:22px 15px}#root .bible-reader-page .study-commentary{margin-inline-start:0;padding:14px}#root .study-masthead{gap:14px;padding:22px 16px}#root .study-masthead-mark{width:52px}#root .study-kicker{letter-spacing:.035em}#root .bible-reader-page .chapter-navigation .button{font-size:.72rem;padding:8px 9px}}
