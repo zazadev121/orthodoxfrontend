@@ -1,0 +1,67 @@
+/* Today: quiet editorial rhythm inspired by the supplied mobile references. */
+.today-home { max-width: 960px; }
+.today-home .home-centered-cover { border-radius: 25px; }
+.today-home .home-centered-cover .heritage-hero-copy { padding: clamp(28px,4.5vw,50px) 22px 24px; }
+.today-home .home-cross-stage { width: clamp(150px,23vw,245px); margin-bottom: 17px; }
+#root .today-home .home-centered-cover h1 { font-size: clamp(1.8rem,4.2vw,3.3rem); margin-block: 5px; }
+#root .today-home .home-centered-cover p { max-width: 660px; margin-bottom: 17px; font-size: .97rem; }
+.today-home .home-cover-rule { margin: 12px auto; }
+.today-home .home-centered-cover .home-hero-rail { margin-top: 22px; }
+.today-next { padding: clamp(24px,4vw,38px); margin-top: 23px; border: 1px solid color-mix(in srgb,var(--text) 20%,var(--line)); border-radius: 23px; background: linear-gradient(145deg,color-mix(in srgb,var(--text) 6%,var(--surface)),var(--surface) 72%); }
+.today-card-kicker { display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--muted); font-size:.89rem; font-weight:600; }
+#root .today-home .today-next h2 { font-size:clamp(1.65rem,4.5vw,2.65rem); line-height:1.45; margin:14px 0 7px; }
+#root .today-home .today-next p { font-size:1rem; line-height:1.85; margin:0 0 18px; color:var(--muted); }
+.today-resume-ref { display:block; color:var(--muted); margin-bottom:13px; }
+.today-pill { display:inline-flex; align-items:center; gap:13px; min-height:44px; padding:8px 19px; border:1px solid var(--line); border-radius:999px; font-weight:600; background:var(--soft); }
+.today-pill:hover { border-color:var(--gold); }
+.today-home .daily-verse { border:0; background: radial-gradient(ellipse at 50% 4%,color-mix(in srgb,var(--text) 9%,transparent),transparent 64%); box-shadow:none; padding:34px 16px; margin-top:15px; text-align:center; }
+.today-home .daily-verse .daily-topline { flex-direction:column; align-items:center; gap:9px; }
+.today-home .daily-verse .daily-topline .eyebrow { flex-direction:column; gap:10px; margin:0; color:var(--muted); font-size:.88rem; }
+.today-home .daily-verse .daily-topline .eyebrow svg { width:26px; height:26px; color:var(--text); filter:drop-shadow(0 0 10px var(--muted)); }
+#root .today-home .daily-verse blockquote { font-size:calc(clamp(1.45rem,3.7vw,2.3rem) * var(--reader-scale,1)); line-height:1.85; margin:20px auto; max-width:760px; }
+.today-home .daily-bottomline { justify-content:center; flex-wrap:wrap; gap:12px 24px; }
+.today-home .daily-options summary { margin-inline:auto; }
+.today-section { margin-top:29px; }
+.today-section-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }
+#root .today-section-head h2 { font-size:.98rem; font-weight:500; color:var(--muted); margin:0; }
+.today-section-head a { display:flex; align-items:center; gap:3px; color:var(--muted); font-size:.86rem; }
+[dir=rtl] .today-section-head svg,[dir=rtl] .today-prayer summary svg { transform:scaleX(-1); }
+.today-prayer-group { border:1px solid var(--line); border-radius:21px; overflow:hidden; background:var(--surface); }
+.today-prayer { padding:19px 22px; }
+.today-prayer + .today-prayer { border-top:1px solid var(--line); }
+.today-prayer summary { display:flex; justify-content:space-between; align-items:center; gap:14px; list-style:none; cursor:pointer; }
+.today-prayer summary::-webkit-details-marker { display:none; }
+.today-prayer summary span,.today-prayer-link span { font-size:clamp(1.17rem,3.2vw,1.65rem); font-weight:600; line-height:1.6; }
+.today-prayer svg { flex-shrink:0; color:var(--muted); }
+.today-prayer[open] summary svg { transform:rotate(90deg); }
+.today-prayer p { margin-top:14px; white-space:pre-wrap; line-height:2; overflow-wrap:anywhere; }
+.today-prayer > a { color:var(--gold); font-size:.8rem; overflow-wrap:anywhere; }
+.today-prayer-link { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.today-saint-card { display:grid; grid-template-columns:minmax(0,1.13fr) minmax(0,.87fr); background:var(--surface); border:1px solid var(--line); border-radius:21px; overflow:hidden; min-height:230px; }
+.today-saint-copy { padding:clamp(17px,3vw,30px); display:flex; flex-direction:column; justify-content:center; min-width:0; }
+#root .today-saint-copy h3 { font-size:clamp(1.3rem,3.6vw,2rem); line-height:1.5; margin:12px 0 8px; overflow-wrap:anywhere; }
+.today-saint-copy p { color:var(--muted); margin:0 0 9px; }
+.today-saint-more { color:var(--gold); display:flex; align-items:center; gap:6px; font-size:.82rem; margin-top:9px; }
+.today-saint-art { display:grid; place-items:center; min-width:0; background:radial-gradient(ellipse,#b88a4a55,transparent 78%),#211d19; padding:14px; }
+.today-saint-art img { display:block; width:100%; height:100%; max-height:260px; object-fit:contain; }
+.today-home .heritage-section { padding-top:46px; }
+.today-home .heritage-prayer-band { margin-top:42px; }
+html[lang=en] .today-home :is(.today-next h2,.today-prayer summary span,.today-saint-copy h3,.daily-verse blockquote) { font-family: Georgia, "Times New Roman", serif; }
+@media(max-width:800px){
+ body { padding-bottom:calc(96px + env(safe-area-inset-bottom)); }
+ #root .bottom-navigation { inset-inline:11px; bottom:calc(9px + env(safe-area-inset-bottom)); border:1px solid var(--line); border-radius:25px; padding:10px 4px; box-shadow:0 9px 30px #0004; background:color-mix(in srgb,var(--surface) 96%,transparent); }
+ #root .bottom-navigation a { min-height:44px; gap:5px; }
+ #root .bottom-navigation a.active { color:var(--text); font-weight:700; }
+ #root .bottom-navigation a.active svg { filter:drop-shadow(0 0 5px color-mix(in srgb,var(--text) 20%,transparent)); }
+}
+@media(max-width:600px){
+ .today-home .home-cross-stage{width:min(53%,190px)}
+ .today-home .home-centered-cover .heritage-hero-copy{padding:26px 15px 20px}
+ .today-home .home-centered-cover .hero-actions .button{min-height:44px;padding:9px 14px;font-size:.88rem}
+ .today-next{padding:22px 19px}
+ .today-saint-card{min-height:180px}
+ .today-saint-art{padding:8px}
+ .today-saint-art img{max-height:205px}
+ .today-prayer{padding:17px}
+ .today-home .daily-verse{padding-inline:10px}
+}

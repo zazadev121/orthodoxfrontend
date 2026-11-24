@@ -11,6 +11,7 @@ import {
   ScrollText,
 } from "lucide-react";
 import { DailyVerse } from "./scripture.jsx";
+import { TodayReading, TodayPrayers, TodaySaint } from "./home-today.jsx";
 import { saints, localized } from "./saints-data.js";
 export const councilSource =
   "https://www.oca.org/orthodoxy/the-orthodox-faith/doctrine-scripture/sources-of-christian-doctrine/the-councils";
@@ -243,7 +244,7 @@ export function OrthodoxHome({ t, language }) {
         .map((d) => d.council_year)
     : councils.map((c) => c.year);
   return (
-    <div className="heritage-home">
+    <div className="heritage-home today-home">
       {cms.visible("hero") && (
         <section className="heritage-hero home-centered-cover">
           <div className="heritage-hero-copy">
@@ -261,7 +262,10 @@ export function OrthodoxHome({ t, language }) {
           </div>
         </section>
       )}
+      {cms.visible("paths") && <TodayReading language={language} />}
       {cms.visible("daily") && <DailyVerse t={t} language={language} compact />}
+      {cms.visible("prayers") && <TodayPrayers language={language} />}
+      {cms.visible("saints") && <TodaySaint language={language} />}
       {cms.visible("paths") && (
         <section className="heritage-section home-path-section">
           <SectionHeading
