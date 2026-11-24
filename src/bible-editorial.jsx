@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { api } from "./api.js";
 import { useEditorial, useEditorialWords } from "./editorial-context.jsx";
 import { fathers, patristicSources } from "./patristic-sources.js";
+import { HistoricalReading } from "./patristic-reading.jsx";
 import { authorName, textFor, profileHref, metadataFor } from "./editorial.js";
 export function VerseExplanations({
   verse,
@@ -147,7 +148,7 @@ export function VerseExplanations({
               const icon = author.icon_url || fallback.icon_url;
               return <div className="study-father-group" key={key}>
                 <div className="verse-father-byline">{icon ? <img src={icon} alt="" loading="lazy" /> : <span className="verse-father-monogram" aria-hidden="true">✣</span>}<h3>{authorName(author,language)}</h3></div>
-                {matches.map(s=><article className="verse-father-card" key={s.number}><p lang="en" dir="ltr" className="study-source-reference">{s.reference} · John {s.range}</p>{s.excerpt && <><p className="study-source-reference">{sourceWords[3]}</p><blockquote lang="en" dir="ltr" className="editorial-verbatim">{s.excerpt}</blockquote></>}<a href={s.url} target="_blank" rel="noreferrer" className="text-link">{sourceWords[2]} ↗</a></article>)}
+                {matches.map(s=><article className="verse-father-card" key={s.number}><p lang="en" dir="ltr" className="study-source-reference">{s.reference} · John {s.range}</p><HistoricalReading source={s} chapter={chapter} verse={verse} language={language} /></article>)}
               </div>;
             })}
           </section>}
