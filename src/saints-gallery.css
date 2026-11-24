@@ -1,0 +1,171 @@
+/* Saints: a quiet, warm gallery. Original icons remain uncropped and unfiltered. */
+.saints-directory .heritage-heading {
+  max-width: 760px;
+  margin: clamp(12px, 3vw, 32px) auto 30px;
+  text-align: center;
+}
+.saints-directory .heritage-heading::after {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--gold);
+  margin: 22px auto 0;
+}
+#root .saints-directory .heritage-heading h1 {
+  font-size: clamp(1.65rem, 4vw, 2.6rem);
+  line-height: 1.5;
+  margin-block: 10px;
+}
+.saints-directory .directory-tools { margin-block: 28px 22px; gap: 12px; }
+.saints-directory .saint-search, .saints-directory .profile-save {
+  border-radius: 12px;
+  min-height: 44px;
+}
+.saints-directory .saints-grid { gap: clamp(12px, 2vw, 24px); }
+.saints-directory .saint-card {
+  border-radius: 16px;
+  min-width: 0;
+  background: var(--surface);
+  box-shadow: 0 4px 18px #0000000b;
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.saints-directory .saint-card:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.saints-directory .saint-image, .saint-profile .saint-portrait {
+  background: radial-gradient(ellipse at 50% 42%, #ffe0a64a 0%, #a4783b24 45%, transparent 76%), linear-gradient(160deg, #332c24, #201c19 75%);
+  color: #d4bd90;
+}
+.saints-directory .saint-image {
+  position: relative;
+  height: auto;
+  aspect-ratio: 4 / 4.6;
+  padding: clamp(14px, 2.4vw, 27px);
+  overflow: hidden;
+}
+.saints-directory .saint-image img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border: 1px solid #c5a36a99;
+  outline: 1px solid #e4c58a30;
+  outline-offset: 4px;
+  border-radius: 3px;
+  box-shadow: 0 6px 24px #0006, 0 0 22px #dbb36b25;
+  transition: transform .25s ease;
+}
+.saints-directory .saint-card-copy { padding: 19px 15px 18px; gap: 4px; }
+#root .saints-directory .saint-card h3 { font-size: clamp(.95rem, 1.5vw, 1.12rem); line-height: 1.65; overflow-wrap: anywhere; }
+#root .saints-directory .saint-card p { font-size: .8rem; line-height: 1.65; margin: 3px 0 6px; overflow-wrap: anywhere; }
+#root .saints-directory .saint-card .saint-card-summary { font-size: .82rem; margin: 6px 0; -webkit-line-clamp: 2; }
+.saints-directory .author-counts { margin: 8px 0; }
+.saints-directory .saint-card-copy > span { width: 100%; justify-content: center; border-top: 1px solid var(--line); padding-top: 12px; margin-top: auto; }
+@media (hover: hover) and (pointer: fine) {
+  .saints-directory .saint-card:hover { transform: translateY(-3px); box-shadow: 0 12px 26px #0002; }
+  .saints-directory .saint-card:hover img { transform: scale(1.025); }
+}
+.saint-profile .profile-header {
+  background: var(--surface);
+  border-radius: 20px;
+  padding: clamp(20px, 4vw, 44px);
+  gap: clamp(22px, 4vw, 40px);
+  box-shadow: 0 8px 32px #0000000d;
+}
+.saint-profile .profile-header figure { width: min(100%, 370px); }
+.saint-profile .saint-portrait {
+  width: 100%;
+  display: grid;
+  place-items: center;
+  min-height: 230px;
+  border: 1px solid #c6a36c45;
+  border-radius: 14px;
+  padding: clamp(18px, 4vw, 32px);
+}
+.saint-profile .saint-portrait .profile-icon {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: min(420px, 60vh);
+  padding: 0;
+  background: none;
+  object-fit: contain;
+  border: 1px solid #c5a36a99;
+  outline: 1px solid #e4c58a35;
+  outline-offset: 5px;
+  border-radius: 3px;
+  box-shadow: 0 8px 30px #0006, 0 0 32px #dbb36b28;
+}
+#root .saint-profile .profile-heading h1 { font-size: clamp(1.55rem, 3.4vw, 2.4rem); line-height: 1.55; margin-block: 12px; }
+.saint-profile .profile-heading > p { margin-block: 5px; color: var(--muted); }
+.saint-profile .saint-facts {
+  border: 0;
+  padding: 0;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.saint-profile .saint-facts > div { background: var(--soft); border: 1px solid var(--line); padding: 12px; border-radius: 10px; min-width: 0; }
+.saint-profile .saint-facts dd { overflow-wrap: anywhere; }
+.saint-profile .profile-save { border-radius: 10px; min-height: 44px; }
+.saint-profile .profile-tabs { gap: 4px; margin: 28px auto 0; max-width: 820px; overflow-x: auto; }
+.saint-profile .profile-tabs a { flex: 1; justify-content: center; white-space: nowrap; padding-inline: 12px; }
+.saint-profile .profile-body { max-width: 740px; }
+.saint-profile .saint-biography { counter-reset: saint-section; }
+.saint-profile .saint-biography > section {
+  counter-increment: saint-section;
+  margin: 0;
+  padding-block: clamp(22px, 4vw, 36px);
+  border-bottom: 1px solid var(--line);
+}
+#root .saint-profile .saint-biography > section h2 {
+  font-size: clamp(1.12rem, 2.4vw, 1.4rem);
+  display: flex;
+  align-items: baseline;
+  gap: 11px;
+  line-height: 1.6;
+  margin: 0 0 14px;
+}
+.saint-profile .saint-biography > section h2::before {
+  content: counter(saint-section, decimal-leading-zero);
+  color: var(--gold);
+  font-size: .7em;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+#root .saint-profile .saint-biography > section p {
+  font-size: calc(1.03rem * var(--reader-scale, 1));
+  line-height: 2.05;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 0;
+}
+.saint-profile .saint-biography > .button { margin-top: 26px; border-radius: 10px; }
+.saint-profile .verified-quote { border-radius: 0 12px 12px 0; }
+.saint-profile .profile-sources { max-width: 740px; margin-inline: auto; }
+@media (min-width: 850px) {
+  .saint-profile .profile-header { grid-template-columns: minmax(0, 340px) minmax(0, 1fr); align-items: center; }
+  .saint-profile .profile-heading { text-align: start; width: 100%; }
+  .saint-profile .saint-facts dt { justify-content: start; }
+}
+@media (max-width: 600px) {
+  .saints-directory .directory-tools { align-items: stretch; }
+  .saints-directory .saint-search { width: 100%; }
+  .saints-directory .profile-save { align-self: flex-start; }
+  .saints-directory .saint-card { border-radius: 12px; }
+  .saints-directory .saint-card-copy { padding: 12px 10px; }
+  #root .saints-directory .saint-card p { font-size: .76rem; }
+  #root .saints-directory .saint-card .saint-card-summary { display: none; }
+  .saints-directory .author-counts { display: none; }
+  .saints-directory .saint-card-copy > span { font-size: .73rem; }
+  .saint-profile .profile-header { border-radius: 16px; padding: 18px; }
+  .saint-profile .saint-portrait { min-height: 190px; }
+  .saint-profile .saint-portrait .profile-icon { max-height: 300px; }
+  .saint-profile .profile-tabs a { font-size: .82rem; padding-inline: 9px; }
+  .saint-profile .saint-facts > div { padding: 10px 6px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .saints-directory .saint-card, .saints-directory .saint-image img { transition: none; }
+  .saints-directory .saint-card:hover, .saints-directory .saint-card:hover img { transform: none; }
+}

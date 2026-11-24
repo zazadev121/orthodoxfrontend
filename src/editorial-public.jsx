@@ -100,7 +100,7 @@ export function AuthorLibrary({ language }) {
     (a) => matchesAuthor(a, search) && (!savedOnly || saved(a)),
   );
   return (
-    <div className="page heritage-page">
+    <div className="page heritage-page saints-directory">
       <header className="heritage-heading">
         <span className="eyebrow">
           {cms.text("general.synaxarionLabel", language, "EASTERN ORTHODOX SYNAXARION")}
@@ -365,6 +365,7 @@ export function AuthorProfile({ language, route }) {
       )}
       <header className="profile-header">
         <figure>
+          <div className="saint-portrait">
           {a.icon_url ? (
             <img
               className="profile-icon"
@@ -377,6 +378,7 @@ export function AuthorProfile({ language, route }) {
           ) : (
             <BookOpen size={64} />
           )}
+          </div>
           <figcaption className="editorial-verbatim"><details className="source-disclosure"><summary>{w.iconCredit}</summary>
             {metadataFor(a, "icon_credit", language)}
             {a.icon_source && (
@@ -465,7 +467,7 @@ export function AuthorProfile({ language, route }) {
           <WritingList key={a.id} language={language} authorId={a.id} />
         </div>
       ) : (
-        <div className="profile-body">
+        <div className="profile-body saint-biography">
           {[
             [w.biography, "biography"],
             [w.historyText, "history"],
