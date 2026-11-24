@@ -5,6 +5,8 @@ import {
   useEditorialWords,
 } from "./editorial-context.jsx";
 import { VerseExplanations, BibleRevision } from "./bible-editorial.jsx";
+import { patristicSources } from "./patristic-sources.js";
+import { localHomilies } from "./patristic-translations.js";
 import {
   BookOpen,
   ChevronDown,
@@ -197,9 +199,12 @@ export function BibleReader({ t, language }) {
   const [bookSearch, setBookSearch] = useState("");
   const [draftBook, setDraftBook] = useState(null);
   const [studyMode, setStudyMode] = useState(true);
+  const [readerMenu,setReaderMenu]=useState(false);
+  const [markedVerse,setMarkedVerse]=useState(null);
+  const videoWords=({en:["Before you read","Read with the Fathers.","Red verse numbers with a dot indicate available patristic texts. Tap a verse to read its commentary.","Reader options","Highlight verse"],ckb:["پێش خوێندنەوە","لەگەڵ باوکانی کڵێسا بخوێنەوە.","ژمارە سوورەکانی ئایەتەکان کە خاڵێکیان لە تەنیشتە، دەقی باوکانی کڵێسایان بۆ بەردەستە. دەست لە ئایەتەکە بدە بۆ خوێندنەوەی ڕوونکردنەوەکە.","هەڵبژاردەکانی خوێندنەوە","دیاریکردنی ئایەت"],ka:["კითხვის წინ","წაიკითხეთ ეკლესიის მამებთან ერთად.","წითელი მუხლის ნომერი წერტილით მიუთითებს ხელმისაწვდომ პატრისტიკულ ტექსტზე. შეეხეთ მუხლს კომენტარის წასაკითხად.","კითხვის პარამეტრები","მუხლის მონიშვნა"]})[language]||["Before you read","Read with the Fathers.","Red verse numbers with a dot indicate available patristic texts. Tap a verse to read its commentary.","Reader options","Highlight verse"];
   const labels = ({en:["Choose passage","Search books","Reading","Study","Close","Select chapter"],ckb:["بەشێک هەڵبژێرە","گەڕان بەدوای کتێبەکان","خوێندنەوە","لێکۆڵینەوە","داخستن","بەش هەڵبژێرە"],ka:["აირჩიეთ მონაკვეთი","წიგნების ძიება","კითხვა","შესწავლა","დახურვა","აირჩიეთ თავი"],kmr:["Beşê hilbijêre","Li pirtûkan bigere","Xwendin","Lêkolîn","Bigire","Beşê hilbijêre"]})[language] || ["Choose passage","Search books","Reading","Study","Close","Select chapter"];
   const studyWords = ({en:{kicker:"SCRIPTURE · THE ORTHODOX TRADITION",editions:"Bible editions",change:"Change edition",choose:"Choose a Bible edition",read:"Sacred Scripture",comment:"Read the Scriptures with the Church Fathers.",end:"End of chapter"},ckb:{kicker:"نووسراوە پیرۆزەکان · نەریتی ئۆرتۆدۆکس",editions:"وەشانەکانی کتێبی پیرۆز",change:"گۆڕینی وەشان",choose:"وەشانێک هەڵبژێرە",read:"کتێبی پیرۆز",comment:"کتێبی پیرۆز لەگەڵ باوکانی کڵێسا بخوێنەوە.",end:"کۆتایی بەش"},ka:{kicker:"წმინდა წერილი · მართლმადიდებლური ტრადიცია",editions:"ბიბლიის გამოცემები",change:"გამოცემის შეცვლა",choose:"აირჩიეთ ბიბლიის გამოცემა",read:"წმინდა წერილი",comment:"წაიკითხეთ წმინდა წერილი ეკლესიის მამებთან ერთად.",end:"თავის დასასრული"}})[language] || {kicker:"SCRIPTURE · THE ORTHODOX TRADITION",editions:"Bible editions",change:"Change edition",choose:"Choose a Bible edition",read:"Sacred Scripture",comment:"Read the Scriptures with the Church Fathers.",end:"End of chapter"};
-  useEffect(() => setOpenVerse(null), [reading.translation, reading.book, reading.chapter]);
+  useEffect(() => {setOpenVerse(null);setMarkedVerse(null);}, [reading.translation, reading.book, reading.chapter]);
   const edition = editionFor(reading.translation);
   const book = edition.books.find((b) => b.id === reading.book);
   const bookName = cms.text(
@@ -308,30 +313,25 @@ export function BibleReader({ t, language }) {
       </div>
     );
   return (
-    <div className="page bible-reader-page">
-      <header className="reading-room-heading">
-        <div className="reading-room-identity"><BookOpen size={22} strokeWidth={1.5} aria-hidden="true"/><div><span>{studyWords.kicker}</span><h1>{t.bibleTitle}</h1></div></div>
-        <div className="reading-room-modes" role="group" aria-label={labels[2]+" / "+labels[3]}>
-          <button type="button" aria-pressed={!studyMode} onClick={()=>{setStudyMode(false);setOpenVerse(null)}}>{labels[2]}</button>
-          <button type="button" aria-pressed={studyMode} onClick={()=>setStudyMode(true)}>{labels[3]}</button>
-        </div>
-      </header>
+    <div className="page bible-reader-page video-reader">
+      <div className="video-reader-top">
+        <a href="#home" className="video-round-button" aria-label={t.home||"Home"}><ArrowLeft size={19}/></a>
+        <div className="video-reader-menu"><button type="button" className="video-round-button" aria-label={videoWords[3]} aria-expanded={readerMenu} onClick={()=>setReaderMenu(v=>!v)}>···</button>
+        {readerMenu&&<div className="video-menu-panel"><button type="button" aria-pressed={studyMode} onClick={()=>{setStudyMode(v=>!v);setOpenVerse(null);setReaderMenu(false)}}>{studyMode?labels[2]:labels[3]}</button><button type="button" disabled={!openVerse&&!reading.verse&&!markedVerse} onClick={()=>{setMarkedVerse(reading.verse||openVerse||markedVerse);setReaderMenu(false)}}>{videoWords[4]}</button></div>}</div>
+      </div>
       {language==="kmr" && <p className="reader-language-note">{t.kurmanjiPending}</p>}
-      <div className="reading-room-layout">
-        <aside className="reading-room-sidebar">
-          <div className="reading-room-side-title">{labels[0]}</div>
-          <button className="reading-passage-button" type="button" aria-expanded={passagePicker} aria-controls="reading-passage-panel" onClick={openPassagePicker}><span dir={edition.direction}>{bookName} <bdi>{reading.chapter}</bdi></span><ChevronDown size={17}/></button>
-          <div className="study-edition-control">
-            <button className="study-edition-button" type="button" aria-expanded={editionPicker} aria-controls="study-edition-options" onClick={()=>{setPassagePicker(false);setEditionPicker(v=>!v)}}>
-              <span className="study-edition-code" dir="ltr">{editionShort(edition)}</span><span className="study-edition-title">{editionTitle(edition)}</span><ChevronDown size={15}/>
-            </button>
+      <header className="video-chapter-header">
+        <h1 dir={edition.direction}>{bookName}</h1>
+        <button className="video-chapter-select" type="button" aria-expanded={passagePicker} aria-controls="reading-passage-panel" onClick={openPassagePicker}>{t.chapter} <bdi>{reading.chapter}</bdi><ChevronDown size={15}/></button>
+        <div className="study-edition-control">
+            <button className="video-edition-select" type="button" aria-expanded={editionPicker} aria-controls="study-edition-options" title={editionTitle(edition)} onClick={()=>{setPassagePicker(false);setEditionPicker(v=>!v)}}><bdi>{editionShort(edition)}</bdi><ChevronDown size={13}/></button>
             <div id="study-edition-options" className="study-edition-options" hidden={!editionPicker}>
               <p>{studyWords.choose}</p>
               {available.map(e=><button key={e.id} className="study-edition-option" type="button" aria-pressed={reading.translation===e.id} onClick={()=>{navigate({...reading,translation:e.id,verse:undefined});setEditionPicker(false);setDraftBook(null)}}>
                 <span className="study-edition-code" dir="ltr">{editionShort(e)}</span><span><strong>{editionTitle(e)}</strong><small>{({en:"English",ckb:"کوردی (سۆرانی)",ka:"ქართული"})[e.language]}</small></span><span className="study-edition-check" aria-hidden="true">{reading.translation===e.id?"✓":""}</span>
               </button>)}
             </div>
-          </div>
+        </div>
           <section className="reading-passage-panel" id="reading-passage-panel" hidden={!passagePicker}>
             <div className="reading-picker-head"><strong>{labels[0]}</strong><button type="button" onClick={()=>setPassagePicker(false)} aria-label={labels[4]}><X size={18}/></button></div>
             <label className="reading-book-search"><Search size={16}/><input value={bookSearch} onChange={e=>setBookSearch(e.target.value)} placeholder={labels[1]} aria-label={labels[1]}/></label>
@@ -342,14 +342,11 @@ export function BibleReader({ t, language }) {
               <div className="reading-chapter-list"><h3>{labels[5]}</h3><strong dir={edition.direction}>{bookLabel(pickerBook)}</strong><div className="reading-chapter-grid">{chapters.map(n=><button key={n} type="button" aria-pressed={pickerBook.id===book.id&&n===reading.chapter} onClick={()=>{navigate({translation:edition.id,book:pickerBook.id,chapter:n});setPassagePicker(false)}}>{n}</button>)}</div></div>
             </div>
           </section>
-          <div className="reading-sidebar-note"><span aria-hidden="true">✦</span><p>{studyWords.comment}</p></div>
-        </aside>
-        <div className="reading-room-main">
-          <nav className="reading-room-nav" aria-label={t.chapter}>
-            <button type="button" disabled={!previous} aria-label={t.previousChapter} onClick={()=>navigate(previous)}><ArrowLeft size={18}/></button>
-            <span dir={edition.direction}>{bookName} <bdi>{reading.chapter}</bdi></span>
-            <button type="button" disabled={!next} aria-label={t.nextChapter} onClick={()=>navigate(next)}><ArrowRight size={18}/></button>
-          </nav>
+      </header>
+      <div className="video-reader-divider" aria-hidden="true"/>
+      <details className="video-before-read"><summary>{videoWords[0]}<ChevronDown size={15}/></summary><p>{studyWords.comment}</p><p>{editionTitle(edition)}</p></details>
+      {studyMode&&<p className="video-reader-hint"><strong>{videoWords[1]}</strong> {videoWords[2]}</p>}
+      <div className="reading-room-main">
       <div aria-live="polite" aria-busy={loading}>
         {loading ? (
           <div className="reader-loading">
@@ -377,14 +374,6 @@ export function BibleReader({ t, language }) {
               lang={edition.language}
               aria-label={`${bookName} ${reading.chapter}`}
             >
-              <div className="chapter-title">
-                <span className="study-chapter-kicker">{book.order>39&&!book.isApocryphal?t.newTestament:book.isApocryphal?t.deuterocanonical:t.oldTestament}</span>
-                <h2>
-                  {bookName}
-                </h2>
-                <div className="reading-chapter-number"><span/><bdi>{reading.chapter}</bdi><span/></div>
-                <span className="study-chapter-edition">{editionTitle(edition)}</span>
-              </div>
               {result.data.chapter.content.map((row, index) => {
                 if (row.type === "heading")
                   return <h3 key={index}>{row.text}</h3>;
@@ -398,23 +387,20 @@ export function BibleReader({ t, language }) {
                 const override = (editorial.path === editorialPath ? editorial.data : null)?.overrides?.find(
                   (item) => item.verse === row.number,
                 );
+                const editorialRows=(editorial.path===editorialPath?editorial.data?.explanations:null)||[];
+                const hasText=editorialRows.some(x=>x.verse_start<=row.number&&x.verse_end>=row.number&&[x.body_en,x.body_ckb,x.body_ka,x.body_kmr].some(Boolean))||patristicSources(reading.book,reading.chapter,row.number).some(s=>s.excerpt||localHomilies.includes(s.author+"-"+s.number));
                 return (
                   <React.Fragment
                     key={`${reading.book}-${reading.chapter}-${row.number}`}
                   >
                     <div
                       id={`scripture-verse-${row.number}`}
-                      className={`scripture-verse${reading.verse === row.number ? " highlighted" : ""}`}
+                      className={`scripture-verse${studyMode&&hasText?" has-patristic":""}${markedVerse===row.number?" video-marked":""}`}
                     >
-                      <button className="scripture-verse-trigger" type="button" aria-expanded={openVerse === row.number} aria-controls={`explanation-${reading.book}-${reading.chapter}-${row.number}`} onClick={() => { setStudyMode(true); setOpenVerse(openVerse === row.number ? null : row.number); }}>
-                        <sup>{row.number}</sup>
+                      <button className="scripture-verse-trigger" type="button" aria-expanded={openVerse === row.number} aria-controls={`explanation-${reading.book}-${reading.chapter}-${row.number}`} onClick={() => { setMarkedVerse(row.number); if(studyMode) setOpenVerse(row.number); }}>
+                        <sup>{row.number}{studyMode&&hasText&&<i aria-hidden="true"/>}</sup>
                         <span>{override ? override.text : row.text || (edition.language === "ka" ? t.sourceVerseMissing : "")}</span>
                       </button>
-                      {studyMode && <button className="study-commentary-toggle" type="button" aria-expanded={openVerse === row.number} aria-controls={`explanation-${reading.book}-${reading.chapter}-${row.number}`} onClick={() => setOpenVerse(current => current === row.number ? null : row.number)}>
-                        <BookOpen size={15} aria-hidden="true" />
-                        <span>{({en:"Church Fathers", ckb:"ڕوونکردنەوەی باوکانی کڵێسا", ka:"ეკლესიის მამათა განმარტება", kmr:"Şiroveya Bavên Dêrê"})[language] || "Church Fathers"}</span>
-                        <span aria-hidden="true">⌄</span>
-                      </button>}
                     </div>
                     {override && (
                       <BibleRevision
@@ -439,7 +425,7 @@ export function BibleReader({ t, language }) {
                         edition={reading.translation}
                         verseText={override ? override.text : row.text}
                         open={openVerse === row.number}
-                        onToggle={() => setOpenVerse(openVerse === row.number ? null : row.number)}
+                        onToggle={() => setOpenVerse(null)}
                       />
                     )}
                     {!!row.footnotes?.length && (
@@ -470,7 +456,7 @@ export function BibleReader({ t, language }) {
             : t.englishScope}
       </p>
       </div>
-      </div>
+      <nav className="video-chapter-dock" aria-label={t.chapter}><button type="button" disabled={!previous} aria-label={t.previousChapter} onClick={()=>{navigate(previous);window.scrollTo(0,0)}}><ArrowLeft size={18}/></button><button type="button" onClick={()=>{openPassagePicker();window.scrollTo(0,0)}}>{bookName} <bdi>{reading.chapter}</bdi></button><button type="button" disabled={!next} aria-label={t.nextChapter} onClick={()=>{navigate(next);window.scrollTo(0,0)}}><ArrowRight size={18}/></button></nav>
     </div>
   );
 }

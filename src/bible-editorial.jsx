@@ -26,6 +26,8 @@ export function VerseExplanations({
     [aiError, setAiError] = useState(false),
     [expanded, setExpanded] = useState({});
   const requestRef = useRef(null);
+  const dialogRef=useRef(null);
+  useEffect(()=>{const dialog=dialogRef.current;if(!open||!dialog)return;const previous=document.activeElement;const overflow=document.body.style.overflow;dialog.showModal();document.body.style.overflow="hidden";return()=>{dialog.close();document.body.style.overflow=overflow;previous?.focus?.({preventScroll:true})}},[open]);
   const cms = useEditorial();
   const sources = open ? patristicSources(book, chapter, verse) : [];
   const sourceWords = ({en:["Historical homilies & commentaries","Related passage; not necessarily a direct explanation of every verse.","Read full English source","Historical English excerpt"],ckb:["وتار و لێکدانەوە مێژووییەکان","ئەم سەرچاوەیە پەیوەندی بە بەشەکەوە هەیە؛ نەک بە ناچاری ڕوونکردنەوەی هەر ئایەتێک.","سەرچاوەی تەواو بە ئینگلیزی","دەقێکی مێژوویی بە ئینگلیزی"],ka:["ისტორიული ქადაგებები და კომენტარები","დაკავშირებული მონაკვეთი; არა აუცილებლად თითოეული მუხლის პირდაპირი განმარტება.","სრული ინგლისური წყარო","ისტორიული ინგლისური ამონარიდი"]})[language] || ["Historical homilies & commentaries","Related passage; not necessarily a direct explanation of every verse.","Read full English source","Historical English excerpt"];
@@ -83,9 +85,9 @@ export function VerseExplanations({
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(item);
   }
-  return <section className="study-commentary" id={id} hidden={!open} aria-label={ui.label || "Patristic commentary"} dir={language === "ckb" ? "rtl" : "ltr"} lang={language}>
+  return <dialog ref={dialogRef} className="study-commentary video-commentary-sheet" id={id} aria-label={ui.label || "Patristic commentary"} dir={language === "ckb" ? "rtl" : "ltr"} lang={language} onCancel={e=>{e.preventDefault();onToggle()}} onClick={e=>{if(e.target===dialogRef.current)onToggle()}}>
     {open && <div className="study-commentary-content">
-      <header className="study-commentary-heading"><span>{ui.label || "Patristic commentary"}</span><bdi>{chapter}:{verse}</bdi></header>
+      <header className="study-commentary-heading"><div className="video-sheet-grip" aria-hidden="true"/><div><span>{ui.label || "Patristic commentary"}</span><h2>{bookName} <bdi>{chapter}:{verse}</bdi> <small>{rows.length+sources.length}</small></h2></div><button type="button" className="video-sheet-close" onClick={onToggle} aria-label={ui.close||"Close"} autoFocus>×</button></header>
           {loading ? (
             <p role="status">{w.loading}</p>
           ) : error ? (
@@ -153,7 +155,7 @@ export function VerseExplanations({
             })}
           </section>}
         </div>}
-      </section>;
+      </dialog>;
 }
 export function BibleRevision({ override, original, language }) {
   const w = useEditorialWords(language);
