@@ -92,6 +92,12 @@ export function VerseExplanations({
     ka: ["AI განმარტება მართლმადიდებლური ხედვით", "AI-ით განმარტება", "AI განმარტება დროებით მიუწვდომელია. სცადეთ ხელახლა.", "დაფუძნებულია მითითებულ მართლმადიდებლურ წყაროზე; ეს არის AI-ის შეჯამება და არა წმინდანის ციტატა."],
     ckb: ["ڕوونکردنەوەی AI لە ڕوانگەی ئۆرتۆدۆکسەوە", "بە AI ڕوونی بکەرەوە", "ڕوونکردنەوەی AI ئێستا بەردەست نییە. دووبارە هەوڵ بدەرەوە.", "پشت بە سەرچاوە ئۆرتۆدۆکسە بەستراوە؛ ئەمە پوختەی AI ـە، نەک وتەی ڕاستەوخۆی پایەپیرۆزێک."],
   }[language] || [];
+  const aiLanguage = ai?.language || { eng_webu: "en", ckb_bib: "ckb", ka_ogb: "ka" }[edition] || language;
+  const aiNotice = {
+    en: "This is an AI-generated explanation and may be wrong.",
+    ka: "ეს განმარტება შექმნილია AI-ის მიერ და შეიძლება მცდარი იყოს.",
+    ckb: "ئەمە ڕوونکردنەوەیەکی دروستکراوی AI ـە و ڕەنگە هەڵە بێت.",
+  }[aiLanguage] || "This is an AI-generated explanation and may be wrong.";
   const ui = {
     en: { label: "Patristic commentary", close: "Close explanation", more: "Continue reading", less: "Show less", ai: "AI explanation" },
     ka: { label: "ეკლესიის მამათა განმარტება", close: "განმარტების დახურვა", more: "კითხვის გაგრძელება", less: "ნაკლების ჩვენება", ai: "AI განმარტება" },
@@ -157,7 +163,7 @@ export function VerseExplanations({
             ))}
             {!ai && (aiLoading ? <p role="status" className="verse-sheet-loading">{w.loading}</p> : rows.length > 0 && <button className="button secondary verse-ai-button" type="button" onClick={explainWithAi}>{words[1]}</button>)}
             {aiError && <p role="alert">{words[2]} <button className="text-link" type="button" onClick={explainWithAi}>{w.retry}</button></p>}
-            {ai && <div className="verse-ai-result"><span className="verse-ai-badge">{ui.ai}</span><h3>{words[0]}</h3><p lang={ai.language} dir={ai.language === "ckb" ? "rtl" : "ltr"}>{ai.explanation}</p><p className="verse-ai-disclaimer">{ai.grounded_in_commentary ? words[3] : ({en:"AI interpretation of this verse; no verse-specific Church Father commentary was found.",ka:"ამ მუხლის AI განმარტება; ეკლესიის მამათა კონკრეტული კომენტარი ვერ მოიძებნა.",ckb:"لێکدانەوەی AI بۆ ئەم ئایەتە؛ لێدوانی تایبەتیی باوکانی کڵێسا نەدۆزرایەوە."})[language]}</p>{ai.source_url && <a href={ai.source_url} target="_blank" rel="noreferrer">{ai.source_title}</a>}</div>}
+            {ai && <div className="verse-ai-result"><span className="verse-ai-badge">{ui.ai}</span><h3>{words[0]}</h3><p className="verse-ai-notice" role="note" lang={aiLanguage} dir={aiLanguage === "ckb" ? "rtl" : "ltr"}><strong>{aiNotice}</strong></p><p lang={ai.language} dir={ai.language === "ckb" ? "rtl" : "ltr"}>{ai.explanation}</p><p className="verse-ai-disclaimer">{ai.grounded_in_commentary ? words[3] : ({en:"AI interpretation of this verse; no verse-specific Church Father commentary was found.",ka:"ამ მუხლის AI განმარტება; ეკლესიის მამათა კონკრეტული კომენტარი ვერ მოიძებნა.",ckb:"لێکدانەوەی AI بۆ ئەم ئایەتە؛ لێدوانی تایبەتیی باوکانی کڵێسا نەدۆزرایەوە."})[language]}</p>{ai.source_url && <a href={ai.source_url} target="_blank" rel="noreferrer">{ai.source_title}</a>}</div>}
             </>
           )}
         </div>
