@@ -124,3 +124,62 @@ html[lang=en] #root .study-masthead h1{font-family:Georgia,"Times New Roman",ser
 @media(max-width:760px){#root .reading-room-layout{display:block}#root .reading-room-sidebar{position:relative;top:auto;border:0;padding:0;margin-bottom:20px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}#root .reading-room-side-title,#root .reading-sidebar-note{display:none}#root .reading-passage-button{margin:0;min-height:48px}#root .reading-passage-panel{top:52px;max-width:100%}#root .study-edition-options{inset-inline-start:auto;inset-inline-end:0}#root .reading-room-heading{padding:4px 0 16px;margin-bottom:16px;gap:9px}#root .reading-room-identity{gap:8px}#root .reading-room-identity span{font-size:.58rem;letter-spacing:0}#root .reading-room-modes button{font-size:.71rem;padding:7px 8px}#root .bible-reader-page .scripture-chapter{padding:24px 16px}#root .reading-picker-columns{gap:9px}#root .reading-room-main{max-width:100%}}
 
 #root .historical-reading blockquote[lang=ckb]{font-family:var(--reading-font);line-height:2;white-space:pre-wrap}#root .historical-reading details{margin:10px 0}#root .historical-reading summary{cursor:pointer;color:var(--gold);font-size:.86rem;padding:8px 0}#root .historical-full-text{max-height:55vh;overflow:auto;border-block:1px solid var(--line);padding:12px 8px;margin:8px 0}#root .historical-full-text p{font-family:Georgia,serif;white-space:pre-wrap;line-height:1.8;margin:0 0 14px}#root .historical-attribution{font-size:.72rem;color:var(--muted)}
+
+/* Reference-video reading interface. Scope all changes to Scripture. */
+#root .video-reader{--reader-accent:#b34457;max-width:700px;padding:16px 24px 100px;margin-inline:auto}
+#root .video-reader-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px}
+#root .video-round-button{width:38px;height:38px;border:0;border-radius:50%;background:var(--surface);color:var(--text);display:grid;place-items:center;font-size:1.5rem;text-decoration:none}
+#root .video-reader-menu{position:relative}
+#root .video-menu-panel{position:absolute;inset-inline-end:0;top:44px;background:var(--surface);border:1px solid var(--line);padding:8px;min-width:155px;z-index:35;border-radius:10px}
+#root .video-menu-panel button{display:block;width:100%;text-align:start;background:none;border:0;color:var(--text);padding:10px}
+#root .video-chapter-header{text-align:center;position:relative}
+#root .video-chapter-header h1{font-size:clamp(2.7rem,8vw,4rem);font-weight:700;line-height:1.13;margin:0 0 8px;color:var(--text);letter-spacing:-.025em}
+#root .video-chapter-header h1[dir=ltr]{font-family:Georgia,var(--reading-font),serif}
+#root .video-chapter-select,#root .video-edition-select{display:flex;justify-content:center;align-items:center;gap:5px;background:none;border:0;color:var(--muted);font-size:.95rem;padding:6px 12px;margin:0 auto;min-height:33px}
+#root .video-edition-select{font-size:.8rem}
+#root .video-chapter-header .study-edition-control{display:inline-block}
+#root .video-chapter-header .study-edition-options{inset-inline-start:50%;inset-inline-end:auto;transform:translateX(-50%);width:min(320px,calc(100vw - 40px));text-align:start;border-radius:12px}
+#root .video-chapter-header .reading-passage-panel{top:100%;inset-inline-start:50%;transform:translateX(-50%);text-align:start;border-radius:12px}
+#root [dir=rtl] .video-chapter-header .study-edition-options,#root [dir=rtl] .video-chapter-header .reading-passage-panel{transform:translateX(50%)}
+#root .video-reader-divider{width:24px;height:1px;background:var(--line);margin:22px auto 24px}
+#root .video-before-read{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:0 14px;font-size:.85rem;margin-bottom:18px}
+#root .video-before-read summary{display:flex;justify-content:space-between;align-items:center;cursor:pointer;list-style:none;padding:13px 0}
+#root .video-before-read summary::-webkit-details-marker{display:none}
+#root .video-before-read p{color:var(--muted);line-height:1.65;margin:0 0 12px}
+#root .video-reader-hint{font-size:.82rem;line-height:1.7;color:var(--muted);margin:0 0 18px}
+#root .video-reader-hint strong{color:var(--text)}
+#root .video-reader .scripture-chapter{border:0;background:transparent;padding:0;box-shadow:none;border-radius:0;max-width:none}
+#root .video-reader .scripture-verse{padding:0;margin:0;line-height:1.74;font-size:calc(clamp(1.28rem,3.6vw,1.52rem)*var(--reader-scale))}
+#root .video-reader .scripture-verse-trigger{display:block;line-height:inherit;padding:2px 0;text-align:start;font-family:var(--reading-font);white-space:normal}
+#root .video-reader .scripture-chapter[lang=en] .scripture-verse-trigger{font-family:Georgia,"Times New Roman",serif}
+#root .video-reader .scripture-verse-trigger sup{display:inline;font-size:.6em;vertical-align:super;margin-inline-end:4px;min-width:0;color:var(--muted)}
+#root .video-reader .has-patristic sup{color:var(--reader-accent);font-weight:700}
+#root .video-reader .has-patristic sup i{display:inline-block;width:3px;height:3px;background:currentColor;border-radius:50%;margin-inline-start:2px;vertical-align:middle}
+#root .video-reader .video-marked .scripture-verse-trigger span{background:color-mix(in srgb,var(--gold) 30%,transparent);box-decoration-break:clone;-webkit-box-decoration-break:clone}
+#root .video-reader .scripture-verse-trigger:hover{color:inherit}
+#root .video-reader .study-chapter-footer{display:none}
+#root .video-chapter-dock{display:flex;align-items:center;justify-content:center;position:fixed;z-index:29;bottom:24px;left:50%;transform:translateX(-50%);gap:10px;padding:7px;border:1px solid var(--line);background:var(--surface);border-radius:40px;box-shadow:0 4px 24px #0004;max-width:calc(100vw - 24px)}
+#root .video-chapter-dock button{display:flex;align-items:center;justify-content:center;gap:5px;background:transparent;color:var(--text);border:0;padding:8px 12px;white-space:nowrap;font-size:.85rem}
+#root .video-chapter-dock button:disabled{opacity:.35}
+#root .video-commentary-sheet:not([open]){display:none}
+#root .video-commentary-sheet[open]{position:fixed;inset:auto 0 0;margin:0 auto;width:min(100%,660px);max-width:100%;height:min(82dvh,850px);max-height:92dvh;border:1px solid var(--line);border-radius:18px 18px 0 0;padding:0;background:var(--paper);color:var(--text);overflow-y:auto;overscroll-behavior:contain;box-shadow:0 -12px 48px #0005}
+#root .video-commentary-sheet::backdrop{background:#0008}
+#root .video-commentary-sheet .study-commentary-content{padding:0 16px 28px}
+#root .video-commentary-sheet .study-commentary-heading{position:sticky;top:0;z-index:2;background:var(--paper);display:flex;justify-content:space-between;align-items:center;margin:0 -16px 12px;padding:27px 16px 13px;border-bottom:1px solid var(--line)}
+#root .video-sheet-grip{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:35px;height:4px;border-radius:4px;background:var(--muted);opacity:.55}
+#root .video-commentary-sheet .study-commentary-heading span{font-size:.75rem;color:var(--muted)}
+#root .video-commentary-sheet .study-commentary-heading h2{font-size:1.2rem;font-weight:500;color:var(--text);margin:4px 0 0}
+#root .video-commentary-sheet .study-commentary-heading small{font-size:.68rem;border-radius:12px;background:var(--surface);padding:2px 7px;color:var(--muted)}
+#root .video-sheet-close{background:none;border:0;color:var(--muted);font-size:1.5rem;width:34px;height:34px}
+#root .video-commentary-sheet .study-father-group{border:0;padding:0;margin:16px 0 22px}
+#root .video-commentary-sheet .verse-father-byline{display:flex;align-items:center;gap:9px;margin:0 0 8px}
+#root .video-commentary-sheet .verse-father-byline img,#root .video-commentary-sheet .verse-father-monogram{width:30px;height:30px;border-radius:50%;object-fit:cover}
+#root .video-commentary-sheet .verse-father-byline h3{font-size:.84rem;margin:0;color:var(--text)}
+#root .video-commentary-sheet .verse-father-card{background:var(--surface);border:1px solid var(--line);padding:15px;border-radius:12px;margin:0 0 9px}
+#root .video-commentary-sheet .study-source-reference{font-size:.73rem;color:var(--muted)}
+#root .video-commentary-sheet .verse-father-reading,#root .video-commentary-sheet .historical-reading blockquote{font-size:1.07rem;line-height:1.8;color:var(--text)}
+#root .video-commentary-sheet .historical-reading blockquote{border:0;padding:0;margin:8px 0}
+#root .video-commentary-sheet .verse-read-more,#root .video-commentary-sheet .historical-reading summary{font-size:.8rem;font-weight:600;color:var(--text)}
+#root .video-commentary-sheet .study-historical-sources{border:0;padding-top:5px}
+#root .video-commentary-sheet .historical-full-text{max-height:none;overflow:visible}
+@media(max-width:760px){#root .video-reader{padding:12px 17px 105px}#root .video-reader-top{margin-bottom:22px}#root .video-chapter-dock{bottom:calc(74px + env(safe-area-inset-bottom));}#root .video-reader .scripture-verse{font-size:calc(1.35rem*var(--reader-scale))}#root .video-commentary-sheet[open]{height:82dvh}#root .video-commentary-sheet .study-commentary-content{padding-bottom:calc(24px + env(safe-area-inset-bottom))}}
