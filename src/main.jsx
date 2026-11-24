@@ -1,6 +1,7 @@
 import { DiscoverPage, ReadingLibrary, HistoryLibrary, discoverWords } from "./discover.jsx";
 import { localizedError, metadataFor } from "./editorial.js";
 import React, { useEffect, useState } from "react";
+import { publicHref, routeFromLocation, seoTitle } from "./seo-pages.js";
 import { createRoot } from "react-dom/client";
 import {
   BookOpen,
@@ -150,7 +151,7 @@ function App() {
       })();
     return Object.hasOwn(copy, requested) ? requested : "ckb";
   });
-  const [route, setRoute] = useState(() => location.hash.slice(1) || "home");
+  const [route, setRoute] = useState(() => routeFromLocation(location));
   const page = route.split("?")[0];
   useEffect(() => { document.documentElement.dataset.page = page; }, [page]);
   const [menu, setMenu] = useState(false);
@@ -165,7 +166,7 @@ function App() {
   const ew = useEditorialWords(language);
   useEffect(() => {
     const handle = () => {
-      setRoute(location.hash.slice(1) || "home");
+      setRoute(routeFromLocation(location));
       setMenu(false);
       window.scrollTo(0, 0);
     };
@@ -174,12 +175,12 @@ function App() {
   }, []);
   useEffect(() => {
     document.documentElement.lang = language;
-    document.title = t.name;
+    document.title = seoTitle(page);
     document.documentElement.dir = language === "ckb" ? "rtl" : "ltr";
     try {
       localStorage.setItem("language", language);
     } catch {}
-  }, [language]);
+  }, [language, page]);
   const fatherQuotesLabel = cms.text(
     "general.navFatherQuotes",
     language,
@@ -224,7 +225,7 @@ function App() {
         {t.skip}
       </a>
       <header className="header">
-        <a href="#home" className="brand">
+        <a href="/" className="brand">
           {page === "discover" ? <h1 className="discover-header-title">{cms.text("discover.title", language, discoverWords(language).title)}</h1> : <>
           {cms.text("general.brandImage", language, "/kurdistan-cross.jpg") && (
             <img
@@ -258,7 +259,7 @@ function App() {
           {nav.map(([id, label]) => (
             <a
               key={id}
-              href={`#${id}`}
+              href={publicHref(id)}
               className={page === id || (id === "saints" && page === "saint") ? "active" : ""}
               aria-current={page === id || (id === "saints" && page === "saint") ? "page" : undefined}
             >
@@ -425,7 +426,7 @@ function App() {
         ].map(([id, Icon, label]) => (
           <a
             key={id}
-            href={`#${id}`}
+            href={publicHref(id)}
             className={page === id || (id === "saints" && page === "saint") ? "active" : ""}
             aria-current={page === id || (id === "saints" && page === "saint") ? "page" : undefined}
           >
@@ -461,7 +462,7 @@ function App() {
             </div>
           </div>
           <div className="footer-links">
-            <a href="#about">
+            <a href="/about/">
               {cms.text(
                 "general.footerAbout",
                 language,
@@ -472,7 +473,7 @@ function App() {
                     : "About",
               )}
             </a>
-            <a href="#councils">
+            <a href="/councils/">
               {cms.text(
                 "general.footerCouncils",
                 language,
@@ -483,7 +484,7 @@ function App() {
                     : "Ecumenical Councils",
               )}
             </a>
-            <a href="#sources">{t.sources}</a>
+            <a href="/sources/">{t.sources}</a>
             <a href="#admin">{t.admin}</a>
             <span lang="en" dir="ltr">
               © {new Date().getFullYear()} {language === "ka" ? t.name : "Rum Orthodoxy In Kurdistan"}
