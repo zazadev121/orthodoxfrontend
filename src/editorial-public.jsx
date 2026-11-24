@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { withClimacusContent } from "./climacus-content.js";
+import { withExpandedBiography } from "./expanded-saint-biographies.js";
 import { ArrowUpRight, BookOpen, Bookmark, Check, Search } from "lucide-react";
 import {
   useEditorial,
@@ -326,7 +327,7 @@ export function AuthorProfile({ language, route }) {
   const resource = useEditorialResource(
       "/authors/" + encodeURIComponent(identifier),
     ),
-    a = withClimacusContent(resource.data?.author);
+    a = withExpandedBiography(withClimacusContent(resource.data?.author));
   const [saved, setSaved] = useState(false);
   useEffect(() => {
     if (!a) return;
