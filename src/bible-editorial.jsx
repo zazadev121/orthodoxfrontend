@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import { api } from "./api.js";
 import { useEditorialWords } from "./editorial-context.jsx";
 import { authorName, textFor, profileHref, metadataFor } from "./editorial.js";
@@ -24,9 +23,7 @@ export function VerseExplanations({
     [aiLoading, setAiLoading] = useState(false),
     [aiError, setAiError] = useState(false),
     [expanded, setExpanded] = useState({});
-  const closeRef = useRef(null), sheetRef = useRef(null),
-    toggleRef = useRef(onToggle), requestRef = useRef(null);
-  toggleRef.current = onToggle;
+  const requestRef = useRef(null);
   const rows = explanations.filter(
     (item) => item.verse_start <= verse && item.verse_end >= verse,
   );
@@ -39,35 +36,7 @@ export function VerseExplanations({
     setExpanded({});
     return () => requestRef.current?.abort();
   }, [book, chapter, verse, edition, language]);
-  useEffect(() => {
-    if (!open) return;
-    const previousFocus = document.activeElement;
-    const previousOverflow = document.body.style.overflow;
-    const root = document.getElementById("root");
-    const previousInert = root?.inert;
-    document.body.style.overflow = "hidden";
-    if (root) root.inert = true;
-    closeRef.current?.focus({ preventScroll: true });
-    const onKeyDown = (event) => {
-      if (event.key === "Escape") { event.preventDefault(); toggleRef.current(); }
-      if (event.key !== "Tab") return;
-      const focusable = [...sheetRef.current.querySelectorAll('a[href], button:not(:disabled), [tabindex="0"]')]
-        .filter((element) => element.getClientRects().length);
-      const first = focusable[0], last = focusable.at(-1);
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault(); last?.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault(); first?.focus();
-      }
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      if (root) root.inert = previousInert;
-      window.removeEventListener("keydown", onKeyDown);
-      if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
-    };
-  }, [open]);
+  useEffect(() => { if (!open) { requestRef.current?.abort(); setAiLoading(false); } }, [open]);
   async function explainWithAi() {
     requestRef.current?.abort();
     const controller = new AbortController();
@@ -103,20 +72,15 @@ export function VerseExplanations({
     ka: { label: "ეკლესიის მამათა განმარტება", close: "განმარტების დახურვა", more: "კითხვის გაგრძელება", less: "ნაკლების ჩვენება", ai: "AI განმარტება" },
     ckb: { label: "ڕوونکردنەوەی باوکانی کڵێسا", close: "داخستنی ڕوونکردنەوە", more: "درێژەی خوێندنەوە", less: "کەمتر پیشان بدە", ai: "ڕوونکردنەوەی AI" },
   }[language] || {};
-  useEffect(() => {
-    if (open && !loading && !error && !rows.length && !ai && !aiLoading && !aiError) explainWithAi();
-  }, [open, loading, error, rows.length, book, chapter, verse, edition, language, ai, aiLoading, aiError]);
-  if (!open) return null;
-  return createPortal(
-    <div className="verse-sheet-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onToggle(); }}>
-      <section ref={sheetRef} className="verse-sheet" id={id} role="dialog" aria-modal="true" aria-labelledby={`${id}-title`} dir={language === "ckb" ? "rtl" : "ltr"} lang={language}>
-        <div className="verse-sheet-handle" aria-hidden="true" />
-        <header className="verse-sheet-header">
-          <div><span className="verse-sheet-kicker">{ui.label}</span><h2 id={`${id}-title`}>{bookName || book} <bdi>{chapter}:{verse}</bdi></h2></div>
-          <button ref={closeRef} className="verse-sheet-close" type="button" onClick={onToggle} aria-label={ui.close}>×</button>
-        </header>
-        <div className="verse-sheet-scroll">
-          <blockquote className="verse-sheet-verse" lang={{eng_webu:"en",ckb_bib:"ckb",ka_ogb:"ka"}[edition]} dir={edition === "ckb_bib" ? "rtl" : "ltr"}>{verseText}</blockquote>
+  const groups = new Map();
+  for (const item of rows) {
+    const key = item.author?.id || item.author_id || item.id;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(item);
+  }
+  return <section className="study-commentary" id={id} hidden={!open} aria-label={ui.label || "Patristic commentary"} dir={language === "ckb" ? "rtl" : "ltr"} lang={language}>
+    {open && <div className="study-commentary-content">
+      <header className="study-commentary-heading"><span>{ui.label || "Patristic commentary"}</span><bdi>{chapter}:{verse}</bdi></header>
           {loading ? (
             <p role="status">{w.loading}</p>
           ) : error ? (
@@ -129,12 +93,15 @@ export function VerseExplanations({
           ) : (
             <>
             {!rows.length && <p className="verse-sheet-empty">{w.noExplanation}</p>}
-            {rows.map((item) => (
-              <article className="verse-father-card" key={item.id}>
+            {[...groups.entries()].map(([key, entries]) => {
+              const author = entries[0].author;
+              return <div className="study-father-group" key={key}>
                 <div className="verse-father-byline">
-                  {item.author?.icon_url ? <img src={item.author.icon_url} alt="" /> : <span className="verse-father-monogram" aria-hidden="true">✣</span>}
-                  <div><h3><a href={profileHref(item.author)}>{authorName(item.author, language)}</a></h3><p>{metadataFor(item, "reference", language)}</p></div>
+                  {author?.icon_url ? <img src={author.icon_url} alt="" loading="lazy" decoding="async" onError={event => { event.currentTarget.hidden = true; }} /> : <span className="verse-father-monogram" aria-hidden="true">✣</span>}
+                  <h3>{author && <a href={profileHref(author)}>{authorName(author, language)}</a>}</h3>
                 </div>
+                {entries.map(item => <article className="verse-father-card" key={item.id}>
+                  <p className="study-source-reference">{metadataFor(item, "reference", language) || item.reference}</p>
                 <div className={`verse-father-reading${(textFor(item, "body", language) || "").length > 220 ? " collapsible" : ""}${expanded[item.id] ? " expanded" : ""}`}>
                   {textFor(item, "title", language) && <h4>{textFor(item, "title", language)}</h4>}
                   <p className="editorial-verbatim">{textFor(item, "body", language) || w.missingTranslation}</p>
@@ -159,17 +126,16 @@ export function VerseExplanations({
                 ) : (
                   <p className="editorial-verbatim">{metadataFor(item, "reference", language)}</p>
                 )}
-              </article>
-            ))}
-            {!ai && (aiLoading ? <p role="status" className="verse-sheet-loading">{w.loading}</p> : rows.length > 0 && <button className="button secondary verse-ai-button" type="button" onClick={explainWithAi}>{words[1]}</button>)}
+              </article>)}
+              </div>;
+            })}
+            {!ai && (aiLoading ? <p role="status" className="verse-sheet-loading">{w.loading}</p> : <button className="button secondary verse-ai-button" type="button" onClick={explainWithAi}>{words[1] || "Explain with AI"}</button>)}
             {aiError && <p role="alert">{words[2]} <button className="text-link" type="button" onClick={explainWithAi}>{w.retry}</button></p>}
             {ai && <div className="verse-ai-result"><span className="verse-ai-badge">{ui.ai}</span><h3>{words[0]}</h3><p className="verse-ai-notice" role="note" lang={aiLanguage} dir={aiLanguage === "ckb" ? "rtl" : "ltr"}><strong>{aiNotice}</strong></p><p lang={ai.language} dir={ai.language === "ckb" ? "rtl" : "ltr"}>{ai.explanation}</p><p className="verse-ai-disclaimer">{ai.grounded_in_commentary ? words[3] : ({en:"AI interpretation of this verse; no verse-specific Church Father commentary was found.",ka:"ამ მუხლის AI განმარტება; ეკლესიის მამათა კონკრეტული კომენტარი ვერ მოიძებნა.",ckb:"لێکدانەوەی AI بۆ ئەم ئایەتە؛ لێدوانی تایبەتیی باوکانی کڵێسا نەدۆزرایەوە."})[language]}</p>{ai.source_url && <a href={ai.source_url} target="_blank" rel="noreferrer">{ai.source_title}</a>}</div>}
             </>
           )}
-        </div>
-      </section>
-    </div>
-    , document.body);
+        </div>}
+      </section>;
 }
 export function BibleRevision({ override, original, language }) {
   const w = useEditorialWords(language);

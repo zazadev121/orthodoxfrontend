@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "./bible-reader-study.css";
 import {
   useEditorial,
   useEditorialResource,
@@ -189,6 +190,7 @@ export function BibleReader({ t, language }) {
   const [error, setError] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const [openVerse, setOpenVerse] = useState(null);
+  useEffect(() => setOpenVerse(null), [reading.translation, reading.book, reading.chapter]);
   const edition = editionFor(reading.translation);
   const book = edition.books.find((b) => b.id === reading.book);
   const bookName = cms.text(
@@ -196,8 +198,9 @@ export function BibleReader({ t, language }) {
     edition.language,
     book.name,
   );
+  const editorialPath = `/bible/editorial?book=${reading.book}&chapter=${reading.chapter}&edition=${reading.translation}`;
   const editorial = useEditorialResource(
-    `/bible/editorial?book=${reading.book}&chapter=${reading.chapter}&edition=${reading.translation}`,
+    editorialPath,
     { enabled: cms.ready === true },
   );
   const available = scriptureEditions.filter(
@@ -314,17 +317,15 @@ export function BibleReader({ t, language }) {
               })
             }
           >
-            {available.map((edition) => (
-              <option key={edition.id} value={edition.id}>
-                {cms.ready
-                  ? cms.editions.find((e) => e.id === edition.id)?.[
-                      `title_${language}`
-                    ]
-                  : edition.language === "ka" ? t.georgianEdition : edition.language === "ckb"
-                    ? t.soraniEdition
-                    : t.englishEdition}
-              </option>
-            ))}
+            {[["en", "English"], ["ckb", "کوردی (سۆرانی)"], ["ka", "ქართული"]].map(([code, label]) => {
+              const options = available.filter(e => e.language === code);
+              return options.length ? <optgroup key={code} label={label}>
+                {options.map(e => <option key={e.id} value={e.id}>
+                  {cms.editions.find(setting => setting.id === e.id)?.[`title_${language}`] ||
+                    (code === "ka" ? t.georgianEdition : code === "ckb" ? t.soraniEdition : t.englishEdition)}
+                </option>)}
+              </optgroup> : null;
+            })}
           </select>
         </label>
         <label>
@@ -336,7 +337,7 @@ export function BibleReader({ t, language }) {
               navigate({
                 ...reading,
                 book: e.target.value,
-                chapter: 1,
+                chapter: edition.books.find(b => b.id === e.target.value)?.firstChapterNumber || 1,
                 verse: undefined,
               })
             }
@@ -449,7 +450,7 @@ export function BibleReader({ t, language }) {
                     </p>
                   );
                 if (row.type !== "verse") return null;
-                const override = editorial.data?.overrides?.find(
+                const override = (editorial.path === editorialPath ? editorial.data : null)?.overrides?.find(
                   (item) => item.verse === row.number,
                 );
                 return (
@@ -464,6 +465,11 @@ export function BibleReader({ t, language }) {
                         <sup>{row.number}</sup>
                         <span>{override ? override.text : row.text || (edition.language === "ka" ? t.sourceVerseMissing : "")}</span>
                       </button>
+                      {cms.ready && <button className="study-commentary-toggle" type="button" aria-expanded={openVerse === row.number} aria-controls={`explanation-${reading.book}-${reading.chapter}-${row.number}`} onClick={() => setOpenVerse(current => current === row.number ? null : row.number)}>
+                        <BookOpen size={15} aria-hidden="true" />
+                        <span>{({en:"Church Fathers", ckb:"ڕوونکردنەوەی باوکانی کڵێسا", ka:"ეკლესიის მამათა განმარტება", kmr:"Şiroveya Bavên Dêrê"})[language] || "Church Fathers"}</span>
+                        <span aria-hidden="true">⌄</span>
+                      </button>}
                     </div>
                     {override && (
                       <BibleRevision
@@ -475,9 +481,9 @@ export function BibleReader({ t, language }) {
                     {cms.ready && (
                       <VerseExplanations
                         verse={row.number}
-                        explanations={editorial.data?.explanations || []}
-                        loading={editorial.loading}
-                        error={editorial.error}
+                        explanations={(editorial.path === editorialPath ? editorial.data?.explanations : null) || []}
+                        loading={editorial.path !== editorialPath || editorial.loading}
+                        error={editorial.path === editorialPath ? editorial.error : null}
                         retry={editorial.retry}
                         language={language}
                         onOpen={rememberVerse}
