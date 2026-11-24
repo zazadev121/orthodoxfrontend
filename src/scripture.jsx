@@ -7,6 +7,9 @@ import {
 import { VerseExplanations, BibleRevision } from "./bible-editorial.jsx";
 import {
   BookOpen,
+  ChevronDown,
+  Search,
+  X,
   Sunrise,
   ArrowLeft,
   ArrowRight,
@@ -190,6 +193,11 @@ export function BibleReader({ t, language }) {
   const [attempt, setAttempt] = useState(0);
   const [openVerse, setOpenVerse] = useState(null);
   const [editionPicker, setEditionPicker] = useState(false);
+  const [passagePicker, setPassagePicker] = useState(false);
+  const [bookSearch, setBookSearch] = useState("");
+  const [draftBook, setDraftBook] = useState(null);
+  const [studyMode, setStudyMode] = useState(true);
+  const labels = ({en:["Choose passage","Search books","Reading","Study","Close","Select chapter"],ckb:["بەشێک هەڵبژێرە","گەڕان بەدوای کتێبەکان","خوێندنەوە","لێکۆڵینەوە","داخستن","بەش هەڵبژێرە"],ka:["აირჩიეთ მონაკვეთი","წიგნების ძიება","კითხვა","შესწავლა","დახურვა","აირჩიეთ თავი"],kmr:["Beşê hilbijêre","Li pirtûkan bigere","Xwendin","Lêkolîn","Bigire","Beşê hilbijêre"]})[language] || ["Choose passage","Search books","Reading","Study","Close","Select chapter"];
   const studyWords = ({en:{kicker:"SCRIPTURE · THE ORTHODOX TRADITION",editions:"Bible editions",change:"Change edition",choose:"Choose a Bible edition",read:"Sacred Scripture",comment:"Read the Scriptures with the Church Fathers.",end:"End of chapter"},ckb:{kicker:"نووسراوە پیرۆزەکان · نەریتی ئۆرتۆدۆکس",editions:"وەشانەکانی کتێبی پیرۆز",change:"گۆڕینی وەشان",choose:"وەشانێک هەڵبژێرە",read:"کتێبی پیرۆز",comment:"کتێبی پیرۆز لەگەڵ باوکانی کڵێسا بخوێنەوە.",end:"کۆتایی بەش"},ka:{kicker:"წმინდა წერილი · მართლმადიდებლური ტრადიცია",editions:"ბიბლიის გამოცემები",change:"გამოცემის შეცვლა",choose:"აირჩიეთ ბიბლიის გამოცემა",read:"წმინდა წერილი",comment:"წაიკითხეთ წმინდა წერილი ეკლესიის მამებთან ერთად.",end:"თავის დასასრული"}})[language] || {kicker:"SCRIPTURE · THE ORTHODOX TRADITION",editions:"Bible editions",change:"Change edition",choose:"Choose a Bible edition",read:"Sacred Scripture",comment:"Read the Scriptures with the Church Fathers.",end:"End of chapter"};
   useEffect(() => setOpenVerse(null), [reading.translation, reading.book, reading.chapter]);
   const edition = editionFor(reading.translation);
@@ -286,10 +294,12 @@ export function BibleReader({ t, language }) {
   }
   const previous = adjacentReading(reading, -1),
     next = adjacentReading(reading, 1);
-  const chapters = Array.from(
-    { length: book.lastChapterNumber - book.firstChapterNumber + 1 },
-    (_, i) => book.firstChapterNumber + i,
-  );
+  const pickerBook = edition.books.find(b=>b.id===draftBook) || book;
+  const chapters = Array.from({length:pickerBook.lastChapterNumber-pickerBook.firstChapterNumber+1},(_,i)=>pickerBook.firstChapterNumber+i);
+  const bookLabel = b => cms.text(`bible.book.${b.id}`,edition.language,b.name);
+  const filteredBooks = edition.books.filter(b=>`${bookLabel(b)} ${b.id}`.toLocaleLowerCase().includes(bookSearch.trim().toLocaleLowerCase()));
+  function openPassagePicker(){setDraftBook(book.id);setBookSearch("");setEditionPicker(false);setPassagePicker(v=>!v);}
+  useEffect(()=>{const dismiss=e=>{if(e.key==="Escape"){setPassagePicker(false);setEditionPicker(false);}};window.addEventListener("keydown",dismiss);return()=>window.removeEventListener("keydown",dismiss);},[]);
   if (cms.ready && !available.length)
     return (
       <div className="page">
@@ -299,101 +309,47 @@ export function BibleReader({ t, language }) {
     );
   return (
     <div className="page bible-reader-page">
-      <header className="study-masthead">
-        <div className="study-masthead-copy"><span className="study-kicker">{studyWords.kicker}</span><h1>{t.bibleTitle}</h1><p>{studyWords.comment}</p></div>
-        <svg className="study-masthead-mark" viewBox="0 0 112 128" fill="none" aria-hidden="true"><rect x="7" y="7" width="98" height="114" rx="46" stroke="currentColor" strokeWidth=".8"/><path d="M56 18v92M42 39h28M29 57h54M43 79l26 12M39 110h34" stroke="currentColor" strokeWidth="2.2"/><path d="M14 64h8M90 64h8M56 11v7M56 110v7" stroke="currentColor"/></svg>
-      </header>
-      {language === "kmr" && (
-        <p className="reader-language-note">{t.kurmanjiPending}</p>
-      )}
-      <div className="reader-controls">
-        <div className="study-edition-control">
-          <span className="study-control-label">{studyWords.editions}</span>
-          <button className="study-edition-button" type="button" aria-expanded={editionPicker} aria-controls="study-edition-options" onClick={()=>setEditionPicker(value=>!value)}>
-            <span className="study-edition-code" dir="ltr">{editionShort(edition)}</span><span className="study-edition-title">{editionTitle(edition)}</span><span aria-hidden="true">⌄</span>
-          </button>
-          <div id="study-edition-options" className="study-edition-options" hidden={!editionPicker}>
-            <p>{studyWords.choose}</p>
-            {available.map(e=><button key={e.id} className="study-edition-option" type="button" aria-pressed={reading.translation===e.id} onClick={()=>{navigate({...reading,translation:e.id,verse:undefined});setEditionPicker(false);}}>
-              <span className="study-edition-code" dir="ltr">{editionShort(e)}</span><span><strong>{editionTitle(e)}</strong><small>{({en:"English",ckb:"کوردی (سۆرانی)",ka:"ქართული"})[e.language]}</small></span><span className="study-edition-check" aria-hidden="true">{reading.translation===e.id?"✓":""}</span>
-            </button>)}
-          </div>
+      <header className="reading-room-heading">
+        <div className="reading-room-identity"><BookOpen size={22} strokeWidth={1.5} aria-hidden="true"/><div><span>{studyWords.kicker}</span><h1>{t.bibleTitle}</h1></div></div>
+        <div className="reading-room-modes" role="group" aria-label={labels[2]+" / "+labels[3]}>
+          <button type="button" aria-pressed={!studyMode} onClick={()=>{setStudyMode(false);setOpenVerse(null)}}>{labels[2]}</button>
+          <button type="button" aria-pressed={studyMode} onClick={()=>setStudyMode(true)}>{labels[3]}</button>
         </div>
-        <label>
-          {t.book}
-          <select
-            value={reading.book}
-            dir={edition.direction}
-            onChange={(e) =>
-              navigate({
-                ...reading,
-                book: e.target.value,
-                chapter: edition.books.find(b => b.id === e.target.value)?.firstChapterNumber || 1,
-                verse: undefined,
-              })
-            }
-          >
-            {[
-              [t.oldTestament, (b) => !b.isApocryphal && b.order <= 39],
-              [t.newTestament, (b) => !b.isApocryphal && b.order > 39],
-              [t.deuterocanonical, (b) => b.isApocryphal],
-            ].map(([label, include]) => {
-              const books = edition.books.filter(include);
-              return books.length ? (
-                <optgroup label={label} key={label}>
-                  {books.map((b) => (
-                    <option key={b.id} value={b.id}>
-                      {cms.text(`bible.book.${b.id}`, edition.language, b.name)}
-                    </option>
-                  ))}
-                </optgroup>
-              ) : null;
-            })}
-          </select>
-        </label>
-        <label>
-          {t.chapter}
-          <select
-            value={reading.chapter}
-            onChange={(e) =>
-              navigate({
-                ...reading,
-                chapter: Number(e.target.value),
-                verse: undefined,
-              })
-            }
-          >
-            {chapters.map((number) => (
-              <option key={number} value={number}>
-                {number}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
-      <div className="chapter-navigation">
-        <button
-          type="button"
-          className="button secondary"
-          disabled={!previous}
-          onClick={() => navigate(previous)}
-        >
-          <ArrowLeft size={17} />
-          <span>{t.previousChapter}</span>
-        </button>
-        <span dir={edition.direction} lang={edition.language}>
-          {bookName} <bdi>{reading.chapter}</bdi>
-        </span>
-        <button
-          type="button"
-          className="button secondary"
-          disabled={!next}
-          onClick={() => navigate(next)}
-        >
-          <span>{t.nextChapter}</span>
-          <ArrowRight size={17} />
-        </button>
-      </div>
+      </header>
+      {language==="kmr" && <p className="reader-language-note">{t.kurmanjiPending}</p>}
+      <div className="reading-room-layout">
+        <aside className="reading-room-sidebar">
+          <div className="reading-room-side-title">{labels[0]}</div>
+          <button className="reading-passage-button" type="button" aria-expanded={passagePicker} aria-controls="reading-passage-panel" onClick={openPassagePicker}><span dir={edition.direction}>{bookName} <bdi>{reading.chapter}</bdi></span><ChevronDown size={17}/></button>
+          <div className="study-edition-control">
+            <button className="study-edition-button" type="button" aria-expanded={editionPicker} aria-controls="study-edition-options" onClick={()=>{setPassagePicker(false);setEditionPicker(v=>!v)}}>
+              <span className="study-edition-code" dir="ltr">{editionShort(edition)}</span><span className="study-edition-title">{editionTitle(edition)}</span><ChevronDown size={15}/>
+            </button>
+            <div id="study-edition-options" className="study-edition-options" hidden={!editionPicker}>
+              <p>{studyWords.choose}</p>
+              {available.map(e=><button key={e.id} className="study-edition-option" type="button" aria-pressed={reading.translation===e.id} onClick={()=>{navigate({...reading,translation:e.id,verse:undefined});setEditionPicker(false);setDraftBook(null)}}>
+                <span className="study-edition-code" dir="ltr">{editionShort(e)}</span><span><strong>{editionTitle(e)}</strong><small>{({en:"English",ckb:"کوردی (سۆرانی)",ka:"ქართული"})[e.language]}</small></span><span className="study-edition-check" aria-hidden="true">{reading.translation===e.id?"✓":""}</span>
+              </button>)}
+            </div>
+          </div>
+          <section className="reading-passage-panel" id="reading-passage-panel" hidden={!passagePicker}>
+            <div className="reading-picker-head"><strong>{labels[0]}</strong><button type="button" onClick={()=>setPassagePicker(false)} aria-label={labels[4]}><X size={18}/></button></div>
+            <label className="reading-book-search"><Search size={16}/><input value={bookSearch} onChange={e=>setBookSearch(e.target.value)} placeholder={labels[1]} aria-label={labels[1]}/></label>
+            <div className="reading-picker-columns">
+              <div className="reading-book-list">
+                {[[t.oldTestament,b=>!b.isApocryphal&&b.order<=39],[t.newTestament,b=>!b.isApocryphal&&b.order>39],[t.deuterocanonical,b=>b.isApocryphal]].map(([title,include])=>{const list=filteredBooks.filter(include);return list.length?<section key={title}><h3>{title}</h3>{list.map(b=><button type="button" key={b.id} aria-pressed={pickerBook.id===b.id} onClick={()=>setDraftBook(b.id)}>{bookLabel(b)}</button>)}</section>:null})}
+              </div>
+              <div className="reading-chapter-list"><h3>{labels[5]}</h3><strong dir={edition.direction}>{bookLabel(pickerBook)}</strong><div className="reading-chapter-grid">{chapters.map(n=><button key={n} type="button" aria-pressed={pickerBook.id===book.id&&n===reading.chapter} onClick={()=>{navigate({translation:edition.id,book:pickerBook.id,chapter:n});setPassagePicker(false)}}>{n}</button>)}</div></div>
+            </div>
+          </section>
+          <div className="reading-sidebar-note"><span aria-hidden="true">✦</span><p>{studyWords.comment}</p></div>
+        </aside>
+        <div className="reading-room-main">
+          <nav className="reading-room-nav" aria-label={t.chapter}>
+            <button type="button" disabled={!previous} aria-label={t.previousChapter} onClick={()=>navigate(previous)}><ArrowLeft size={18}/></button>
+            <span dir={edition.direction}>{bookName} <bdi>{reading.chapter}</bdi></span>
+            <button type="button" disabled={!next} aria-label={t.nextChapter} onClick={()=>navigate(next)}><ArrowRight size={18}/></button>
+          </nav>
       <div aria-live="polite" aria-busy={loading}>
         {loading ? (
           <div className="reader-loading">
@@ -422,10 +378,11 @@ export function BibleReader({ t, language }) {
               aria-label={`${bookName} ${reading.chapter}`}
             >
               <div className="chapter-title">
-                <span className="study-chapter-kicker">{studyWords.read}</span>
+                <span className="study-chapter-kicker">{book.order>39&&!book.isApocryphal?t.newTestament:book.isApocryphal?t.deuterocanonical:t.oldTestament}</span>
                 <h2>
-                  {bookName} <bdi>{reading.chapter}</bdi>
+                  {bookName}
                 </h2>
+                <div className="reading-chapter-number"><span/><bdi>{reading.chapter}</bdi><span/></div>
                 <span className="study-chapter-edition">{editionTitle(edition)}</span>
               </div>
               {result.data.chapter.content.map((row, index) => {
@@ -449,11 +406,11 @@ export function BibleReader({ t, language }) {
                       id={`scripture-verse-${row.number}`}
                       className={`scripture-verse${reading.verse === row.number ? " highlighted" : ""}`}
                     >
-                      <button className="scripture-verse-trigger" type="button" aria-expanded={openVerse === row.number} aria-controls={`explanation-${reading.book}-${reading.chapter}-${row.number}`} onClick={() => { setOpenVerse(openVerse === row.number ? null : row.number); rememberVerse(row.number); }}>
+                      <button className="scripture-verse-trigger" type="button" aria-expanded={openVerse === row.number} aria-controls={`explanation-${reading.book}-${reading.chapter}-${row.number}`} onClick={() => { setStudyMode(true); setOpenVerse(openVerse === row.number ? null : row.number); }}>
                         <sup>{row.number}</sup>
                         <span>{override ? override.text : row.text || (edition.language === "ka" ? t.sourceVerseMissing : "")}</span>
                       </button>
-                      {cms.ready && <button className="study-commentary-toggle" type="button" aria-expanded={openVerse === row.number} aria-controls={`explanation-${reading.book}-${reading.chapter}-${row.number}`} onClick={() => setOpenVerse(current => current === row.number ? null : row.number)}>
+                      {studyMode && <button className="study-commentary-toggle" type="button" aria-expanded={openVerse === row.number} aria-controls={`explanation-${reading.book}-${reading.chapter}-${row.number}`} onClick={() => setOpenVerse(current => current === row.number ? null : row.number)}>
                         <BookOpen size={15} aria-hidden="true" />
                         <span>{({en:"Church Fathers", ckb:"ڕوونکردنەوەی باوکانی کڵێسا", ka:"ეკლესიის მამათა განმარტება", kmr:"Şiroveya Bavên Dêrê"})[language] || "Church Fathers"}</span>
                         <span aria-hidden="true">⌄</span>
@@ -466,12 +423,12 @@ export function BibleReader({ t, language }) {
                         language={language}
                       />
                     )}
-                    {cms.ready && (
+                    {studyMode && (
                       <VerseExplanations
                         verse={row.number}
                         explanations={(editorial.path === editorialPath ? editorial.data?.explanations : null) || []}
-                        loading={editorial.path !== editorialPath || editorial.loading}
-                        error={editorial.path === editorialPath ? editorial.error : null}
+                        loading={cms.ready === null || (cms.ready === true && (editorial.path !== editorialPath || editorial.loading))}
+                        error={cms.ready === true && editorial.path === editorialPath ? editorial.error : null}
                         retry={editorial.retry}
                         language={language}
                         onOpen={rememberVerse}
@@ -512,6 +469,8 @@ export function BibleReader({ t, language }) {
             ? t.soraniScope
             : t.englishScope}
       </p>
+      </div>
+      </div>
     </div>
   );
 }
