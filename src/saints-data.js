@@ -74,7 +74,7 @@ export const saints = [
     quote: { en: "Wherefore, children, let us hold fast our discipline, and let us not be careless.", ckb: "کەواتە، منداڵەکانم، با بە ڕاهێنانە ڕۆحییەکەمانەوە پابەند بین و کەمتەرخەم نەبین.", work: "Athanasius, Life of Antony", locator: "§19 · Anthony's teaching as recorded by Athanasius", url: "https://www.newadvent.org/fathers/2811.htm" }
   },
   {
-    id: "maximus", en: "Saint Maximus the Confessor", ckb: "پایەپیرۆز ماکسیمی دانپێدەر", dates: "c. 580–662", feast: ["21 January; also 13 August", "٢١ی کانوونی دووەم؛ هەروەها ١٣ی ئاب"],
+    id: "maximus", en: "Saint Maximus the Confessor", ckb: "پایەپیرۆز ماکسیموسی دانپێدەر", dates: "c. 580–662", feast: ["21 January; also 13 August", "٢١ی کانوونی دووەم؛ هەروەها ١٣ی ئاب"],
     bio: ["Maximus became a monk and a leading defender of Christ's complete humanity. He opposed the claim that Christ had only one will. Condemned, mutilated, and exiled, he died in 662. The Sixth Ecumenical Council later affirmed the teaching that Christ has both a divine and a human will.", "بوو بە تاکمەند و داکۆکیکارێکی گرنگی مرۆڤایەتیی تەواوی مەسیح. دژی ئەو بانگەشەیە وەستایەوە کە مەسیح تەنها یەک ویستی هەیە. سزا درا، ئەندامی بڕدرا و دوورخرایەوە؛ لە ٦٦٢ کۆچی دوایی کرد. ئەنجومەنی شەشەم دواتر پشتڕاستی کردەوە کە مەسیح هەم ویستی خودایی و هەم ویستی مرۆڤانەی هەیە."],
     history: ["Seventh-century disputes over Christ's wills and energies, resolved at Constantinople in 680–681.", "مشتومڕەکانی سەدەی حەوتەم لەسەر ویست و کردەکانی مەسیح، کە لە قسطنطینیەی ٦٨٠–٦٨١ یەکلایی کرانەوە."],
     contribution: ["Christology, spiritual interpretation of Scripture, love, and the transformation of creation in Christ.", "مەسیحناسی، لێکدانەوەی ڕۆحیی کتێبی پیرۆز، خۆشەویستی و گۆڕانی ئافراندن لە مەسیحدا."],

@@ -1,3 +1,23 @@
+// Exact legacy-name corrections; subsequent owner edits take precedence.
+const correctedSoraniNames = new Map([
+  [
+    "پایەپیرۆز ماکسیمی دانپێدەر",
+    "پایەپیرۆز ماکسیموسی دانپێدەر"
+  ],
+  [
+    "پایەپیرۆز پۆڵسی نێردراو",
+    "پایەپیرۆز پۆڵۆسی نێردراو"
+  ],
+  [
+    "پایەپیرۆز تۆمای نێردراو",
+    "پایەپیرۆز تۆماسی نێردراو"
+  ],
+  [
+    "پایەپیرۆز ئیگناتیۆسی خوداهەڵگری ئەنتاکیا",
+    "پایەپیرۆز ئیگناتیۆسی ئەنتاکیا (تێئۆفۆرۆس)"
+  ]
+]);
+function correctedSoraniName(value) { return correctedSoraniNames.get(value) || value; }
 export function searchKey(value = "") {
   return value
     .normalize("NFKD")
@@ -16,6 +36,7 @@ export function matchesAuthor(author, query) {
       ...["name", "title", "position"].flatMap((base) =>
         ["en", "ckb", "kmr", "ka"].map((lang) => author[`${base}_${lang}`] || ""),
       ),
+      correctedSoraniName(author.name_ckb || ""),
       ...(author.aliases || []),
     ].join(" "),
   );
@@ -25,6 +46,7 @@ export function matchesAuthor(author, query) {
   );
 }
 export function authorName(author, language = "en") {
+  if (language === "ckb" && author?.name_ckb) return correctedSoraniName(author.name_ckb);
   if (language === "ka") return author?.name_ka || "ქართული სახელი ჯერ არ არის დამატებული";
   return (
     author?.[`name_${language}`] ||
