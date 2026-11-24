@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { withClimacusContent } from "./climacus-content.js";
 import { ArrowUpRight, BookOpen, Bookmark, Check, Search } from "lucide-react";
 import {
   useEditorial,
@@ -30,6 +31,7 @@ export function ResourceState({ resource, language }) {
   );
 }
 export function AuthorCard({ author, language }) {
+  author = withClimacusContent(author);
   const w = useEditorialWords(language);
   return (
     <a className="saint-card author-library-card" href={profileHref(author)}>
@@ -324,7 +326,7 @@ export function AuthorProfile({ language, route }) {
   const resource = useEditorialResource(
       "/authors/" + encodeURIComponent(identifier),
     ),
-    a = resource.data?.author;
+    a = withClimacusContent(resource.data?.author);
   const [saved, setSaved] = useState(false);
   useEffect(() => {
     if (!a) return;
