@@ -29,3 +29,7 @@
 .study-commentary .editorial-verbatim {white-space:pre-wrap;overflow-wrap:anywhere}
 .study-commentary .verse-ai-result {border-radius:3px}
 @media(max-width:600px){.bible-reader-page .reader-controls{grid-template-columns:minmax(0,1fr) 78px;padding:12px}.bible-reader-page .reader-controls label:first-child{grid-column:1/-1}.study-commentary{margin-inline-start:0;padding:12px}.bible-reader-page .scripture-verse-trigger{gap:8px}}
+
+.study-historical-sources {border-top:1px solid var(--line);margin-block-start:20px;padding-block-start:16px}
+.study-historical-sources > h3 {margin:0 0 8px;font-size:1rem;color:var(--text)}
+.study-historical-sources blockquote {margin:10px 0;padding-inline-start:12px;border-inline-start:2px solid var(--gold);font-family:Georgia,serif;line-height:1.8}
