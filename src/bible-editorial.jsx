@@ -3,6 +3,7 @@ import { api } from "./api.js";
 import { useEditorial, useEditorialWords } from "./editorial-context.jsx";
 import { fathers, patristicSources } from "./patristic-sources.js";
 import { HistoricalReading } from "./patristic-reading.jsx";
+import { CommentaryIcon } from "./commentary-icon.jsx";
 import { authorName, textFor, profileHref, metadataFor } from "./editorial.js";
 export function VerseExplanations({
   verse,
@@ -104,7 +105,7 @@ export function VerseExplanations({
               const author = entries[0].author;
               return <div className="study-father-group" key={key}>
                 <div className="verse-father-byline">
-                  {author?.icon_url ? <img src={author.icon_url} alt="" loading="lazy" decoding="async" onError={event => { event.currentTarget.hidden = true; }} /> : <span className="verse-father-monogram" aria-hidden="true">✣</span>}
+                  <CommentaryIcon author={author}/>
                   <h3>{author && <a href={profileHref(author)}>{authorName(author, language)}</a>}</h3>
                 </div>
                 {entries.map(item => <article className="verse-father-card" key={item.id}>
@@ -147,9 +148,8 @@ export function VerseExplanations({
               const matches = sources.filter(s=>s.author===key);
               if(!matches.length)return null;
               const author = cms.authors.find(a=>a.slug===fallback.slug || a.name_en===fallback.name_en) || fallback;
-              const icon = author.icon_url || fallback.icon_url;
               return <div className="study-father-group" key={key}>
-                <div className="verse-father-byline">{icon ? <img src={icon} alt="" loading="lazy" /> : <span className="verse-father-monogram" aria-hidden="true">✣</span>}<h3>{authorName(author,language)}</h3></div>
+                <div className="verse-father-byline"><CommentaryIcon author={author} fallback={fallback}/><h3>{authorName(author,language)}</h3></div>
                 {matches.map(s=><article className="verse-father-card" key={s.number}><p lang="en" dir="ltr" className="study-source-reference">{s.reference} · John {s.range}</p><HistoricalReading source={s} chapter={chapter} verse={verse} language={language} /></article>)}
               </div>;
             })}
