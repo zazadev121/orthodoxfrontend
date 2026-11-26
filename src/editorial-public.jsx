@@ -1,3 +1,4 @@
+import { saintScriptureQuotes, mergeSaintQuotes, saintQuoteLabel } from "./saint-scripture-quotes.js";
 import { withVerifiedIcon } from "./saint-icons-2026.js";
 import React, { useEffect, useState } from "react";
 import { withClimacusContent } from "./climacus-content.js";
@@ -154,9 +155,10 @@ export function QuoteCard({ quote, language }) {
   return (
     <article className="quote shared-quote">
       {language === "ka" && quote.review_note_ka && <p className="editorial-review-note" role="note">{quote.review_note_ka}</p>}
+      {quote.id?.startsWith("scripture-saint-") && <p className="editorial-note">{saintQuoteLabel(language)}</p>}
       <span className="quote-mark">“</span>
       <blockquote>
-        {textFor(quote, "text", language) || w.missingTranslation}
+        {textFor(quote, "text", language) || (quote.kind && quote.id?.startsWith("scripture-saint-") ? quote.text_en : w.missingTranslation)}
       </blockquote>
       <h3>
         {quote.author ? (
@@ -180,7 +182,7 @@ export function QuoteCard({ quote, language }) {
     </article>
   );
 }
-export function QuoteFeed({ language, authorId = null }) {
+export function QuoteFeed({ language, authorId = null, author = null }) {
   const w = useEditorialWords(language),
     cms = useEditorial();
   const [page, setPage] = useState(1),
@@ -190,8 +192,10 @@ export function QuoteFeed({ language, authorId = null }) {
   if (authorId) params.set("author_id", authorId);
   if (search) params.set("q", search);
   if (topic) params.set("topic", topic);
-  const resource = useEditorialResource("/quotes?" + params),
-    data = resource.data;
+  const resource = useEditorialResource("/quotes?" + params, {enabled:!author?.local_library}),
+    data = author?.local_library ? {quotes:[],total:0} : resource.data;
+  const supplemental = saintScriptureQuotes(author).filter(q=>!search || (q.text_en+" "+q.text_ckb+" "+q.reference).toLowerCase().includes(search.toLowerCase()));
+  const quotes = mergeSaintQuotes(data?.quotes, page===1 ? supplemental : []);
   useEffect(() => {
     if (data?.total && page > Math.ceil(data.total / 100))
       setPage(Math.ceil(data.total / 100));
@@ -238,16 +242,16 @@ export function QuoteFeed({ language, authorId = null }) {
       {resource.error && (
         <ResourceState resource={resource} language={language} />
       )}
-      {resource.loading && !data ? (
+      {resource.loading && !data && !quotes.length ? (
         <ResourceState resource={resource} language={language} />
       ) : (
         <>
           <div className="quotes-grid">
-            {data?.quotes?.map((q) => (
+            {quotes.map((q) => (
               <QuoteCard key={q.id} quote={q} language={language} />
             ))}
           </div>
-          {!data?.quotes?.length && <p role="status">{w.empty}</p>}
+          {!quotes.length && <p role="status">{w.empty}</p>}
           {(data?.total || 0) > 100 && (
             <div className="editorial-pagination">
               <button
@@ -448,11 +452,11 @@ export function AuthorProfile({ language, route }) {
           </button>
         </div>
       </header>
-      {!localAuthor && <nav className="profile-tabs" aria-label={w.details}>
+      {<nav className="profile-tabs" aria-label={w.details}>
         {[
           ["bio", w.biography],
-          ["quotes", `${w.quotesLabel} (${a.quote_count || 0})`],
-          ["writings", `${w.writingsLabel} (${a.writing_count || 0})`],
+          ["quotes", w.quotesLabel],
+          ...(!localAuthor ? [["writings", `${w.writingsLabel} (${a.writing_count || 0})`]] : []),
         ].map(([id, label]) => (
           <a
             key={id}
@@ -463,8 +467,8 @@ export function AuthorProfile({ language, route }) {
           </a>
         ))}
       </nav>}
-      {!localAuthor && tab === "quotes" ? (
-        <QuoteFeed key={a.id} language={language} authorId={a.id} />
+      {tab === "quotes" ? (
+        <QuoteFeed key={a.id} language={language} authorId={a.id} author={a} />
       ) : !localAuthor && tab === "writings" ? (
         <div className="profile-body">
           <h2>{w.writingsLabel}</h2>
@@ -488,8 +492,8 @@ export function AuthorProfile({ language, route }) {
               </p>
             </section>
           ))}
-          {!localAuthor && <a className="button gold" href={`${profileHref(a)}&tab=quotes`}>
-            {w.quotesLabel} ({a.quote_count || 0})<ArrowUpRight size={16} />
+          {<a className="button gold" href={`${profileHref(a)}&tab=quotes`}>
+            {w.quotesLabel}<ArrowUpRight size={16} />
           </a>}
         </div>
       )}

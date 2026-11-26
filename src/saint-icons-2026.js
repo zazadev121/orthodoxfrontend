@@ -1,5 +1,14 @@
 // Wikimedia Commons file descriptions were checked for subject and reuse status.
 const files = {
+"methodius-confessor": ["Agios Methodios Konstantinoupoleos Vissarionos.jpg","Tzortis Phouka, 16th-century fresco, Saint Bessarion's Monastery"],
+"agatha-sicily": ["Agatha orthodox icon.jpg","Anonymous icon, circa 1500"],
+"innocent-alaska": ["St Innocent of Alaska.JPG","Wolfymoza","cc-by-sa/4.0"],
+"lucia-syracuse": ["Chiesa di Santa Lucia (icons)03.png","Asia, photograph of Byzantine icon of Saint Lucy","cc-by-sa/4.0"],
+"silouan-athonite": ["Silouanicon.jpg","Historical icon, Wikimedia Commons (Jack1956 upload)"],
+"joseph-hesychast": ["FullBodyIconOfElderJoseph.jpg","Moralmonke, Wikimedia Commons","cc-by-sa/4.0"],
+"matrona-moscow": ["Блаженная Матрона Московская (13899411716).jpg","Icon Painting Workshop Eleon","cc-by/2.0"],
+"photina-samaritan": ["Saint Photina.jpg","Anonymous 13th-century icon detail"],
+"menas-egypt": ["Saint Menas with scenes from his life Tryavna 19th-century icon.jpg","Anonymous 19th-century Tryavna icon"],
   "constantine-great": [
     "Saint Constantin and Helena, mother of Constantine I icon, Syria (14th Century).jpg",
     "14th-century Syrian icon; Michel Bakni / Wikimedia Commons",

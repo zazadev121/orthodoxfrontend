@@ -1,3 +1,4 @@
+import { saintScriptureQuotes, mergeSaintQuotes, saintQuoteLabel } from "./saint-scripture-quotes.js";
 import { faithIntroduction } from "./faith-introduction.js";
 import { withVerifiedIcon } from "./saint-icons-2026.js";
 import React,{useEffect,useRef,useState} from "react";
@@ -132,14 +133,14 @@ export function JourneyDaily({language,journey,onEdit}){
  const [date,setDate]=useState(()=>new Date());
  useEffect(()=>{const update=()=>setDate(new Date());const timer=setInterval(update,30000);document.addEventListener("visibilitychange",update);return()=>{clearInterval(timer);document.removeEventListener("visibilitychange",update);};},[]);
  const data=live&&resource.path===path?resource.data:null;
- const q=dailyItem(sourcedQuotes(data?.quotes,language,a?.id),date);
+ const q=dailyItem(sourcedQuotes(mergeSaintQuotes(data?.quotes,saintScriptureQuotes(a)),language,a?.id),date);
  const legacy=a?.legacy?saints.find(s=>s.id===a.id)?.quote:null;
  const fallbackQuote=legacy?.[language]&&legacy?.url?legacy:null;
  if(!journey?.completed)return null;
  const prayer=dailyItem(w.prayers,date);
  return <section className="journey-daily today-section"><div className="today-section-head"><h2>{w.daily}</h2><button className="journey-edit" onClick={onEdit} aria-label={w.edit}><Settings2 size={18}/>{w.edit}</button></div><div className="journey-daily-card">
  {a&&<a className="journey-daily-saint" href={"/"+profileHref(a)}>{a.icon_url?<img src={a.icon_url} alt="" width="86" height="108" loading="lazy"/>:<span className="journey-no-icon">☦</span>}<span><strong>{displayName(a,language)}</strong><small>{w.read} <ArrowUpRight size={14}/></small></span></a>}
- {a&&(q||fallbackQuote?<div className="journey-daily-quote"><span>{w.quote}</span><blockquote>{q?textFor(q,"text",language):fallbackQuote[language]}</blockquote>{(q?.source_url||fallbackQuote?.url)?<a href={q?.source_url||fallbackQuote?.url} target="_blank" rel="noreferrer">{q?.["reference_"+language]||q?.reference||fallbackQuote?.work||w.source} ↗</a>:<p>{q?.["reference_"+language]||q?.reference}</p>}</div>:<p className="journey-quote-empty" role="status">{live&&(resource.path!==path||resource.loading)?w.loading:w.empty}</p>)}
+ {a&&(q||fallbackQuote?<div className="journey-daily-quote"><span>{q?.id?.startsWith("scripture-saint-")?saintQuoteLabel(language):w.quote}</span><blockquote>{q?textFor(q,"text",language):fallbackQuote[language]}</blockquote>{(q?.source_url||fallbackQuote?.url)?<a href={q?.source_url||fallbackQuote?.url} target="_blank" rel="noreferrer">{q?.["reference_"+language]||q?.reference||fallbackQuote?.work||w.source} ↗</a>:<p>{q?.["reference_"+language]||q?.reference}</p>}</div>:<p className="journey-quote-empty" role="status">{live&&(resource.path!==path||resource.loading)?w.loading:w.empty}</p>)}
  <div className="journey-daily-prayer"><span>{w.prayer}</span><p>{prayer}</p><small>{w.prayerNote}</small></div>
  </div></section>;
 }
