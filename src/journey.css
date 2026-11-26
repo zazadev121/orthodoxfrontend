@@ -47,3 +47,5 @@
 .journey-footer-button{border:0;background:transparent;color:inherit;font:inherit;cursor:pointer;padding:0;text-align:start}
 @media(max-width:440px){.journey-shell{padding:20px}.journey-regions button{font-size:.85rem;padding:10px}.journey-dialog{border-radius:23px}.journey-stage>p{font-size:.85rem}}
 @media(prefers-reduced-motion:reduce){.journey-stage{animation:none}}
+
+.journey-region-art{max-width:240px;margin:8px auto 24px;color:var(--gold);animation:journey-region-rise .8s ease both}.journey-region-art svg{display:block;width:100%;height:auto}.journey-stage .journey-region-message{font-size:1rem;line-height:2.1;color:var(--text);margin:14px auto 26px;max-width:440px;animation:journey-enter .65s .15s both}@keyframes journey-region-rise{from{opacity:0;transform:translateY(12px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}@media(prefers-reduced-motion:reduce){.journey-region-art,.journey-stage .journey-region-message{animation:none}}

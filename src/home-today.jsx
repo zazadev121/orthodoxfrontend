@@ -1,3 +1,4 @@
+import { withVerifiedIcon } from "./saint-icons-2026.js";
 import React, { useEffect, useState } from "react";
 import { ArrowUpRight, BookOpen, ChevronRight, Heart } from "lucide-react";
 import { useEditorial, useEditorialResource } from "./editorial-context.jsx";
@@ -51,7 +52,7 @@ export function TodaySaint({language}) {
  const cms=useEditorial(), w=wFor(language);
  const [date,setDate]=useState(()=>new Date());
  useEffect(()=>{const update=()=>setDate(new Date());const timer=setInterval(update,30000);document.addEventListener("visibilitychange",update);return()=>{clearInterval(timer);document.removeEventListener("visibilitychange",update);};},[]);
- const authors=cms.ready?cms.authors.map(withClimacusContent):saints.map(s=>({slug:s.id,id:s.id,name_en:s.en,name_ckb:s.ckb,feast_en:s.feast[0],feast_ckb:s.feast[1],icon_url:"/icons/"+s.id+".webp"}));
+ const authors=cms.ready?cms.authors.map(a=>withVerifiedIcon(withClimacusContent(a))):saints.map(s=>({slug:s.id,id:s.id,name_en:s.en,name_ckb:s.ckb,feast_en:s.feast[0],feast_ckb:s.feast[1],icon_url:"/icons/"+s.id+".webp"}));
  const {author,match}=selectTodaySaint(authors,date);
  if(!author)return null;
  return <section className="today-section">

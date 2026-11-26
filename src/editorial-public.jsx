@@ -1,3 +1,4 @@
+import { withVerifiedIcon } from "./saint-icons-2026.js";
 import React, { useEffect, useState } from "react";
 import { withClimacusContent } from "./climacus-content.js";
 import { mergeSaintLibrary, localSaintByIdentifier } from "./additional-saints-2026.js";
@@ -34,7 +35,7 @@ export function ResourceState({ resource, language }) {
   );
 }
 export function AuthorCard({ author, language }) {
-  author = withClimacusContent(author);
+  author = withVerifiedIcon(withClimacusContent(author));
   const w = useEditorialWords(language);
   return (
     <a className="saint-card author-library-card" href={profileHref(author)}>
@@ -330,7 +331,7 @@ export function AuthorProfile({ language, route }) {
   const resource = useEditorialResource(
       "/authors/" + encodeURIComponent(identifier), { enabled: !localAuthor },
     ),
-    a = localAuthor || withRemainingBiography(withExpandedBiography(withClimacusContent(resource.data?.author)));
+    a = withVerifiedIcon(localAuthor || withRemainingBiography(withExpandedBiography(withClimacusContent(resource.data?.author))));
   const [saved, setSaved] = useState(false);
   useEffect(() => {
     if (!a) return;
