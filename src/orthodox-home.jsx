@@ -1,3 +1,4 @@
+import { JourneyDaily } from "./journey.jsx";
 import { georgianHeritageWords } from "./georgian-copy.js";
 import React from "react";
 import { useEditorial, useEditorialWords } from "./editorial-context.jsx";
@@ -207,7 +208,7 @@ function SectionHeading({ label, title, description, action, href }) {
     </div>
   );
 }
-export function OrthodoxHome({ t, language }) {
+export function OrthodoxHome({ t, language, journey, onEditJourney }) {
   const cms = useEditorial(),
     ew = useEditorialWords(language);
   const w = cms.words(heritageWords(language), "home", language);
@@ -262,6 +263,7 @@ export function OrthodoxHome({ t, language }) {
           </div>
         </section>
       )}
+      <JourneyDaily language={language} journey={journey} onEdit={onEditJourney}/>
       {cms.visible("paths") && <TodayReading language={language} />}
       {cms.visible("daily") && <DailyVerse t={t} language={language} compact />}
       {cms.visible("prayers") && <TodayPrayers language={language} />}

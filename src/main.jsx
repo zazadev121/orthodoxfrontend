@@ -1,3 +1,6 @@
+import { JourneyWelcome, journeyWords } from "./journey.jsx";
+import { JOURNEY_KEY, loadJourney, saveJourney } from "./journey-model.js";
+import "./journey.css";
 import { localSaintByIdentifier } from "./additional-saints-2026.js";
 import { DiscoverPage, ReadingLibrary, HistoryLibrary, discoverWords } from "./discover.jsx";
 import { localizedError, metadataFor } from "./editorial.js";
@@ -142,12 +145,17 @@ function App() {
       localStorage.setItem("readerSize", readerSize);
     } catch {}
   }, [readerSize]);
+  const [journey, setJourney] = useState(() => {try{return loadJourney(localStorage);}catch{return null;}});
+  const [journeyOpen, setJourneyOpen] = useState(() => !journey?.completed);
+  const [journeyStorageError, setJourneyStorageError] = useState(false);
+  const finishJourney = value => {let saved=false;try{saved=saveJourney(localStorage,value);}catch{}setJourneyStorageError(!saved);setJourney(value);setJourneyOpen(false);};
+  const resetJourney = () => {try{localStorage.removeItem(JOURNEY_KEY);}catch{}setJourney(null);setJourneyOpen(false);};
   const [language, setLanguage] = useState(() => {
     const requested =
       new URLSearchParams(location.search).get("lang") ||
       (() => {
         try {
-          return localStorage.getItem("language");
+          return journey?.language || localStorage.getItem("language");
         } catch {
           return null;
         }
@@ -184,6 +192,7 @@ function App() {
       localStorage.setItem("language", language);
     } catch {}
   }, [language, page]);
+  useEffect(()=>{if(!journey?.completed || journey.language===language || journeyOpen)return;const next={...journey,language};setJourney(next);try{if(!saveJourney(localStorage,next))setJourneyStorageError(true);}catch{setJourneyStorageError(true);}},[language,journey,journeyOpen]);
   const fatherQuotesLabel = cms.text(
     "general.navFatherQuotes",
     language,
@@ -326,6 +335,7 @@ function App() {
           </button>
         </div>
       </header>
+      {journeyStorageError && <p className="journey-storage-alert" role="status">{journeyWords(language).storage}</p>}
       <main id="main" tabIndex={-1}>
         {cms.ready === null &&
         !["admin", "appearance", "bible"].includes(page) ? (
@@ -353,7 +363,7 @@ function App() {
             retryFont={() => setFontAttempt((value) => value + 1)}
           />
         ) : page === "home" ? (
-          <OrthodoxHome t={t} language={language} />
+          <OrthodoxHome t={t} language={language} journey={journey} onEditJourney={()=>setJourneyOpen(true)} />
         ) : page === "discover" ? (
           <DiscoverPage language={language} hideHeading />
         ) : page === "reading" ? (
@@ -487,6 +497,7 @@ function App() {
                     : "Ecumenical Councils",
               )}
             </a>
+            <button type="button" className="journey-footer-button" onClick={()=>setJourneyOpen(true)}>{journeyWords(language).edit}</button>
             <a href="/sources/">{t.sources}</a>
             <a href="#admin">{t.admin}</a>
             <span lang="en" dir="ltr">
@@ -495,6 +506,7 @@ function App() {
           </div>
         </div>
       </footer>
+      {journeyOpen && page !== "admin" && <JourneyWelcome language={language} initial={journey} editing={!!journey?.completed} onLanguage={setLanguage} onComplete={finishJourney} onReset={resetJourney}/>}
     </>
   );
 }

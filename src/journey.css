@@ -1,0 +1,49 @@
+/* First-visit journey: a native modal, readable RTL and keyboard navigation. */
+.journey-dialog{width:min(94vw,560px);max-height:calc(100dvh - 32px);padding:0;border:1px solid var(--line);border-radius:28px;background:var(--surface);color:var(--text);box-shadow:0 24px 90px #0007;overflow:auto;overscroll-behavior:contain}
+.journey-dialog::backdrop{background:#0a090bd9;backdrop-filter:blur(10px)}
+.journey-shell{padding:clamp(20px,5vw,38px);background:radial-gradient(ellipse at 50% 0%,color-mix(in srgb,var(--gold) 11%,transparent),transparent 60%)}
+.journey-progress{display:flex;gap:7px;margin:0 0 25px}
+.journey-progress span{height:3px;flex:1;border-radius:9px;background:var(--line)}
+.journey-progress .filled{background:var(--gold)}
+.journey-stage{text-align:center;animation:journey-enter .42s cubic-bezier(.2,.8,.2,1) both}
+@keyframes journey-enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.journey-emblem{display:block;margin:0 auto 15px;object-fit:contain;border-radius:21px;width:clamp(95px,24vw,150px);height:auto;box-shadow:0 0 35px color-mix(in srgb,var(--gold) 22%,transparent)}
+.journey-brand{font-size:.8rem;letter-spacing:.12em;color:var(--muted);margin-bottom:16px}
+#root .journey-stage h2{font-size:clamp(1.45rem,4.5vw,2.1rem);line-height:1.6;margin:0 0 12px;outline:none}
+.journey-stage>p{color:var(--muted);font-size:.91rem;line-height:1.95;margin:0 0 20px}
+.journey-languages,.journey-regions{display:grid;gap:10px}
+.journey-languages button,.journey-regions button,.journey-saints button{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:52px;text-align:start;width:100%;border:1px solid var(--line);border-radius:14px;background:var(--soft);color:var(--text);padding:12px 15px;cursor:pointer;font:inherit}
+.journey-languages strong,.journey-languages small,.journey-saints small{display:block}
+.journey-languages small,.journey-saints small{color:var(--muted);font-size:.75rem;margin-top:4px}
+.journey-languages button:hover,.journey-regions .selected,.journey-saints .selected{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 9%,var(--surface))}
+.journey-halo{display:grid;place-items:center;width:116px;height:116px;margin:8px auto 23px;font-size:60px;line-height:1;color:var(--gold);border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--gold) 22%,transparent),transparent 72%);text-shadow:0 0 20px color-mix(in srgb,var(--gold) 55%,transparent)}
+.journey-feature-icons{display:flex;justify-content:center;align-items:center;gap:29px;margin:25px auto;color:var(--gold);font-size:27px}
+.journey-primary{display:flex;justify-content:center;align-items:center;gap:10px;width:100%;min-height:52px;margin-top:20px;border:0;border-radius:999px;background:var(--gold);color:var(--on-gold);font:inherit;font-weight:700;cursor:pointer;padding:12px 17px}
+.journey-primary:disabled{opacity:.45;cursor:not-allowed}
+.journey-quiet{display:block;margin:12px auto 0;padding:7px 12px;min-height:40px;background:transparent;border:0;color:var(--muted);font:inherit;font-size:.85rem;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.journey-search{display:flex;align-items:center;gap:10px;border:1px solid var(--line);padding:10px 13px;border-radius:13px;background:var(--soft);margin-bottom:12px;color:var(--muted)}
+.journey-search input{width:100%;min-width:0;background:transparent;color:var(--text);border:0;padding:5px;font:inherit}
+.journey-saints{max-height:min(32dvh,320px);overflow:auto;display:grid;gap:7px;text-align:start;padding:2px}
+.journey-saints button{padding:8px 10px;justify-content:flex-start}
+.journey-saints button>span:not(.journey-no-icon){flex:1;min-width:0;overflow-wrap:anywhere}
+.journey-saints img{width:45px;height:57px;object-fit:contain;background:#29241f;border-radius:6px;flex:none}
+.journey-no-icon{display:grid;place-items:center;color:var(--gold);width:45px;height:57px;flex:none;font-size:25px;border-radius:8px;background:var(--surface)}
+.journey-regions{grid-template-columns:1fr 1fr}
+.journey-stage .journey-privacy{font-size:.75rem;margin:15px 0 0}
+.journey-dialog button:focus-visible,.journey-dialog input:focus-visible,.journey-edit:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+[dir=rtl] .journey-dialog .journey-primary svg,[dir=rtl] .journey-dialog .journey-languages svg{transform:scaleX(-1)}
+.journey-edit{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:.78rem;color:var(--muted);background:none;border:0;cursor:pointer;text-align:start}
+.journey-daily-card{border:1px solid var(--line);border-radius:23px;background:linear-gradient(145deg,color-mix(in srgb,var(--gold) 6%,var(--surface)),var(--surface));padding:clamp(19px,4vw,30px)}
+.journey-daily-saint{display:flex;align-items:center;gap:17px}
+.journey-daily-saint img{width:76px;height:96px;object-fit:contain;border-radius:8px;background:#28231d}
+.journey-daily-saint strong{display:block;font-size:1.25rem;line-height:1.6}
+.journey-daily-saint small{display:flex;align-items:center;gap:5px;color:var(--gold);margin-top:6px}
+.journey-daily-quote,.journey-daily-prayer{border-top:1px solid var(--line);padding-top:18px;margin-top:18px}
+.journey-daily-quote>span,.journey-daily-prayer>span{color:var(--gold);font-size:.82rem;font-weight:600}
+#root .journey-daily-quote blockquote{font-size:clamp(1.12rem,3vw,1.55rem);line-height:1.95;margin:12px 0;border:0;padding:0}
+.journey-daily-quote a,.journey-daily-prayer small,.journey-quote-empty{font-size:.8rem;color:var(--muted);overflow-wrap:anywhere}
+.journey-daily-prayer p{line-height:2;margin:10px 0}
+.journey-storage-alert{padding:12px 18px;text-align:center;color:var(--muted);border-bottom:1px solid var(--line);font-size:.85rem}
+.journey-footer-button{border:0;background:transparent;color:inherit;font:inherit;cursor:pointer;padding:0;text-align:start}
+@media(max-width:440px){.journey-shell{padding:20px}.journey-regions button{font-size:.85rem;padding:10px}.journey-dialog{border-radius:23px}.journey-stage>p{font-size:.85rem}}
+@media(prefers-reduced-motion:reduce){.journey-stage{animation:none}}
