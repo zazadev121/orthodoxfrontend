@@ -1,3 +1,4 @@
+import { localSaintByIdentifier } from "./additional-saints-2026.js";
 import { DiscoverPage, ReadingLibrary, HistoryLibrary, discoverWords } from "./discover.jsx";
 import { localizedError, metadataFor } from "./editorial.js";
 import React, { useEffect, useState } from "react";
@@ -366,7 +367,7 @@ function App() {
             <Saints language={language} />
           )
         ) : page === "saint" ? (
-          cms.ready ? (
+          (cms.ready || localSaintByIdentifier(new URLSearchParams(route.split("?")[1]).get("id"), cms.authors)) ? (
             <AuthorProfile language={language} route={route} />
           ) : (
             <SaintProfile language={language} route={route} />

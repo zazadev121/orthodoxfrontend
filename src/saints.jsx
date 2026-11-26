@@ -1,3 +1,5 @@
+import { additionalSaints } from "./additional-saints-2026.js";
+import { AuthorCard } from "./editorial-public.jsx";
 import { georgianSaintWords } from "./georgian-copy.js";
 import React, { useEffect, useState } from "react";
 import { ArrowUpRight, BookOpen, CalendarDays, Search, Bookmark, Check } from "lucide-react";
@@ -22,10 +24,11 @@ export function Saints({ language }) {
   const [last] = useState(() => { try { return saintById(localStorage.getItem("lastSaint")); } catch { return null; } });
   const w = saintWords(language);
   const list = saints.filter(s => (!savedOnly || savedIds.includes(s.id)) && `${s.en} ${s.ckb}`.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase()));
+  const extra = additionalSaints.filter(a => (!savedOnly || localStorage.getItem(`saint:${a.slug}:saved`) === "true") && `${a.name_en} ${a.name_ckb}`.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase()));
   return <div className="page heritage-page saints-directory"><header className="heritage-heading"><span className="eyebrow">EASTERN ORTHODOX SYNAXARION</span><h1>{w.title}</h1><p>{w.intro}</p></header>
     <div className="directory-tools"><label className="saint-search"><Search size={18} /><input type="search" value={search} onChange={e => setSearch(e.target.value)} placeholder={w.search} aria-label={w.search} /></label><button className="profile-save" aria-pressed={savedOnly} onClick={() => setSavedOnly(!savedOnly)}><Bookmark size={16} />{w.savedOnly}</button>{last && <a className="text-link" href={`#saint?id=${last.id}`}>{w.resume}: {language === "ckb" ? last.ckb : last.en}</a>}</div>
-    <p className="editorial-note">{w.sourcePolicy}</p><div className="saints-grid">{list.map(s => <SaintCard key={s.id} saint={s} language={language} />)}</div>
-    {!list.length && <p role="status">{w.empty}</p>}
+    <p className="editorial-note">{w.sourcePolicy}</p><div className="saints-grid">{list.map(s => <SaintCard key={s.id} saint={s} language={language} />)}{extra.map(a => <AuthorCard key={a.id} author={a} language={language} />)}</div>
+    {!list.length && !extra.length && <p role="status">{w.empty}</p>}
   </div>;
 }
 export function SaintProfile({ language, route }) {

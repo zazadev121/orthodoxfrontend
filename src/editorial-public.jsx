@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { withClimacusContent } from "./climacus-content.js";
+import { mergeSaintLibrary, localSaintByIdentifier } from "./additional-saints-2026.js";
 import { withExpandedBiography } from "./expanded-saint-biographies.js";
 import { withRemainingBiography, extraSaintSources } from "./remaining-saint-biographies.js";
 import { ArrowUpRight, BookOpen, Bookmark, Check, Search } from "lucide-react";
@@ -100,7 +101,7 @@ export function AuthorLibrary({ language }) {
       return false;
     }
   };
-  const rows = cms.authors.filter(
+  const rows = mergeSaintLibrary(cms.authors).filter(
     (a) => matchesAuthor(a, search) && (!savedOnly || saved(a)),
   );
   return (
@@ -325,10 +326,11 @@ export function AuthorProfile({ language, route }) {
     tab = ["quotes", "writings"].includes(params.get("tab"))
       ? params.get("tab")
       : "bio";
+  const localAuthor = localSaintByIdentifier(identifier, cms.authors);
   const resource = useEditorialResource(
-      "/authors/" + encodeURIComponent(identifier),
+      "/authors/" + encodeURIComponent(identifier), { enabled: !localAuthor },
     ),
-    a = withRemainingBiography(withExpandedBiography(withClimacusContent(resource.data?.author)));
+    a = localAuthor || withRemainingBiography(withExpandedBiography(withClimacusContent(resource.data?.author)));
   const [saved, setSaved] = useState(false);
   useEffect(() => {
     if (!a) return;
@@ -364,7 +366,7 @@ export function AuthorProfile({ language, route }) {
       <a className="text-link" href="#saints">
         ← {cms.text("saints.all", language, w.back)}
       </a>
-      {resource.error && (
+      {!localAuthor && resource.error && (
         <ResourceState resource={resource} language={language} />
       )}
       <header className="profile-header">
@@ -383,7 +385,7 @@ export function AuthorProfile({ language, route }) {
             <BookOpen size={64} />
           )}
           </div>
-          <figcaption className="editorial-verbatim"><details className="source-disclosure"><summary>{w.iconCredit}</summary>
+          {a.icon_url && <figcaption className="editorial-verbatim"><details className="source-disclosure"><summary>{w.iconCredit}</summary>
             {metadataFor(a, "icon_credit", language)}
             {a.icon_source && (
               <>
@@ -403,7 +405,7 @@ export function AuthorProfile({ language, route }) {
                 </a>
               </>
             )}
-          </details></figcaption>
+          </details></figcaption>}
         </figure>
         <div className="profile-heading">
           <span className="eyebrow">
@@ -445,7 +447,7 @@ export function AuthorProfile({ language, route }) {
           </button>
         </div>
       </header>
-      <nav className="profile-tabs" aria-label={w.details}>
+      {!localAuthor && <nav className="profile-tabs" aria-label={w.details}>
         {[
           ["bio", w.biography],
           ["quotes", `${w.quotesLabel} (${a.quote_count || 0})`],
@@ -459,10 +461,10 @@ export function AuthorProfile({ language, route }) {
             {label}
           </a>
         ))}
-      </nav>
-      {tab === "quotes" ? (
+      </nav>}
+      {!localAuthor && tab === "quotes" ? (
         <QuoteFeed key={a.id} language={language} authorId={a.id} />
-      ) : tab === "writings" ? (
+      ) : !localAuthor && tab === "writings" ? (
         <div className="profile-body">
           <h2>{w.writingsLabel}</h2>
           <p className="editorial-verbatim">
@@ -477,7 +479,7 @@ export function AuthorProfile({ language, route }) {
             [w.historyText, "history"],
             [w.contributions, "contributions"],
             [w.writingsLabel, "writings_intro"],
-          ].map(([title, base]) => (
+          ].filter(([, base]) => !localAuthor || base === "biography").map(([title, base]) => (
             <section key={base}>
               <h2>{title}</h2>
               <p className="editorial-verbatim">
@@ -485,9 +487,9 @@ export function AuthorProfile({ language, route }) {
               </p>
             </section>
           ))}
-          <a className="button gold" href={`${profileHref(a)}&tab=quotes`}>
+          {!localAuthor && <a className="button gold" href={`${profileHref(a)}&tab=quotes`}>
             {w.quotesLabel} ({a.quote_count || 0})<ArrowUpRight size={16} />
-          </a>
+          </a>}
         </div>
       )}
       {related.length > 0 && (
