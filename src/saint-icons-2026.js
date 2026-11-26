@@ -150,5 +150,5 @@ export function withVerifiedIcon(author) {
  if (!author || author.icon_url || !Object.hasOwn(files,author.slug)) return author;
  const [file,credit,license]=files[author.slug];
  const name=encodeURIComponent(file.replaceAll(" ","_"));
- return {...author,icon_url:"https://commons.wikimedia.org/wiki/Special:FilePath/"+name+"?width=600",icon_source:"https://commons.wikimedia.org/wiki/File:"+name,icon_credit:credit+" · Wikimedia Commons",icon_license_url:license==="cc0"?"https://creativecommons.org/publicdomain/zero/1.0/":license?"https://creativecommons.org/licenses/"+license+"/":"https://creativecommons.org/publicdomain/mark/1.0/",icon_alt:author.name_en||author.name_ckb||""};
+ return {...author,icon_url:"https://commons.wikimedia.org/wiki/Special:FilePath/"+name+"?width=600",icon_source:"https://commons.wikimedia.org/wiki/File:"+name,icon_credit:credit+" · Wikimedia Commons",icon_license_url:license==="cc0"?"https://creativecommons.org/publicdomain/zero/1.0/":license?"https://creativecommons.org/licenses/"+license.replace(/^cc-/,"")+"/":"https://creativecommons.org/publicdomain/mark/1.0/",icon_alt:author.name_en||author.name_ckb||""};
 }

@@ -74,7 +74,7 @@ export function AuthorCard({ author, language }) {
         )}
         <div className="author-counts">
           <span>
-            {author.quote_count || 0} {w.quotesCount}
+            {Math.max(author.quote_count || 0, saintScriptureQuotes(author).length)} {w.quotesCount}
           </span>
           <span>
             {author.writing_count || 0} {w.writingsCount}
