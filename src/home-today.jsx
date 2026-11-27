@@ -30,12 +30,23 @@ export function TodayReading({language}) {
  const edition=editionFor(reading.translation);
  const book=edition?.books.find(b=>b.id===reading.book);
  const localBook=book?cms.text(`bible.book.${book.id}`,edition.language,book.name):null;
- return <section className="today-next">
+ const iconNames=({ckb:["تیۆتۆکیس","یەشوای مەسیح"],en:["Theotokos","Jesus Christ"],ka:["ღვთისმშობელი","იესო ქრისტე"],ru:["Богородица","Иисус Христос"],kmr:["Theotokos","Îsa Mesîh"]})[language]||["Theotokos","Jesus Christ"];
+ return <section className="today-next today-reading-with-icons">
+   <div className="today-reading-copy">
    <div className="today-card-kicker"><span>{w.next}</span><BookOpen size={20}/></div>
    <h2>{resume ? w.continue : w.john}</h2>
    <p>{resume ? w.resume : w.start}</p>
    {resume && localBook && <span className="today-resume-ref" dir={edition.direction} lang={edition.language}>{localBook} <bdi>{reading.chapter}{reading.verse?":"+reading.verse:""}</bdi></span>}
    <a className="today-pill" href={"/"+readingHref(reading)}>{resume ? w.continue : w.begin}<ArrowUpRight size={18}/></a>
+   </div>
+   <div className="today-reading-icons" dir="ltr">
+    <a href="https://commons.wikimedia.org/wiki/File:Virgin_of_Vladimir.jpg" target="_blank" rel="noreferrer" title="Theotokos of Vladimir · 1125 · Wikimedia Commons / public domain">
+     <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/3/37/Virgin_of_Vladimir.jpg/330px-Virgin_of_Vladimir.jpg" alt={iconNames[0]} width="330" height="481" loading="lazy" decoding="async" referrerPolicy="no-referrer" onError={e=>{e.currentTarget.closest("a").hidden=true}}/>
+    </a>
+    <a href="https://commons.wikimedia.org/wiki/File:Christ_Icon_Sinai_6th_century.jpg" target="_blank" rel="noreferrer" title="Christ Pantocrator of Sinai · 6th century · Wikimedia Commons / public domain">
+     <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fb/Christ_Icon_Sinai_6th_century.jpg/330px-Christ_Icon_Sinai_6th_century.jpg" alt={iconNames[1]} width="330" height="630" loading="lazy" decoding="async" referrerPolicy="no-referrer" onError={e=>{e.currentTarget.closest("a").hidden=true}}/>
+    </a>
+   </div>
  </section>;
 }
 export function TodayPrayers({language}) {
