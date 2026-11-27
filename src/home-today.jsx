@@ -17,12 +17,12 @@ const words = {
 };
 const wFor = language => words[language] || words.en;
 function readSaved(language) {
- try { const v=JSON.parse(localStorage.getItem(language==="ka"?"scripture-position:ka":"scripture-position")); return v?.book && v?.translation ? normalizeReading(v,language) : null; } catch { return null; }
+ try { const v=JSON.parse(localStorage.getItem(["ka","ru"].includes(language)?`scripture-position:${language}`:"scripture-position")); return v?.book && v?.translation ? normalizeReading(v,language) : null; } catch { return null; }
 }
 export function TodayReading({language}) {
  const w=wFor(language), cms=useEditorial(), saved=readSaved(language);
  const initial=defaultEdition(language);
- const available=cms.ready ? cms.editions.map(x=>x.id) : null;
+ const available=cms.ready ? [...cms.editions.map(x=>x.id),"ru_rst"] : null;
  const fallbackId=available && !available.includes(initial.id) ? available[0] : initial.id;
  if(!fallbackId) return null;
  const resume=saved && (!available || available.includes(saved.translation)) ? saved : null;

@@ -317,6 +317,7 @@ function App() {
             onChange={(e) => {
               const next = e.target.value;
               if (next === "ka" && page === "bible") location.hash = "bible?translation=ka_ogb&book=JHN&chapter=1";
+              if (next === "ru" && page === "bible") location.hash = "bible?translation=ru_rst&book=JHN&chapter=1";
               setLanguage(next);
             }}
           >

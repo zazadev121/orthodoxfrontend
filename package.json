@@ -11,7 +11,8 @@
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1",
-    "postbuild": "node scripts/generate-seo.mjs"
+    "postbuild": "node scripts/generate-seo.mjs",
+    "prebuild": "node scripts/prepare-russian-scripture.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.89.0",

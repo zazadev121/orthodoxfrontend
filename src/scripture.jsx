@@ -32,6 +32,7 @@ import {
 } from "./scripture.js";
 
 function Attribution({ edition, language, compact = false }) {
+  if (edition.id === "ru_rst") return <div className="scripture-attribution" lang="ru" dir="ltr">Синодальный перевод · Общественное достояние</div>;
   return (
     <div
       className={`scripture-attribution${compact ? " compact" : ""}`}
@@ -101,7 +102,7 @@ export function DailyVerse({ t, language, compact = false }) {
       }
     : dailyVerseForDate(edition, date);
   const available = scriptureEditions.filter(
-    (e) => !cms.ready || cms.editions.some((setting) => setting.id === e.id),
+    (e) => e.id === "ru_rst" || !cms.ready || cms.editions.some((setting) => setting.id === e.id),
   );
   useEffect(() => {
     if (
@@ -170,7 +171,7 @@ function DailyVerseOptions({t,language,translation,setTranslation,available,cms,
         >
           {available.map((edition) => (
             <option key={edition.id} value={edition.id}>
-              {cms.ready
+              {edition.id === "ru_rst" ? "Русский · Синодальный перевод" : cms.ready
                 ? cms.editions.find((e) => e.id === edition.id)?.[
                     `title_${language}`
                   ]
@@ -218,11 +219,11 @@ export function BibleReader({ t, language }) {
     { enabled: cms.ready === true },
   );
   const available = scriptureEditions.filter(
-    (e) => !cms.ready || cms.editions.some((setting) => setting.id === e.id),
+    (e) => e.id === "ru_rst" || !cms.ready || cms.editions.some((setting) => setting.id === e.id),
   );
   const editionSetting = cms.editions.find((e) => e.id === edition.id);
   const editionTitle = e => cms.editions.find(setting => setting.id === e.id)?.[`title_${language}`] || e.name || e.englishName;
-  const editionShort = e => ({eng_webu:"WEB",ckb_bib:"CKB",ka_ogb:"OGB"})[e.id] || e.id;
+  const editionShort = e => ({eng_webu:"WEB",ckb_bib:"CKB",ka_ogb:"OGB",ru_rst:"СИН"})[e.id] || e.id;
   useEffect(() => {
     if (
       cms.ready &&
@@ -240,7 +241,7 @@ export function BibleReader({ t, language }) {
     setReading(next);
     history.replaceState(null, "", readingHref(next));
     try {
-      localStorage.setItem(language === "ka" ? "scripture-position:ka" : "scripture-position", JSON.stringify(next));
+      localStorage.setItem(["ka","ru"].includes(language) ? `scripture-position:${language}` : "scripture-position", JSON.stringify(next));
     } catch {}
   }
   useEffect(() => {
@@ -259,7 +260,7 @@ export function BibleReader({ t, language }) {
     setError(false);
     setResult(null);
     try {
-      localStorage.setItem(language === "ka" ? "scripture-position:ka" : "scripture-position", JSON.stringify(reading));
+      localStorage.setItem(["ka","ru"].includes(language) ? `scripture-position:${language}` : "scripture-position", JSON.stringify(reading));
     } catch {}
     loadChapter(reading, { signal: controller.signal })
       .then((data) => {
@@ -320,7 +321,6 @@ export function BibleReader({ t, language }) {
         {readerMenu&&<div className="video-menu-panel"><button type="button" aria-pressed={studyMode} onClick={()=>{setStudyMode(v=>!v);setOpenVerse(null);setReaderMenu(false)}}>{studyMode?labels[2]:labels[3]}</button><button type="button" disabled={!openVerse&&!reading.verse&&!markedVerse} onClick={()=>{setMarkedVerse(reading.verse||openVerse||markedVerse);setReaderMenu(false)}}>{videoWords[4]}</button></div>}</div>
       </div>
       {language==="kmr" && <p className="reader-language-note">{t.kurmanjiPending}</p>}
-      {language==="ru" && <p className="reader-language-note" lang="ru">Русский перевод пока не подключён к нашему библейскому разделу. <a href="https://azbyka.ru/biblia/" target="_blank" rel="noreferrer">Читать Библию в Синодальном переводе на портале «Азбука веры» ↗</a></p>}
       <header className="video-chapter-header">
         <h1 dir={edition.direction}>{bookName}</h1>
         <button className="video-chapter-select" type="button" aria-expanded={passagePicker} aria-controls="reading-passage-panel" onClick={openPassagePicker}>{t.chapter} <bdi>{reading.chapter}</bdi><ChevronDown size={15}/></button>
@@ -329,7 +329,7 @@ export function BibleReader({ t, language }) {
             <div id="study-edition-options" className="study-edition-options" hidden={!editionPicker}>
               <p>{studyWords.choose}</p>
               {available.map(e=><button key={e.id} className="study-edition-option" type="button" aria-pressed={reading.translation===e.id} onClick={()=>{navigate({...reading,translation:e.id,verse:undefined});setEditionPicker(false);setDraftBook(null)}}>
-                <span className="study-edition-code" dir="ltr">{editionShort(e)}</span><span><strong>{editionTitle(e)}</strong><small>{({en:"English",ckb:"کوردی (سۆرانی)",ka:"ქართული"})[e.language]}</small></span><span className="study-edition-check" aria-hidden="true">{reading.translation===e.id?"✓":""}</span>
+                <span className="study-edition-code" dir="ltr">{editionShort(e)}</span><span><strong>{editionTitle(e)}</strong><small>{({en:"English",ckb:"کوردی (سۆرانی)",ka:"ქართული",ru:"Русский"})[e.language]}</small></span><span className="study-edition-check" aria-hidden="true">{reading.translation===e.id?"✓":""}</span>
               </button>)}
             </div>
         </div>
@@ -450,7 +450,7 @@ export function BibleReader({ t, language }) {
       <Attribution edition={edition} language={language} />
             {edition.language === "ka" && <p className="reader-language-note">{language === "ka" ? t.georgianScope : "This historical Old Georgian edition contains the 27 New Testament books. It is not a newly commissioned modern Georgian translation."}</p>}
       <p className="reader-scope editorial-verbatim">
-        {editionSetting
+        {edition.id === "ru_rst" ? (language === "ru" ? "Полное издание: 77 книг, включая неканонические книги Ветхого Завета; Молитва Манассии представлена отдельно. Нумерация стихов и псалмов соответствует изданию." : "Complete 77-book Synodal edition, with the Prayer of Manasseh separately listed. Verse and Psalm numbering follows this edition.") : editionSetting
           ? editionSetting[`description_${language}`]
           : edition.language === "ckb"
             ? t.soraniScope
