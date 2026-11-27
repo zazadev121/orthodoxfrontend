@@ -1,3 +1,5 @@
+import { parseRussianBook } from "./russian-scripture-parser.js";
+import { russianSourceRoot } from "./russian-scripture-data.js";
 import { scriptureEditions as originalEditions } from "./scripture-data.js";
 import { georgianScriptureEdition } from "./georgian-scripture-data.js";
 import { russianScriptureEdition } from "./russian-scripture-data.js";
@@ -63,9 +65,16 @@ export async function loadChapter(reading, { signal, fetcher = fetch, now = Date
   const cached = readCache().find(row => row?.key === key && validChapter(row.data, reading));
   if (cached && now - cached.savedAt < week) return { data: cached.data, offline: false };
   try {
-    const response = await fetcher(["ka_ogb","ru_rst"].includes(reading.translation) ? `/scripture/${reading.translation}/${reading.book}.json` : `https://bible.helloao.org/api/${key}.simple.json`, { signal });
-    if (!response.ok) throw Error(`Scripture request failed (${response.status})`);
-    const raw = await response.json();
+    let raw;
+    if(reading.translation==="ru_rst"){
+      const edition=editionFor("ru_rst"),book=edition.books.find(b=>b.id===reading.book);
+      try { const local=await fetcher(`/scripture/ru_rst/${reading.book}.json`,{signal}); if(local.ok)raw=await local.json(); } catch(error){if(signal?.aborted)throw error;}
+      if(!raw?.chapters){const remote=await fetcher(russianSourceRoot+book.sourceFile,{signal});if(!remote.ok)throw Error("Russian Scripture request failed ("+remote.status+")");raw=parseRussianBook(await remote.text(),book,edition);}
+    } else {
+      const response=await fetcher(reading.translation==="ka_ogb"?`/scripture/ka_ogb/${reading.book}.json`:`https://bible.helloao.org/api/${key}.simple.json`,{signal});
+      if(!response.ok)throw Error(`Scripture request failed (${response.status})`);
+      raw=await response.json();
+    }
     const data = ["ka_ogb","ru_rst"].includes(reading.translation) ? {translation:raw.translation,book:raw.book,chapter:raw.chapters?.find(ch => ch.number === reading.chapter)} : raw;
     if (!validChapter(data, reading)) throw Error("Scripture response did not match the requested chapter");
     try {

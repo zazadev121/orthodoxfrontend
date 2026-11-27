@@ -435,10 +435,10 @@ function App() {
         {[
           ["home", HomeIcon, t.home],
           ["bible", BookOpen, t.bible],
-          ["discover", Library, cms.text("general.navDiscover", language, discoverWords(language).title)],
+          ["discover", Library, language==="ru"?"Поиск":language==="en"?"Discover":language==="ka"?"ძიება":cms.text("general.navDiscover", language, discoverWords(language).title)],
           ["saints", Church, cms.text("general.navSaints", language, language === "ckb" ? "پایەپیرۆزان" : language === "ka" ? "წმინდანები" : language === "ru" ? "Святые" : language === "kmr" ? "Pîroz" : "Saints")],
           ["prayers", Heart, t.prayers],
-          ["appearance", Palette, t.appearance],
+          ["appearance", Palette, language==="ru"?"Вид":language==="en"?"Style":language==="ka"?"თემა":t.appearance],
         ].map(([id, Icon, label]) => (
           <a
             key={id}
@@ -447,7 +447,7 @@ function App() {
             aria-current={page === id || (id === "saints" && page === "saint") ? "page" : undefined}
           >
             <Icon size={21} />
-            <span>{label}</span>
+            <span lang={language} dir={language==="ckb"?"rtl":"ltr"}>{label}</span>
           </a>
         ))}
       </nav>
@@ -482,7 +482,7 @@ function App() {
               {cms.text(
                 "general.footerAbout",
                 language,
-                language === "ka" ? "ჩვენ შესახებ" : language === "ckb"
+                language === "ru" ? "О нас" : language === "ka" ? "ჩვენ შესახებ" : language === "ckb"
                   ? "دەربارەی ئێمە"
                   : language === "kmr"
                     ? "Derbarê me"
@@ -493,7 +493,7 @@ function App() {
               {cms.text(
                 "general.footerCouncils",
                 language,
-                language === "ka" ? "მსოფლიო საეკლესიო კრებები" : language === "ckb"
+                language === "ru" ? "Вселенские Соборы" : language === "ka" ? "მსოფლიო საეკლესიო კრებები" : language === "ckb"
                   ? "ئەنجومەنەکان"
                   : language === "kmr"
                     ? "Civînên gerdûnî"

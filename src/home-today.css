@@ -65,3 +65,11 @@ html[lang=en] .today-home :is(.today-next h2,.today-prayer summary span,.today-s
  .today-prayer{padding:17px}
  .today-home .daily-verse{padding-inline:10px}
 }
+
+/* Six equally spaced mobile destinations; prevent text from crossing into its neighbors. */
+@media(max-width:800px){
+ #root .bottom-navigation { grid-template-columns:repeat(6,minmax(0,1fr)); gap:0; box-sizing:border-box; overflow:hidden; inset-inline:8px; padding:8px 3px; }
+ #root .bottom-navigation a { min-width:0; max-width:100%; width:100%; padding:3px 1px; box-sizing:border-box; gap:4px; overflow:hidden; }
+ #root .bottom-navigation a svg { flex:none; width:21px; height:21px; }
+ #root .bottom-navigation a span { display:block; width:100%; min-width:0; max-width:100%; font-size:clamp(9px,2.45vw,12px) !important; line-height:1.25 !important; white-space:normal; overflow-wrap:anywhere; text-align:center; letter-spacing:0; unicode-bidi:isolate; }
+}

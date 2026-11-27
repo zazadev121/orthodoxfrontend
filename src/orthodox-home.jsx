@@ -1,3 +1,4 @@
+import { saintThumbnail } from "./localized-saint-names.js";
 import { russianHeritage, russianIdentity } from "./russian-copy.js";
 import { JourneyDaily } from "./journey.jsx";
 import { georgianHeritageWords } from "./georgian-copy.js";
@@ -314,7 +315,7 @@ export function OrthodoxHome({ t, language, journey, onEditJourney }) {
                   .slice(0, 4)
                   .map((a, index) => (
                     <a className={`home-saint${index === 0 ? " home-saint-featured" : ""}`} key={a.id} href={profileHref(a)}>
-                      <div className="home-saint-image">{a.icon_url ? <img src={a.icon_url} alt="" width="320" height="400" loading="lazy" decoding="async" /> : <Church size={32} />}</div>
+                      <div className={"home-saint-image"+(saintThumbnail(a).portrait?" portrait-crop":"")}>{a.icon_url ? <img src={a.icon_url} alt="" width="320" height="400" loading="lazy" decoding="async" /> : <Church size={32} />}</div>
                       <div className="home-saint-copy"><h3>{authorName(a,language)}</h3><p>{textFor(a,"title",language) || textFor(a,"feast",language)}</p><span aria-hidden="true"><ArrowUpRight size={18} /></span></div>
                     </a>
                   ))
@@ -322,8 +323,8 @@ export function OrthodoxHome({ t, language, journey, onEditJourney }) {
                   .slice(0, 4)
                   .map((saint, index) => (
                     <a className={`home-saint${index === 0 ? " home-saint-featured" : ""}`} key={saint.id} href={`#saint?id=${saint.id}`}>
-                      <div className="home-saint-image"><img src={`/icons/${saint.id}.webp`} alt="" width="320" height="400" loading="lazy" decoding="async" /></div>
-                      <div className="home-saint-copy"><h3>{language === "ckb" ? saint.ckb : saint.en}</h3><p>{language === "ckb" ? saint.feast?.[1] : saint.feast?.[0]}</p><span aria-hidden="true"><ArrowUpRight size={18} /></span></div>
+                      <div className={"home-saint-image"+(saintThumbnail(saint).portrait?" portrait-crop":"")}><img src={`/icons/${saint.id}.webp`} alt="" width="320" height="400" loading="lazy" decoding="async" /></div>
+                      <div className="home-saint-copy"><h3>{authorName(saint,language)}</h3>{["ckb","en"].includes(language)&&<p>{language === "ckb" ? saint.feast?.[1] : saint.feast?.[0]}</p>}<span aria-hidden="true"><ArrowUpRight size={18} /></span></div>
                     </a>
                   ))}
           </div>

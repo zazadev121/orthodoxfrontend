@@ -1,3 +1,4 @@
+import { saintThumbnail } from "./localized-saint-names.js";
 import { saintScriptureQuotes, mergeSaintQuotes, saintQuoteLabel } from "./saint-scripture-quotes.js";
 import { withVerifiedIcon } from "./saint-icons-2026.js";
 import React, { useEffect, useState } from "react";
@@ -40,7 +41,7 @@ export function AuthorCard({ author, language }) {
   const w = useEditorialWords(language);
   return (
     <a className="saint-card author-library-card" href={profileHref(author)}>
-      <div className="saint-image">
+      <div className={"saint-image"+(saintThumbnail(author).portrait?" portrait-crop":"")}>
         {author.icon_url ? (
           <img
             src={author.icon_url}

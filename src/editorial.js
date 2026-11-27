@@ -1,3 +1,4 @@
+import { localizedSaintName, validLanguageText } from "./localized-saint-names.js";
 import { russianSaintNames, russianSaintSummaries } from "./russian-copy.js";
 // Exact legacy-name corrections; subsequent owner edits take precedence.
 const correctedSoraniNames = new Map([
@@ -38,7 +39,7 @@ export function matchesAuthor(author, query) {
         ["en", "ckb", "kmr", "ka", "ru"].map((lang) => author[`${base}_${lang}`] || ""),
       ),
       correctedSoraniName(author.name_ckb || ""),
-      authorName(author, "ru"),
+      ...["en","ckb","ka","ru"].map(lang=>authorName(author,lang)),
       ...(author.aliases || []),
     ].join(" "),
   );
@@ -48,19 +49,13 @@ export function matchesAuthor(author, query) {
   );
 }
 export function authorName(author, language = "en") {
-  if (language === "ru") return author?.name_ru || russianSaintNames[author?.name_en] || author?.name_en || author?.name_ckb || "";
-  if (language === "ckb" && author?.name_ckb) return correctedSoraniName(author.name_ckb);
-  if (language === "ka") return author?.name_ka || "ქართული სახელი ჯერ არ არის დამატებული";
-  return (
-    author?.[`name_${language}`] ||
-    author?.name_en ||
-    author?.name_ckb ||
-    author?.name_kmr ||
-    ""
-  );
+  if (language === "ckb" && validLanguageText(author?.name_ckb,language)) return correctedSoraniName(author.name_ckb);
+  return localizedSaintName(author,language);
 }
 export function textFor(row, base, language) {
-  return row?.[`${base}_${language}`] ?? (language === "ru" ? russianSaintSummaries[row?.name_en]?.[base] : undefined) ?? "";
+  const value = row?.[`${base}_${language}`];
+  if (["title","position","feast","summary"].includes(base) && value && !validLanguageText(value,language)) return "";
+  return value || (language === "ru" ? russianSaintSummaries[row?.name_en]?.[base] : undefined) || "";
 }
 export function profileHref(author) {
   return `#saint?id=${encodeURIComponent(author.slug || author.id)}`;
@@ -80,7 +75,8 @@ export function mergeWords(base, blocks, prefix, language) {
         ]),
       );
     const row = index.get(path);
-    return row ? (row[`text_${language}`] ?? value) : value;
+    const translated=row?.[`text_${language}`];
+    return typeof value==="string" && value && typeof translated==="string" && !validLanguageText(translated,language) && validLanguageText(value,language) ? value : translated ?? value;
   }
   return walk(base, prefix);
 }

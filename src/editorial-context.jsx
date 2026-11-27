@@ -7,6 +7,7 @@ import React, {
   useState,
 } from "react";
 import { api } from "./api.js";
+import { validLanguageText } from "./localized-saint-names.js";
 import { mergeWords } from "./editorial.js";
 import { baseEditorialWords } from "./editorial-words.js";
 const Context = createContext(null);
@@ -73,7 +74,9 @@ export function EditorialProvider({ children }) {
       mergeWords(base, catalog.blocks, prefix, language),
     text: (key, language, fallback = "") => {
       const b = catalog.blocks.find((row) => row.key === key);
-      return b ? (b[`text_${language}`] ?? fallback) : fallback;
+      const value=b?.[`text_${language}`];
+      if (typeof value==="string" && fallback && /^general\.(?:nav|bottom|footer|synaxarion)/.test(key) && !validLanguageText(value,language)) return fallback;
+      return value ?? fallback;
     },
     visible: (key) =>
       catalog.blocks.find((row) => row.key === `visibility.home.${key}`)

@@ -51,3 +51,9 @@ html[lang="ckb"] #root { letter-spacing: normal; }
 @font-face { font-family: "Noto Sans Georgian"; src: url("/fonts/noto-sans-georgian.ttf") format("truetype"); font-weight: 100 900; font-style: normal; font-display: swap; }
 html[lang="ka"] { --reading-leading: 1.8; }
 html[lang="ka"] #root { letter-spacing: normal; }
+
+/* Use native script-appropriate typefaces instead of legacy Kurdish glyph encodings. */
+html[lang="ru"], html[lang="en"], html[lang="kmr"] { --reading-font: "Noto Sans", system-ui, Arial, sans-serif; --reading-leading: 1.7; }
+html[lang="ka"] { --reading-font: "Noto Sans Georgian", system-ui, sans-serif; }
+#root [lang="ru"], #root [lang="ru"] * , #root [lang="en"], #root [lang="en"] * { font-family: "Noto Sans", system-ui, Arial, sans-serif !important; }
+#root [lang="ka"], #root [lang="ka"] * { font-family: "Noto Sans Georgian", system-ui, sans-serif !important; }

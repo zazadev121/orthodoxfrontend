@@ -104,7 +104,7 @@ function useJourneySaints(){
  const fallback=saints.map(s=>({id:s.id,slug:s.id,name_en:s.en,name_ckb:s.ckb,icon_url:"/icons/"+s.id+".webp",legacy:true}));
  return mergeSaintLibrary(cms.ready?cms.authors:fallback).map(a=>withVerifiedIcon(withClimacusContent(a)));
 }
-function displayName(a,language){if(language==='ru')return authorName(a,language);return a?.["name_"+language]?authorName(a,language):a?.name_en||a?.name_ckb||"";}
+function displayName(a,language){return authorName(a,language);}
 export function JourneyWelcome({language,initial,onLanguage,onComplete,onReset,editing=false}){
  const [step,setStep]=useState(0),[chosen,setChosen]=useState(initial?.saint||""),[region,setRegion]=useState(initial?.region||"private"),[query,setQuery]=useState("");
  const w=journeyWords(language),dialog=useRef(null),heading=useRef(null), authors=useJourneySaints(), cms=useEditorial();
