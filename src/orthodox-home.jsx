@@ -210,6 +210,58 @@ function SectionHeading({ label, title, description, action, href }) {
     </div>
   );
 }
+const illuminatedFeatureWords = {
+  "en": {
+    "kicker": "A LIVING TRADITION",
+    "title": "Discover the beauty of the Orthodox faith",
+    "body": "From the Holy Scriptures to the lives and teachings of the saints, discover the faith preserved in the life of the Church.",
+    "action": "Explore the library",
+    "saint": "Saint Gregory the Theologian"
+  },
+  "ru": {
+    "kicker": "ЖИВОЕ ПРЕДАНИЕ",
+    "title": "Откройте красоту православной веры",
+    "body": "Священное Писание, жития святых и творения святых отцов помогут вам глубже познать веру Церкви.",
+    "action": "Открыть библиотеку",
+    "saint": "Святитель Григорий Богослов"
+  },
+  "ckb": {
+    "kicker": "نەریتێکی زیندوو",
+    "title": "جوانیی باوەڕی ئۆرتۆدۆکس بناسە",
+    "body": "لە کتێبی پیرۆزەوە تا ژیان و فێرکارییەکانی پایەپیرۆزان، باوەڕی کڵێسا زیاتر بناسە.",
+    "action": "کتێبخانەکە ببینە",
+    "saint": "پایەپیرۆز گریگۆری خوداناس"
+  },
+  "ka": {
+    "kicker": "ცოცხალი გადმოცემა",
+    "title": "აღმოაჩინეთ მართლმადიდებლური რწმენის სილამაზე",
+    "body": "წმინდა წერილი, წმინდანთა ცხოვრება და წმინდა მამათა თხზულებები დაგეხმარებათ ეკლესიის სარწმუნოების უკეთ შეცნობაში.",
+    "action": "ბიბლიოთეკის გაცნობა",
+    "saint": "წმინდა გრიგოლ ღვთისმეტყველი"
+  },
+  "kmr": {
+    "kicker": "KEVNEŞOPIYA ZINDÎ",
+    "title": "Bedewiya baweriya Ortodoks nas bike",
+    "body": "Ji Pirtûka Pîroz heta jiyan û hînkirinên pîrozan, baweriya Dêrê nas bike.",
+    "action": "Pirtûkxaneyê bibîne",
+    "saint": "Pîroz Grîgorê Teolog"
+  }
+};
+function IlluminatedHomeFeature({language}) {
+ const w=illuminatedFeatureWords[language] || illuminatedFeatureWords.en;
+ return <section className="home-illuminated-feature" lang={language} dir={language==="ckb"?"rtl":"ltr"} aria-label={w.title}>
+   <div className="home-illuminated-art">
+     <img src="/icons/gregory-theologian.webp" alt={w.saint} width="300" height="450" loading="lazy" decoding="async" />
+     <span className="home-illuminated-caption">{w.saint}</span>
+   </div>
+   <div className="home-illuminated-copy">
+     <span className="home-illuminated-kicker">{w.kicker}</span>
+     <h2>{w.title}</h2>
+     <p>{w.body}</p>
+     <a className="home-illuminated-action" href="/discover/">{w.action}<ArrowUpRight size={18} aria-hidden="true"/></a>
+   </div>
+ </section>;
+}
 export function OrthodoxHome({ t, language, journey, onEditJourney }) {
   const cms = useEditorial(),
     ew = useEditorialWords(language);
@@ -267,6 +319,7 @@ export function OrthodoxHome({ t, language, journey, onEditJourney }) {
           </div>
         </section>
       )}
+      {cms.visible("paths") && <IlluminatedHomeFeature language={language} />}
       <JourneyDaily language={language} journey={journey} onEdit={onEditJourney}/>
       {cms.visible("paths") && <TodayReading language={language} />}
       {cms.visible("daily") && <DailyVerse t={t} language={language} compact />}

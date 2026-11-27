@@ -157,3 +157,36 @@ html[data-page="discover"] #root .discover-card p { line-height: 1.5; }
 @media (max-width:640px) {
   #root .discover-card p { font-size: 1.05rem; }
 }
+
+/* Keep the saint's face and halo in a dedicated artwork area, rather than
+   zooming a tall icon across the whole banner. The original files are unchanged. */
+#root .discover-card {
+  min-height: 230px;
+  background: radial-gradient(ellipse at 90% 15%, #8b633b45, transparent 60%), #181613;
+  border-color: #ad90643b;
+}
+#root .discover-card > img {
+  inset: 0;
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+  width: 46%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(.86) brightness(.97);
+}
+#root .discover-card::after {
+  background: linear-gradient(90deg,#151411 0%,#151411 43%,#151411e6 50%,#15141150 62%,transparent 76%);
+}
+[dir="rtl"] #root .discover-card::after, #root [dir="rtl"] .discover-card::after {
+  background: linear-gradient(270deg,#151411 0%,#151411 43%,#151411e6 50%,#15141150 62%,transparent 76%);
+}
+#root .discover-card-content { position:relative; width:58%; padding:28px 30px; min-width:0; }
+#root .discover-card h2 { text-wrap:balance; overflow-wrap:break-word; }
+#root .discover-card p { color:#e2dcd4; overflow-wrap:break-word; }
+@media(max-width:640px){
+ #root .discover-card { min-height:214px; border-radius:26px; }
+ #root .discover-card-content { width:60%; padding:20px 17px; }
+ #root .discover-card h2 { font-size:clamp(1.22rem,5.3vw,1.8rem); line-height:1.22; }
+ #root .discover-card p { font-size:clamp(.81rem,3.4vw,.99rem); line-height:1.48; }
+ #root .discover-card > img { width:46%; }
+}
