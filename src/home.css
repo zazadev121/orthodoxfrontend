@@ -280,31 +280,74 @@
 .heritage-home .home-saint .home-saint-copy { min-height:0; min-width:0; overflow-wrap:anywhere; }
 @media(max-width:600px){.heritage-home .home-saint .home-saint-image{height:170px;}.heritage-home .home-saint .home-saint-image > img{inset:9px;width:calc(100% - 18px);height:calc(100% - 18px);}}
 
-/* Homepage illuminated feature, in the same visual language as Discover. */
-.heritage-home .home-illuminated-feature {
- position:relative; isolation:isolate; overflow:hidden; display:flex; align-items:center;
- margin:24px 0 30px; min-height:340px; border:1px solid #b1916150; border-radius:28px;
- background:radial-gradient(ellipse at 80% 10%,#ad784545,transparent 65%),#181613; color:#fff;
+
+/* Main homepage cover only. Photograph: Bombon mi, St Stephen's Orthodox Church,
+   Istanbul, CC0 1.0; https://commons.wikimedia.org/wiki/File:IMG_Istanbul_Bulgarian_Orthodox_Church_interior.jpg */
+#root .heritage-home .home-sacred-cover {
+  position: relative; isolation:isolate; overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+  min-height:clamp(480px, 52vw, 620px);
+  background:#16110d;
+  color:#fff7e9;
+  border:1px solid #caa56a45;
+  border-radius:28px;
 }
-.home-illuminated-art { position:absolute; inset-block:0; inset-inline-end:0; width:46%; z-index:-2; overflow:hidden; }
-.home-illuminated-art img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:65% 0%; filter:saturate(.86) brightness(.96); }
-.home-illuminated-feature::after { content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; background:linear-gradient(90deg,#181613 0%,#181613 43%,#181613e8 50%,#18161345 64%,transparent 77%); }
-.home-illuminated-feature[dir="rtl"]::after { background:linear-gradient(270deg,#181613 0%,#181613 43%,#181613e8 50%,#18161345 64%,transparent 77%); }
-.home-illuminated-caption { position:absolute; inset-inline:6px; bottom:0; padding:16px 8px 9px; background:linear-gradient(transparent,#17130fe8); text-align:center; color:#fff0da; font-size:.7rem; line-height:1.35; }
-.home-illuminated-copy { width:58%; padding:clamp(24px,5vw,52px); min-width:0; }
-.home-illuminated-kicker { color:#e6c58b; font-size:.76rem; font-weight:600; letter-spacing:.07em; line-height:1.5; }
-#root .home-illuminated-copy h2 { margin:11px 0 14px; font-size:clamp(1.7rem,3.5vw,3rem); line-height:1.22; color:#fff6e8; font-weight:650; overflow-wrap:break-word; text-wrap:balance; }
-#root .home-illuminated-copy p { margin:0; font-size:clamp(.92rem,1.4vw,1.1rem); line-height:1.65; color:#e1d9cd; }
-.home-illuminated-action { display:inline-flex; align-items:center; gap:10px; margin-top:24px; color:#f2d198; border-bottom:1px solid #a88d60; padding-bottom:7px; font-size:.9rem; font-weight:600; line-height:1.35; }
-.home-illuminated-action svg { flex:none; }
-.home-illuminated-action:focus-visible { outline:2px solid #f2d198; outline-offset:5px; }
-[dir="rtl"] .home-illuminated-kicker { letter-spacing:0; }
+.home-sacred-backdrop {
+  position:absolute; inset:0; z-index:-2; overflow:hidden;
+  background:radial-gradient(ellipse at 76% 8%, #8d612a55, transparent 48%),#21170f;
+  pointer-events:none;
+}
+.home-sacred-backdrop img {
+  display:block; width:100%; height:100%; position:absolute; inset:0;
+  object-fit:cover; object-position:center 46%;
+  filter:saturate(.73) sepia(.17) brightness(.8);
+}
+#root .heritage-home .home-sacred-cover::after {
+  content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background:
+    radial-gradient(ellipse at 50% 43%,#0a0806ad 0%,#0a08065c 52%,transparent 87%),
+    linear-gradient(180deg,#100c075c 0%,#110d096b 34%,#100c09b8 68%,#100d0bf5 100%);
+}
+#root .heritage-home .home-sacred-cover .heritage-hero-copy {
+  position:relative; z-index:1; width:100%; max-width:1050px; min-width:0;
+  padding:clamp(30px,4.6vw,56px) clamp(18px,5vw,56px) 30px;
+  align-items:center; text-align:center;
+}
+#root .home-sacred-cover .home-cross-stage {
+  width:clamp(102px,15vw,150px); margin:0 auto 19px; aspect-ratio:1;
+}
+#root .home-sacred-cover .home-cross-stage::before {
+  background:radial-gradient(circle,#e6c38b45,transparent 69%); inset:-35%;
+}
+#root .home-sacred-cover .home-cross-emblem {
+  display:block; width:100%; height:100%; object-fit:contain;
+  border-radius:0; box-shadow:none;
+  filter:drop-shadow(0 0 1px #f6ce95) drop-shadow(0 3px 12px #140604);
+}
+#root .home-sacred-cover .home-chapter-label { color:#eac88c; text-shadow:0 2px 8px #000; font-size:.86rem; }
+#root .heritage-home .home-sacred-cover h1 {
+  color:#fffaf2; font-size:clamp(2.25rem,5.5vw,4.5rem); line-height:1.22;
+  margin:10px 0 5px; text-shadow:0 3px 20px #000b; text-wrap:balance;
+}
+#root .home-sacred-cover .home-english-brand { color:#e9ddcc; font-size:.9rem; letter-spacing:.05em; }
+#root .home-sacred-cover .home-cover-rule { color:#e4bf80; margin:18px auto; }
+#root .heritage-home .home-sacred-cover p {
+  color:#f0e9df; line-height:1.65; font-size:clamp(.98rem,1.7vw,1.15rem);
+  max-width:650px; margin:0 auto 24px; text-shadow:0 2px 10px #000;
+}
+#root .home-sacred-cover .hero-actions { gap:10px; justify-content:center; }
+#root .home-sacred-cover .hero-actions .button.gold { color:#24180a; background:#ddba7b; border-color:#ddba7b; }
+#root .home-sacred-cover .hero-actions .button.secondary { color:#fff5e7; background:#15110ebd; border-color:#d8ba8670; }
+#root .home-sacred-cover .home-hero-rail { margin:26px auto 0; padding-top:15px; border-color:#f0d5a040; color:#e5d5bc; }
+#root .home-sacred-cover .home-hero-rail a { color:inherit; }
 @media(max-width:640px){
- .heritage-home .home-illuminated-feature { min-height:280px; margin:18px 0 24px; border-radius:24px; }
- .home-illuminated-copy { width:61%; padding:22px 16px; }
- .home-illuminated-kicker { font-size:.63rem; }
- #root .home-illuminated-copy h2 { font-size:clamp(1.28rem,5.1vw,1.7rem); line-height:1.26; }
- #root .home-illuminated-copy p { font-size:.82rem; line-height:1.5; }
- .home-illuminated-action { font-size:.78rem; margin-top:17px; }
- .home-illuminated-caption { font-size:.6rem; }
+  #root .heritage-home .home-sacred-cover { min-height:0; border-radius:22px; }
+  #root .home-sacred-cover .home-sacred-backdrop img { object-position:50% 44%; }
+  #root .heritage-home .home-sacred-cover .heritage-hero-copy { padding:34px 17px 23px; }
+  #root .home-sacred-cover .home-cross-stage { width:104px; margin-bottom:15px; }
+  #root .heritage-home .home-sacred-cover h1 { font-size:clamp(1.95rem,8vw,2.65rem); line-height:1.23; }
+  #root .home-sacred-cover .home-chapter-label { font-size:.74rem; }
+  #root .heritage-home .home-sacred-cover p { font-size:.94rem; line-height:1.6; }
+  #root .home-sacred-cover .hero-actions .button { font-size:.85rem; min-height:43px; padding:9px 13px; }
+  #root .home-sacred-cover .home-hero-rail { margin-top:21px; font-size:.77rem; }
 }
