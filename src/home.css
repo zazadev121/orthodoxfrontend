@@ -281,8 +281,7 @@
 @media(max-width:600px){.heritage-home .home-saint .home-saint-image{height:170px;}.heritage-home .home-saint .home-saint-image > img{inset:9px;width:calc(100% - 18px);height:calc(100% - 18px);}}
 
 
-/* Main homepage cover only. Photograph: Bombon mi, St Stephen's Orthodox Church,
-   Istanbul, CC0 1.0; https://commons.wikimedia.org/wiki/File:IMG_Istanbul_Bulgarian_Orthodox_Church_interior.jpg */
+/* Homepage photo: MKFI, Tampere Orthodox Church iconostasis, public domain. https://commons.wikimedia.org/wiki/File:Tampereen_ortodoksinen_kirkko_sis%C3%A4lt%C3%A4_10_ikonostaasi.JPG */
 #root .heritage-home .home-sacred-cover {
   position: relative; isolation:isolate; overflow:hidden;
   display:flex; align-items:center; justify-content:center;
@@ -350,4 +349,41 @@
   #root .heritage-home .home-sacred-cover p { font-size:.94rem; line-height:1.6; }
   #root .home-sacred-cover .hero-actions .button { font-size:.85rem; min-height:43px; padding:9px 13px; }
   #root .home-sacred-cover .home-hero-rail { margin-top:21px; font-size:.77rem; }
+}
+
+/* Wide, compact cover: natural photography, simple scrim, no artificial glow. */
+#root .heritage-home .home-sacred-cover {
+ min-height:0; width:100%; border-radius:20px; border-color:var(--line);
+}
+#root .home-sacred-cover .home-sacred-backdrop {background:#161412;}
+#root .home-sacred-cover .home-sacred-backdrop img {object-position:50% 43%;filter:none;}
+#root .heritage-home .home-sacred-cover::after {
+ background:linear-gradient(180deg,rgba(0,0,0,.45),rgba(0,0,0,.65) 48%,rgba(0,0,0,.78));
+}
+#root .heritage-home .home-sacred-cover .heritage-hero-copy {
+ padding:24px 22px 22px; max-width:900px; gap:0;
+}
+#root .home-sacred-cover .home-cross-stage {width:82px; margin:0 auto 8px;}
+#root .home-sacred-cover .home-cross-stage::before {display:none;}
+#root .home-sacred-cover .home-cross-emblem {filter:drop-shadow(0 0 1px #f4e1cf);}
+#root .heritage-home .home-sacred-cover h1 {font-size:clamp(1.85rem,4vw,3.05rem);line-height:1.17;margin:6px 0;}
+#root .home-sacred-cover .home-chapter-label {font-size:.78rem;}
+#root .home-sacred-cover .home-english-brand {font-size:.78rem;}
+#root .home-sacred-cover .home-cover-rule {margin:9px auto 12px;}
+#root .heritage-home .home-sacred-cover p {font-size:clamp(.87rem,1.4vw,1rem);line-height:1.55;margin-bottom:16px;max-width:610px;}
+#root .home-sacred-cover .hero-actions .button {min-height:40px;padding:9px 15px;font-size:.88rem;}
+#root .home-sacred-cover .home-hero-rail {margin-top:14px;padding-top:9px;font-size:.75rem;}
+@media(max-width:640px){
+ #root .heritage-home {width:calc(100% - 20px);}
+ #root .heritage-home .home-sacred-cover {border-radius:17px;}
+ #root .heritage-home .home-sacred-cover .heritage-hero-copy {padding:17px 12px 16px;}
+ #root .home-sacred-cover .home-cross-stage {width:62px;margin-bottom:6px;}
+ #root .home-sacred-cover .home-chapter-label {font-size:.69rem;}
+ #root .heritage-home .home-sacred-cover h1 {font-size:clamp(1.45rem,6vw,2rem);line-height:1.19;}
+ #root .home-sacred-cover .home-english-brand {display:none;}
+ #root .home-sacred-cover .home-cover-rule {margin:7px auto 9px;}
+ #root .heritage-home .home-sacred-cover p {font-size:.84rem;line-height:1.48;margin-bottom:13px;}
+ #root .home-sacred-cover .hero-actions {gap:7px;}
+ #root .home-sacred-cover .hero-actions .button {min-height:40px;font-size:.76rem;padding:8px 11px;}
+ #root .home-sacred-cover .home-hero-rail {display:none;}
 }
