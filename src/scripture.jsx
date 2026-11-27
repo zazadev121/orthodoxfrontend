@@ -31,6 +31,15 @@ import {
   loadChapter,
 } from "./scripture.js";
 
+const pntzsUrl = "https://www.bible.com/versions/1852-PNTZS-";
+const pntzsLabels = {"en":"Read on YouVersion · New Testament and Psalms","ckb":"خوێندنەوە لە YouVersion · پەیمانی نوێ و زەبوورەکان","ru":"Читать в YouVersion · Новый Завет и Псалтирь","ka":"წაკითხვა YouVersion-ზე · ახალი აღთქმა და ფსალმუნები","kmr":"Li YouVersion bixwîne · Peymana Nû û Zebûr"};
+function PntzsEdition({language}) {
+  return <a className="study-edition-option" href={pntzsUrl} target="_blank" rel="noopener noreferrer">
+    <span className="study-edition-code" dir="ltr">PNTZS</span>
+    <span><strong lang="ckb" dir="rtl">پەیمانی نوێ و زەبوورەکان بە سۆرانی</strong><small>{pntzsLabels[language] || pntzsLabels.en}</small><small lang="en" dir="ltr">Bible Society in Lebanon · 2018</small></span>
+    <ArrowUpRight size={16} aria-hidden="true"/>
+  </a>;
+}
 function Attribution({ edition, language, compact = false }) {
   if (edition.id === "ru_rst") return <div className="scripture-attribution" lang="ru" dir="ltr">Синодальный перевод · Общественное достояние</div>;
   return (
@@ -331,6 +340,7 @@ export function BibleReader({ t, language }) {
               {available.map(e=><button key={e.id} className="study-edition-option" type="button" aria-pressed={reading.translation===e.id} onClick={()=>{navigate({...reading,translation:e.id,verse:undefined});setEditionPicker(false);setDraftBook(null)}}>
                 <span className="study-edition-code" dir="ltr">{editionShort(e)}</span><span><strong>{editionTitle(e)}</strong><small>{({en:"English",ckb:"کوردی (سۆرانی)",ka:"ქართული",ru:"Русский"})[e.language]}</small></span><span className="study-edition-check" aria-hidden="true">{reading.translation===e.id?"✓":""}</span>
               </button>)}
+              <PntzsEdition language={language} />
             </div>
         </div>
           <section className="reading-passage-panel" id="reading-passage-panel" hidden={!passagePicker}>
