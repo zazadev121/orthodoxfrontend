@@ -1,3 +1,4 @@
+import { russianCopy } from "./russian-copy.js";
 import { georgianCopy } from "./georgian-copy.js";
 export const copy = {
   en: {
@@ -344,5 +345,6 @@ export const copy = {
     back: "گەڕانەوە بۆ سەرەکی",
   },
   ka: georgianCopy,
+  ru: russianCopy,
 };
 

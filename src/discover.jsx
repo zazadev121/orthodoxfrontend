@@ -1,3 +1,4 @@
+import { russianDiscover } from "./russian-copy.js";
 import React, { useState } from "react";
 import { Search } from "lucide-react";
 import {
@@ -11,6 +12,7 @@ import "./discover.css";
 // These are editorial labels, not automatically generated religious content.
 // Each value can be overridden in General Content Management at discover.<key>.
 export const discoverTranslations = {
+  ru: russianDiscover,
   en: {
     title: "Discover",
     search: "Search",

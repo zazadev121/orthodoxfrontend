@@ -196,12 +196,12 @@ function App() {
   const fatherQuotesLabel = cms.text(
     "general.navFatherQuotes",
     language,
-    language === "ckb" ? "وتەکانی باوکانی کڵێسا" : language === "ka" ? "ეკლესიის მამათა გამონათქვამები" : language === "kmr" ? "Gotinên Bavên Dêrê" : "Church Fathers’ Quotes",
+    language === "ckb" ? "وتەکانی باوکانی کڵێسا" : language === "ka" ? "ეკლესიის მამათა გამონათქვამები" : language === "ru" ? "Изречения святых отцов" : language === "kmr" ? "Gotinên Bavên Dêrê" : "Church Fathers’ Quotes",
   );
   const saintsQuotesLabel = cms.text(
     "general.bottomSaintQuotes",
     language,
-    language === "ckb" ? "وتەکانی پایەپیرۆزان" : language === "ka" ? "წმინდანთა გამონათქვამები" : language === "kmr" ? "Gotinên Pîrozan" : "Saints’ Quotes",
+    language === "ckb" ? "وتەکانی پایەپیرۆزان" : language === "ka" ? "წმინდანთა გამონათქვამები" : language === "ru" ? "Изречения святых" : language === "kmr" ? "Gotinên Pîrozan" : "Saints’ Quotes",
   );
   const nav = [
     ["home", t.home],
@@ -214,7 +214,7 @@ function App() {
         language,
         language === "ckb"
           ? "پایەپیرۆزان"
-          : language === "ka" ? "წმინდანები" : language === "kmr"
+          : language === "ka" ? "წმინდანები" : language === "ru" ? "Святые" : language === "kmr"
             ? "Pîroz"
             : "Saints",
       ),
@@ -239,14 +239,14 @@ function App() {
       <header className="header">
         <a href="/" className="brand">
           {page === "discover" ? <h1 className="discover-header-title">{cms.text("discover.title", language, discoverWords(language).title)}</h1> : <>
-          {cms.text("general.brandImage", language, "/kurdistan-cross.jpg") && (
+          {(cms.text("general.brandImage", language, "/kurdistan-cross-transparent.svg") || "").replace("/kurdistan-cross.jpg", "/kurdistan-cross-transparent.svg") && (
             <img
               className="brand-cross"
-              src={cms.text(
+              src={(cms.text(
                 "general.brandImage",
                 language,
-                "/kurdistan-cross.jpg",
-              )}
+                "/kurdistan-cross-transparent.svg",
+              ) || "").replace("/kurdistan-cross.jpg", "/kurdistan-cross-transparent.svg")}
               alt=""
               width="42"
               height="42"
@@ -322,6 +322,7 @@ function App() {
             <option value="ckb">سۆرانی</option>
             <option value="en">English</option>
             <option value="ka">ქართული</option>
+            <option value="ru">Русский</option>
           </select>
           <button
             className="mobile-menu icon-button"
@@ -451,18 +452,18 @@ function App() {
       <footer>
         <div className="footer-inner">
           <div className="footer-brand">
-            {cms.text(
+            {(cms.text(
               "general.brandImage",
               language,
-              "/kurdistan-cross.jpg",
-            ) && (
+              "/kurdistan-cross-transparent.svg",
+            ) || "").replace("/kurdistan-cross.jpg", "/kurdistan-cross-transparent.svg") && (
               <img
                 className="brand-cross"
-                src={cms.text(
+                src={(cms.text(
                   "general.brandImage",
                   language,
-                  "/kurdistan-cross.jpg",
-                )}
+                  "/kurdistan-cross-transparent.svg",
+                ) || "").replace("/kurdistan-cross.jpg", "/kurdistan-cross-transparent.svg")}
                 alt=""
                 width="42"
                 height="42"

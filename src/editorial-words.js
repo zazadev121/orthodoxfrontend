@@ -1,7 +1,9 @@
+import { russianEditorial } from "./russian-copy.js";
 import { draftWords } from "./editorial-drafts.js";
 import { georgianEditorialWords } from "./georgian-copy.js";
 // Interface labels only. Religious content is never generated here.
 export const editorialWords = {
+  ru: russianEditorial,
   en: {
     libraryTitle: "Saints and Church Fathers",
     libraryIntro:

@@ -1,3 +1,4 @@
+import { russianSaintNames } from "./russian-copy.js";
 // Exact legacy-name corrections; subsequent owner edits take precedence.
 const correctedSoraniNames = new Map([
   [
@@ -34,9 +35,10 @@ export function matchesAuthor(author, query) {
   const text = searchKey(
     [
       ...["name", "title", "position"].flatMap((base) =>
-        ["en", "ckb", "kmr", "ka"].map((lang) => author[`${base}_${lang}`] || ""),
+        ["en", "ckb", "kmr", "ka", "ru"].map((lang) => author[`${base}_${lang}`] || ""),
       ),
       correctedSoraniName(author.name_ckb || ""),
+      authorName(author, "ru"),
       ...(author.aliases || []),
     ].join(" "),
   );
@@ -46,6 +48,7 @@ export function matchesAuthor(author, query) {
   );
 }
 export function authorName(author, language = "en") {
+  if (language === "ru") return author?.name_ru || russianSaintNames[author?.name_en] || author?.name_en || author?.name_ckb || "";
   if (language === "ckb" && author?.name_ckb) return correctedSoraniName(author.name_ckb);
   if (language === "ka") return author?.name_ka || "ქართული სახელი ჯერ არ არის დამატებული";
   return (

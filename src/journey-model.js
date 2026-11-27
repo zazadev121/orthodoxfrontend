@@ -1,5 +1,5 @@
 export const JOURNEY_KEY = "orthodoxy-journey-v1";
-export const journeyLanguages = ["ckb","en","ka"];
+export const journeyLanguages = ["ckb","en","ka","ru"];
 export const journeyRegions = ["bakur","bashur","rojava","rojhalat","other","private"];
 export function normalizeJourney(value) {
   if (!value || typeof value !== "object") return null;

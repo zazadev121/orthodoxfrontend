@@ -1902,3 +1902,6 @@ html[data-theme="charcoal"] body::before { display: none; }
 .draft-recovery > div { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding-block: 12px; border-top: 1px solid var(--line); }
 .draft-recovery time { color: var(--muted); font-size: .85rem; }
 .draft-status { color: var(--muted); font-size: .9rem; line-height: 1.6; }
+
+/* Preserve the original cross on both light and dark themes. */
+.brand-cross, .kurdistan-cross, .journey-emblem { mix-blend-mode: normal !important; }

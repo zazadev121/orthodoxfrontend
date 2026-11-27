@@ -1,3 +1,4 @@
+import { russianHeritage, russianIdentity } from "./russian-copy.js";
 import { JourneyDaily } from "./journey.jsx";
 import { georgianHeritageWords } from "./georgian-copy.js";
 import React from "react";
@@ -117,7 +118,7 @@ const lessons = [
   },
 ];
 export const heritageWords = (language) =>
-  language === "ka" ? georgianHeritageWords : language === "ckb"
+  language === "ru" ? russianHeritage : language === "ka" ? georgianHeritageWords : language === "ckb"
     ? {
         welcome: "میراتێکی زیندوو · باوەڕێکی هەتاهەتایی",
         title: "ڕووناکیی ئۆرتۆدۆکسی، بە زمانی کوردی",
@@ -213,6 +214,7 @@ export function OrthodoxHome({ t, language, journey, onEditJourney }) {
     ew = useEditorialWords(language);
   const w = cms.words(heritageWords(language), "home", language);
   const labels = {
+    ru: { scripture: 'ПИСАНИЕ И ПРЕДАНИЕ', saints: 'СОБОР СВЯТЫХ', prayer: 'ВРЕМЯ МОЛИТВЫ', teaching: 'ВЕРА ЦЕРКВИ' },
     en: { scripture: "SCRIPTURE & TRADITION", saints: "THE COMMUNION OF SAINTS", prayer: "A MOMENT OF STILLNESS", teaching: "THE FAITH OF THE CHURCH" },
     ckb: { scripture: "کتێبی پیرۆز و نەریتی کڵێسا", saints: "کۆمەڵی پایەپیرۆزان", prayer: "کاتێک بۆ نوێژ", teaching: "باوەڕی کڵێسا" },
     kmr: { scripture: "PIRTÛKA PÎROZ Û KEVNEŞOPÎ", saints: "CIVATA PÎROZAN", prayer: "DEMEK JI BO DUA", teaching: "BAWERIYA DÊRÊ" },
@@ -229,13 +231,14 @@ export function OrthodoxHome({ t, language, journey, onEditJourney }) {
     return language !== "en" && value === english ? labels[field] : value;
   };
   const homeIdentity = {
+    ru: russianIdentity,
     ckb: { name: "ئۆرتۆدۆکسی ڕۆم لە کوردستان", line: "باوەڕی کڵێسا بە زمانی کوردی", intro: "ئەم پەیجە بۆ هەموو ئەو کەسانەیە کە دەیانەوێت مەسیح و باوەڕی کڵێسای ئۆرتۆدۆکسی بناسن. لێرە دەتوانیت کتێبی پیرۆز بخوێنیتەوە و لە ژیان و فێرکارییەکانی باوکانی کڵێسا و پایەپیرۆزان فێر ببیت", explore: "گەشتێک بە ناو سایتەکەدا", about: "دەربارەی ئێمە" },
     en: { name: "Orthodoxy in Kurdistan", line: "The faith of the Church in the Kurdish language", intro: "A place for everyone seeking to know Christ and the Orthodox Christian faith. Read Holy Scripture, discover the lives of the saints, and explore the teachings of the Church Fathers.", explore: "Explore the library", about: "About us" },
     ka: { name: "მართლმადიდებლობა ქურთისტანში", line: "ეკლესიის სარწმუნოება ქურთულ ენაზე", intro: "სივრცე ყველასთვის, ვისაც სურს ქრისტესა და მართლმადიდებლური სარწმუნოების გაცნობა. წაიკითხეთ წმინდა წერილი, გაეცანით წმინდანთა ცხოვრებასა და ეკლესიის მამათა სწავლებას.", explore: "ბიბლიოთეკის გაცნობა", about: "ჩვენ შესახებ" },
     kmr: { name: "Ortodoksî li Kurdistanê", line: "Baweriya Dêrê bi zimanê Kurdî", intro: "Cihê her kesê ku dixwaze Mesîh û baweriya Ortodoks nas bike. Pirtûka Pîroz bixwîne û jiyana pîrozan û hînkirinên Bavên Dêrê nas bike.", explore: "Pirtûkxaneyê bibîne", about: "Derbarê me" }
   }[language] || {};
   const identity = (key) => cms.text("home.identity." + key, language, homeIdentity[key]);
-  const crossImage = cms.text("general.brandImage", language, "/kurdistan-cross.jpg") || "/kurdistan-cross.jpg";
+  const crossImage = (cms.text("general.brandImage", language, "/kurdistan-cross-transparent.svg") || "").replace("/kurdistan-cross.jpg", "/kurdistan-cross-transparent.svg") || "/kurdistan-cross-transparent.svg";
   const preview = cms.ready
     ? cms.doctrines.filter((d) => d.category === "doctrine").slice(0, 2)
     : lessons.slice(0, 2);
