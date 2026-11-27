@@ -1,3 +1,4 @@
+import { RussianPrayerBook } from "./russian-prayer-book.jsx";
 import { JourneyWelcome, journeyWords } from "./journey.jsx";
 import { JOURNEY_KEY, loadJourney, saveJourney } from "./journey-model.js";
 import "./journey.css";
@@ -412,7 +413,7 @@ function App() {
             <Fathers t={t} language={language} />
           )
         ) : page === "prayers" ? (
-          cms.ready ? (
+          language === "ru" ? <RussianPrayerBook /> : cms.ready ? (
             <PrayerFeed t={t} language={language} />
           ) : (
             <Prayers t={t} language={language} />

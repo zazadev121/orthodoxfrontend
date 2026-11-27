@@ -1,3 +1,4 @@
+import { russianPrayers } from "./russian-prayers.js";
 import { withVerifiedIcon } from "./saint-icons-2026.js";
 import React, { useEffect, useState } from "react";
 import { ArrowUpRight, BookOpen, ChevronRight, Heart } from "lucide-react";
@@ -39,7 +40,7 @@ export function TodayReading({language}) {
 export function TodayPrayers({language}) {
  const w=wFor(language),cms=useEditorial();
  const r=useEditorialResource("/prayers?limit=100&page=1",{enabled:cms.ready===true});
- const prayers=(r.data?.prayers||[]).filter(p=>textFor(p,"title",language)&&textFor(p,"text",language));
+ const prayers=(language==="ru"?russianPrayers.filter(p=>["ru-prayer-morning-trinity","ru-prayer-sleep"].includes(p.id)):(r.data?.prayers||[])).filter(p=>textFor(p,"title",language)&&textFor(p,"text",language));
  const ordered=[...prayers].sort((a,b)=>score(b)-score(a));
  function score(p){return /evening|sleep|morning|jesus prayer/i.test(p.title_en||"")?1:0;}
  return <section className="today-section">
