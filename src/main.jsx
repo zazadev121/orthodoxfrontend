@@ -434,7 +434,7 @@ function App() {
           ["home", HomeIcon, t.home],
           ["bible", BookOpen, t.bible],
           ["discover", Library, cms.text("general.navDiscover", language, discoverWords(language).title)],
-          ["saints", Church, cms.text("general.navSaints", language, language === "ckb" ? "پایەپیرۆزان" : language === "ka" ? "წმინდანები" : language === "kmr" ? "Pîroz" : "Saints")],
+          ["saints", Church, cms.text("general.navSaints", language, language === "ckb" ? "پایەپیرۆزان" : language === "ka" ? "წმინდანები" : language === "ru" ? "Святые" : language === "kmr" ? "Pîroz" : "Saints")],
           ["prayers", Heart, t.prayers],
           ["appearance", Palette, t.appearance],
         ].map(([id, Icon, label]) => (

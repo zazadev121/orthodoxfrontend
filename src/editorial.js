@@ -1,4 +1,4 @@
-import { russianSaintNames } from "./russian-copy.js";
+import { russianSaintNames, russianSaintSummaries } from "./russian-copy.js";
 // Exact legacy-name corrections; subsequent owner edits take precedence.
 const correctedSoraniNames = new Map([
   [
@@ -60,7 +60,7 @@ export function authorName(author, language = "en") {
   );
 }
 export function textFor(row, base, language) {
-  return row?.[`${base}_${language}`] ?? "";
+  return row?.[`${base}_${language}`] ?? (language === "ru" ? russianSaintSummaries[row?.name_en]?.[base] : undefined) ?? "";
 }
 export function profileHref(author) {
   return `#saint?id=${encodeURIComponent(author.slug || author.id)}`;

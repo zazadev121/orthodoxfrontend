@@ -320,6 +320,7 @@ export function BibleReader({ t, language }) {
         {readerMenu&&<div className="video-menu-panel"><button type="button" aria-pressed={studyMode} onClick={()=>{setStudyMode(v=>!v);setOpenVerse(null);setReaderMenu(false)}}>{studyMode?labels[2]:labels[3]}</button><button type="button" disabled={!openVerse&&!reading.verse&&!markedVerse} onClick={()=>{setMarkedVerse(reading.verse||openVerse||markedVerse);setReaderMenu(false)}}>{videoWords[4]}</button></div>}</div>
       </div>
       {language==="kmr" && <p className="reader-language-note">{t.kurmanjiPending}</p>}
+      {language==="ru" && <p className="reader-language-note" lang="ru">Русский перевод пока не подключён к нашему библейскому разделу. <a href="https://azbyka.ru/biblia/" target="_blank" rel="noreferrer">Читать Библию в Синодальном переводе на портале «Азбука веры» ↗</a></p>}
       <header className="video-chapter-header">
         <h1 dir={edition.direction}>{bookName}</h1>
         <button className="video-chapter-select" type="button" aria-expanded={passagePicker} aria-controls="reading-passage-panel" onClick={openPassagePicker}>{t.chapter} <bdi>{reading.chapter}</bdi><ChevronDown size={15}/></button>

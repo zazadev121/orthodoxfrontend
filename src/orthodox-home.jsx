@@ -444,10 +444,10 @@ export function OrthodoxStudy({ language, page, route }) {
   return (
     <div className="page heritage-page study-page">
       <a className="text-link" href="#home">
-        ← {language === "ka" ? "მთავარი" : language === "ckb" ? "سەرەکی" : "Home"}
+        ← {language === "ru" ? "Главная" : language === "ka" ? "მთავარი" : language === "ckb" ? "سەرەکی" : "Home"}
       </a>
       <header className="heritage-heading">
-        <span className="eyebrow">{language === "ka" ? "მართლმადიდებლური სარწმუნოება და ცხოვრება" : "EASTERN ORTHODOX FAITH & LIFE"}</span>
+        <span className="eyebrow">{language === "ru" ? "ПРАВОСЛАВНАЯ ВЕРА И ЖИЗНЬ" : language === "ka" ? "მართლმადიდებლური სარწმუნოება და ცხოვრება" : "EASTERN ORTHODOX FAITH & LIFE"}</span>
         <h1>
           {
             w[

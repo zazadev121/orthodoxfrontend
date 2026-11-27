@@ -114,6 +114,7 @@ export function AuthorLibrary({ language }) {
         </span>
         <h1>{w.libraryTitle}</h1>
         <p>{w.libraryIntro}</p>
+        {language === "ru" && <p className="settings-caption">Дни памяти приведены по церковному календарю. Гражданская дата зависит от календаря конкретной Церкви.</p>}
         {language === "ka" && <p className="settings-caption">ხსენების დღეები მითითებულია საეკლესიო თარიღით. იულიუსის კალენდრის მიმდევარ ეკლესიებში სამოქალაქო თარიღი ამჟამად 13 დღით გვიან დგება.</p>}
       </header>
       <div className="directory-tools">
@@ -417,7 +418,7 @@ export function AuthorProfile({ language, route }) {
             {cms.text(
               "general.synaxarionLabel",
               language,
-              "EASTERN ORTHODOX SYNAXARION",
+              language === "ru" ? "ПРАВОСЛАВНЫЕ ЖИТИЯ СВЯТЫХ" : "EASTERN ORTHODOX SYNAXARION",
             )}
           </span>
           <h1>{authorName(a, language)}</h1>
