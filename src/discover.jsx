@@ -122,12 +122,12 @@ export function discoverWords(language) {
 // The icons are the site's already verified, locally bundled historical art.
 // Image overrides are optional; the default page does not rely on hotlinked art.
 export const discoverCategories = [
-  { id: "saints", href: "#saints", image: "/icons/basil.webp", position: "42% 0%", aliases: "saints lives synaxarion church fathers پایەپیرۆزان წმინდანები" },
-  { id: "reading", href: "#reading", image: "/icons/chrysostom.webp", position: "65% 0%", aliases: "reading writings literature fathers books خوێندنەوە საკითხავი" },
-  { id: "history", href: "#history", image: "/icons/maximus.webp", position: "50% 0%", aliases: "orthodox history heritage church مێژوو ისტორია" },
-  { id: "councils", href: "#councils", image: "/icons/gregory-theologian.webp", position: "65% 0%", aliases: "councils seven ecumenical synods ئەنجومەن კრებები" },
-  { id: "theology", href: "#doctrine", image: "/icons/gregory-nyssa.webp", position: "50% 0%", aliases: "theology doctrine teaching faith عقیدە خوداناسی ღვთისმეტყველება" },
-  { id: "prayers", href: "#prayers", image: "/icons/anthony.webp", position: "50% 0%", aliases: "prayers liturgy liturgical نوێژ دوعا ლოცვები" },
+  { id: "saints", href: "#saints", image: "/icons/basil.webp", position: "75% 5%", aliases: "saints lives synaxarion church fathers پایەپیرۆزان წმინდანები" },
+  { id: "reading", href: "#reading", image: "/icons/chrysostom.webp", position: "74% 5%", aliases: "reading writings literature fathers books خوێندنەوە საკითხავი" },
+  { id: "history", href: "#history", image: "/icons/maximus.webp", position: "76% 33%", aliases: "orthodox history heritage church مێژوو ისტორია" },
+  { id: "councils", href: "#councils", image: "/icons/gregory-theologian.webp", position: "72% 34%", aliases: "councils seven ecumenical synods ئەنجومەن კრებები" },
+  { id: "theology", href: "#doctrine", image: "/icons/gregory-nyssa.webp", position: "75% 27%", aliases: "theology doctrine teaching faith عقیدە خوداناسی ღვთისმეტყველება" },
+  { id: "prayers", href: "#prayers", image: "/icons/anthony.webp", position: "75% 2%", aliases: "prayers liturgy liturgical نوێژ دوعا ლოცვები" },
 ];
 
 export function DiscoverPage({ language, hideHeading = false }) {
