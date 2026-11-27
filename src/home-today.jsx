@@ -46,7 +46,7 @@ export function TodayPrayers({language}) {
  return <section className="today-section">
   <div className="today-section-head"><h2>{w.pray}</h2><a href="/prayers/">{w.all}<ChevronRight size={16}/></a></div>
   <div className="today-prayer-group">
-   {ordered.length?ordered.slice(0,2).map(p=><details key={p.id} className="today-prayer"><summary><span>{textFor(p,"title",language)}</span><ChevronRight size={21}/></summary><p className="editorial-verbatim">{textFor(p,"text",language)}</p>{p.source_url&&<a href={p.source_url} target="_blank" rel="noreferrer">{p.reference||new URL(p.source_url).hostname} ↗</a>}</details>):<a className="today-prayer today-prayer-link" href="/prayers/"><Heart size={20}/><span>{w.noPrayer}</span><ChevronRight size={20}/></a>}
+   {ordered.length?ordered.slice(0,2).map(p=><details key={p.id} className="today-prayer"><summary><span>{textFor(p,"title",language)}</span><ChevronRight size={21}/></summary><p className="editorial-verbatim">{textFor(p,"text",language)}</p>{language!=="ru"&&p.source_url&&<a href={p.source_url} target="_blank" rel="noreferrer">{p.reference||new URL(p.source_url).hostname} ↗</a>}</details>):<a className="today-prayer today-prayer-link" href="/prayers/"><Heart size={20}/><span>{w.noPrayer}</span><ChevronRight size={20}/></a>}
   </div>
  </section>;
 }
