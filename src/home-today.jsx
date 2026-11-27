@@ -5,7 +5,7 @@ import { ArrowUpRight, BookOpen, ChevronRight, Heart } from "lucide-react";
 import { useEditorial, useEditorialResource } from "./editorial-context.jsx";
 import { authorName, profileHref, textFor } from "./editorial.js";
 import { withClimacusContent } from "./climacus-content.js";
-import { defaultEdition, readingHref, normalizeReading, localDateKey } from "./scripture.js";
+import { defaultEdition, editionFor, readingHref, normalizeReading, localDateKey } from "./scripture.js";
 import { saints } from "./saints-data.js";
 import { selectTodaySaint } from "./home-today-model.js";
 const words = {
@@ -27,13 +27,14 @@ export function TodayReading({language}) {
  if(!fallbackId) return null;
  const resume=saved && (!available || available.includes(saved.translation)) ? saved : null;
  const reading=resume || normalizeReading({translation:fallbackId,book:"JHN",chapter:1},language);
- const edition=defaultEdition(language);
- const localBook=edition.id===reading.translation ? edition.books.find(b=>b.id===reading.book)?.name : null;
+ const edition=editionFor(reading.translation);
+ const book=edition?.books.find(b=>b.id===reading.book);
+ const localBook=book?cms.text(`bible.book.${book.id}`,edition.language,book.name):null;
  return <section className="today-next">
    <div className="today-card-kicker"><span>{w.next}</span><BookOpen size={20}/></div>
    <h2>{resume ? w.continue : w.john}</h2>
    <p>{resume ? w.resume : w.start}</p>
-   {resume && localBook && <span className="today-resume-ref">{localBook} <bdi>{reading.chapter}</bdi></span>}
+   {resume && localBook && <span className="today-resume-ref" dir={edition.direction} lang={edition.language}>{localBook} <bdi>{reading.chapter}{reading.verse?":"+reading.verse:""}</bdi></span>}
    <a className="today-pill" href={"/"+readingHref(reading)}>{resume ? w.continue : w.begin}<ArrowUpRight size={18}/></a>
  </section>;
 }
