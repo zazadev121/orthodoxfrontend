@@ -183,3 +183,46 @@ html[lang=en] #root .study-masthead h1{font-family:Georgia,"Times New Roman",ser
 #root .video-commentary-sheet .study-historical-sources{border:0;padding-top:5px}
 #root .video-commentary-sheet .historical-full-text{max-height:none;overflow:visible}
 @media(max-width:760px){#root .video-reader{padding:12px 17px 105px}#root .video-reader-top{margin-bottom:22px}#root .video-chapter-dock{bottom:calc(74px + env(safe-area-inset-bottom));}#root .video-reader .scripture-verse{font-size:calc(1.35rem*var(--reader-scale))}#root .video-commentary-sheet[open]{height:82dvh}#root .video-commentary-sheet .study-commentary-content{padding-bottom:calc(24px + env(safe-area-inset-bottom))}}
+
+/* Scripture refresh: responsive edition cards, passage chooser and personal highlighting. */
+#root .video-reader{max-width:820px;padding-inline:clamp(16px,4vw,36px)}
+#root .video-chapter-header{padding:24px 16px 20px;border:1px solid var(--line);border-radius:24px;background:radial-gradient(ellipse at top,color-mix(in srgb,var(--gold) 9%,transparent),transparent 70%),var(--surface)}
+#root .reader-identity{display:flex;align-items:center;justify-content:center;gap:9px;color:var(--gold);font-size:.78rem;margin-bottom:12px}
+#root .reader-identity img{width:34px;height:34px;object-fit:contain}
+#root .reader-controls-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:16px}
+#root .video-chapter-select,#root .video-edition-select{border:1px solid var(--line);border-radius:12px;min-height:46px;background:var(--paper);color:var(--text);gap:9px;padding:9px 14px;transition:border-color .18s,background .18s}
+#root .video-chapter-select:hover,#root .video-edition-select:hover{border-color:var(--gold)}
+#root .video-edition-select{font-size:.9rem}
+#root .video-chapter-header .study-edition-control{position:static}
+#root .video-chapter-header .study-edition-options{top:100%;width:min(100%,420px);max-width:100%;border-radius:18px;padding:14px;margin-top:10px;box-shadow:0 16px 45px #0005}
+#root .video-chapter-header .reading-passage-panel{width:min(100%,590px);max-width:100%;padding:16px;border-radius:18px;margin-top:10px;box-shadow:0 16px 45px #0005}
+#root .study-edition-option{display:grid;grid-template-columns:52px minmax(0,1fr) 20px;align-items:center;gap:12px;text-align:start;width:100%;min-height:64px;padding:10px;border:1px solid var(--line);border-radius:12px;color:var(--text);transition:background .18s,border-color .18s}
+#root .study-edition-option:hover{background:var(--subtle);border-color:var(--gold)}
+#root .study-edition-code{display:grid;place-items:center;min-height:40px;border-radius:9px;background:var(--paper);color:var(--gold);font-weight:700;font-size:.8rem}
+#root .study-edition-option strong{font-size:.9rem}
+#root .reading-book-search{border-radius:10px;min-height:44px}
+#root .reading-picker-columns{max-height:min(52dvh,480px);overflow:hidden}
+#root .reading-book-list,#root .reading-chapter-list{overflow-y:auto;overscroll-behavior:contain;max-height:min(52dvh,480px);scrollbar-width:thin}
+#root .reading-book-list button{min-height:42px;border-radius:8px}
+#root .reading-chapter-grid{grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:6px}
+#root .reading-chapter-grid button{min-height:44px;border-radius:9px}
+#root .video-reader .scripture-verse{padding:2px 0;display:block}
+#root .video-reader .scripture-verse-trigger{padding:5px 7px;border-radius:8px}
+#root .video-reader .scripture-verse-trigger:focus-visible,#root .verse-palette button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+#root .video-reader .video-marked .scripture-verse-trigger span{background:color-mix(in srgb,var(--verse-color) 34%,transparent);border-radius:3px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+#root .video-reader .verse-action-selected .scripture-verse-trigger{outline:1px solid var(--line)}
+#root .verse-palette{padding:13px;margin:5px 0 13px;border:1px solid var(--line);border-radius:15px;background:var(--surface);box-shadow:0 8px 24px #0002;font-family:inherit;font-size:.84rem;line-height:1.5}
+#root .verse-palette-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--text);margin-bottom:10px}
+#root .verse-palette-close{display:grid;place-items:center;width:36px;height:36px;background:transparent;border:0;color:var(--muted)}
+#root .verse-swatches{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:5px;justify-items:center}
+#root .verse-swatches button{display:grid;place-items:center;min-height:44px;width:100%;padding:4px 0;background:transparent;border:0;cursor:pointer}
+#root .verse-swatches button span{width:28px;height:28px;border-radius:50%;background:var(--swatch);color:#19202a;border:1px solid #0003;display:grid;place-items:center;font-weight:700}
+#root .verse-swatches button[aria-pressed=true] span{outline:2px solid var(--text);outline-offset:3px}
+#root .verse-palette-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}
+#root .verse-palette-actions button{display:flex;align-items:center;gap:7px;background:var(--paper);border:1px solid var(--line);border-radius:9px;padding:8px 12px;min-height:44px;color:var(--text);font:inherit}
+#root .verse-palette-actions button:disabled{opacity:.45}
+#root .home-bible-front{margin-block:14px 20px}
+#root .home-bible-front a{display:flex;align-items:center;justify-content:center;gap:10px;width:min(100%,330px);margin:auto;min-height:54px;padding:10px 19px;border:1px solid var(--gold);border-radius:14px;background:var(--gold);color:var(--on-gold,#211706);font-weight:700;text-decoration:none;box-shadow:0 5px 22px #0002}
+#root .home-bible-front a:hover{filter:brightness(1.07)}
+@media(max-width:560px){#root .verse-swatches{grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}#root .verse-swatches button span{width:32px;height:32px}#root .video-chapter-header{padding:19px 10px 16px}#root .reading-chapter-grid{grid-template-columns:repeat(auto-fill,minmax(36px,1fr))}#root .video-reader .scripture-verse-trigger{padding-inline:3px}}
+@media(prefers-reduced-motion:no-preference){#root .verse-palette,#root .video-chapter-header .study-edition-options:not([hidden]),#root .video-chapter-header .reading-passage-panel:not([hidden]){animation:readerReveal .16s ease-out}@keyframes readerReveal{from{opacity:0;translate:0 -5px}to{opacity:1;translate:0 0}}}
