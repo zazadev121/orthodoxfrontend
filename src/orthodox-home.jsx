@@ -12,8 +12,12 @@ import {
   Heart,
   Library,
   ScrollText,
+  ChevronDown,
+  Highlighter,
+  ChevronRight,
 } from "lucide-react";
 import { DailyVerse } from "./scripture.jsx";
+import { scriptureEditions, editionFor, defaultEdition, readingHref, normalizeReading } from "./scripture.js";
 import { TodayReading, TodayPrayers, TodaySaint } from "./home-today.jsx";
 import { saints, localized } from "./saints-data.js";
 export const councilSource =
@@ -210,6 +214,40 @@ function SectionHeading({ label, title, description, action, href }) {
     </div>
   );
 }
+const libraryWords={
+ en:["Explore the library","Read a book of the Bible","My highlighted verses","Tap a verse in the Bible and choose a color. Your highlights will appear here.","Sources"],
+ ckb:["کتێبخانە","کتێبێک لە کتێبی پیرۆز بخوێنەوە","ئایەتە ڕەنگکراوەکانم","لە کتێبی پیرۆز دەست لە ئایەتێک بدە و ڕەنگێک هەڵبژێرە. ئایەتە ڕەنگکراوەکانت لێرە دەردەکەون.","سەرچاوەکان"],
+ ka:["ბიბლიოთეკა","წაიკითხეთ ბიბლიის წიგნი","ჩემი მონიშნული მუხლები","შეეხეთ მუხლს და აირჩიეთ ფერი. მონიშნული მუხლები აქ გამოჩნდება.","წყაროები"],
+ ru:["Библиотека","Читать книгу Библии","Мои выделенные стихи","Нажмите на стих и выберите цвет. Выделенные стихи появятся здесь.","Источники"],
+ kmr:["Pirtûkxane","Pirtûkek ji Pirtûka Pîroz bixwîne","Ayêtên min ên nîşankirî","Li ayêtekê bitikîne û rengek hilbijêre. Ayêtên nîşankirî li vir xuya dibin.","Çavkanî"]
+};
+function HomeLibraryTools({t,language,w,ew}){
+ const cms=useEditorial(), words=libraryWords[language]||libraryWords.en;
+ const allowed=scriptureEditions.filter(e=>!cms.ready||e.id==="ru_rst"||cms.editions.some(x=>x.id===e.id));
+ const preferred=allowed.find(e=>e.id===defaultEdition(language).id)||allowed[0];
+ const passages=preferred?["JHN","MAT","PSA","ROM"].map(id=>preferred.books.find(b=>b.id===id)).filter(Boolean):[];
+ let saved={};
+ try{const raw=JSON.parse(localStorage.getItem("scripture-highlights-v1")||"{}");if(raw&&typeof raw==="object"&&!Array.isArray(raw))saved=raw;}catch{}
+ const highlights=Object.entries(saved).flatMap(([key,color])=>{
+  const [translation,id,chapter,verse]=key.split(":");
+  const edition=editionFor(translation),book=edition?.books.find(b=>b.id===id);
+  if(!book||!/^#[0-9a-f]{6}$/i.test(color)||!/^\d+$/.test(chapter)||!/^\d+$/.test(verse))return [];
+  const reading=normalizeReading({translation,book:id,chapter,verse},language);
+  if(reading.chapter!==Number(chapter)||reading.verse!==Number(verse))return [];
+  return [{key,color,book,edition,reading}];
+ }).reverse();
+ const shortcuts=[["/saints/",Church,w.saints],["/fathers/",Library,t.fathers],["/prayers/",Heart,t.prayers],["/doctrine/",ScrollText,ew.doctrineTitle||w.teaching],["/reading/",BookOpen,words[0]],["/sources/",Library,words[4]]];
+ return <>
+  <section className="home-library-tools" aria-label={words[0]}>
+   <h2>{words[0]}</h2>
+   <div className="home-shortcut-list">{shortcuts.map(([href,Icon,label])=><a href={href} key={href}><Icon size={20}/><span>{label}</span><ChevronRight size={16}/></a>)}</div>
+  </section>
+  {passages.length>0&&<section className="home-library-tools" aria-label={words[1]}><h2>{words[1]}</h2><div className="home-passage-links">{passages.map(b=><a key={b.id} href={"/"+readingHref(normalizeReading({translation:preferred.id,book:b.id,chapter:b.firstChapterNumber},language))} lang={preferred.language} dir={preferred.direction}>{cms.text(`bible.book.${b.id}`,preferred.language,b.name)}<ArrowUpRight size={14}/></a>)}</div></section>}
+  <details className="home-highlight-library"><summary><Highlighter size={20}/><span>{words[2]}</span><span className="home-highlight-count">{highlights.length}</span><ChevronDown size={18}/></summary>
+   {highlights.length?<ul className="home-highlight-list">{highlights.map(({key,color,book,edition,reading})=><li key={key}><a href={"/"+readingHref(reading)}><span className="home-highlight-dot" style={{"--saved-color":color}}/><span lang={edition.language} dir={edition.direction}>{cms.text(`bible.book.${book.id}`,edition.language,book.name)} <bdi>{reading.chapter}:{reading.verse}</bdi></span><small dir="ltr">{edition.language.toUpperCase()}</small><ArrowUpRight size={15}/></a></li>)}</ul>:<p>{words[3]}</p>}
+  </details>
+ </>;
+}
 export function OrthodoxHome({ t, language, journey, onEditJourney }) {
   const cms = useEditorial(),
     ew = useEditorialWords(language);
@@ -252,25 +290,23 @@ export function OrthodoxHome({ t, language, journey, onEditJourney }) {
     <div className="heritage-home today-home">
       {cms.visible("hero") && (
         <section className="heritage-hero home-centered-cover home-cross-cover">
-          <div className="home-cover-ornaments" aria-hidden="true" />
           <div className="heritage-hero-copy">
             {cms.visible("heroArt") && <div className="home-cross-stage"><img className="home-cross-emblem" src={crossImage} alt="" width="300" height="300" fetchPriority="high" /></div>}
-            <div className="home-bible-front"><a href="/bible/"><BookOpen size={23}/><span>{t.bible}</span><ArrowUpRight size={17}/></a></div>
             <div className="home-chapter-label"><span>{identity("line")}</span></div>
             <h1>{identity("name")}</h1>
             {language !== "en" && <div className="home-english-brand" lang="en" dir="ltr">Orthodoxy in Kurdistan</div>}
-            <div className="home-cover-rule" aria-hidden="true"><span>✣</span></div>
             <p className="editorial-verbatim">{identity("intro")}</p>
             <div className="hero-actions">
-              <a className="button secondary" href="/discover/">{identity("explore")}<ArrowUpRight size={16} /></a>
+              <a className="button gold" href="/bible/"><BookOpen size={18}/>{t.bible}</a>
+              <a className="button secondary" href="/discover/">{identity("explore")}<ArrowUpRight size={16}/></a>
             </div>
-            <div className="home-hero-rail"><a href="/saints/">{w.saints}</a><a href="/fathers/">{t.fathers}</a><a href="/prayers/">{w.prayerTitle}</a></div>
           </div>
         </section>
       )}
+      {cms.visible("paths") && <TodayReading language={language} />}
+      {cms.visible("paths") && <HomeLibraryTools t={t} language={language} w={w} ew={ew} />}
       {cms.visible("daily") && <DailyVerse t={t} language={language} compact />}
       <JourneyDaily language={language} journey={journey} onEdit={onEditJourney}/>
-      {cms.visible("paths") && <TodayReading language={language} />}
       {cms.visible("prayers") && <TodayPrayers language={language} />}
       {cms.visible("saints") && <TodaySaint language={language} />}
       {cms.visible("paths") && (
