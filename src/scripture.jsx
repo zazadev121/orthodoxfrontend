@@ -186,6 +186,18 @@ function DailyVerseOptions({t,language,translation,setTranslation,available,cms,
       <Attribution edition={edition} language={language} compact />
   </>;
 }
+const highlightStorageKey = "scripture-highlights-v1";
+const highlightColors = ["#facc15","#fb923c","#f87171","#f472b6","#c084fc","#818cf8","#60a5fa","#22d3ee","#4ade80","#a3e635"];
+const highlightWords = {
+  en: ["Highlight verse","Remove highlight","Commentary & AI","Close","Yellow","Orange","Red","Pink","Purple","Indigo","Blue","Cyan","Green","Lime","Tap a verse to highlight it or open its commentary."],
+  ckb: ["ڕەنگکردنی ئایەت","سڕینەوەی ڕەنگ","ڕوونکردنەوە و AI","داخستن","زەرد","پرتەقاڵی","سوور","پەمەیی","مۆر","نیلی","شین","شینی کاڵ","سەوز","سەوزی کاڵ","دەست لە ئایەتێک بدە بۆ ڕەنگکردن یان خوێندنەوەی ڕوونکردنەوەکەی."],
+  ka: ["მუხლის მონიშვნა","მონიშვნის წაშლა","განმარტება და AI","დახურვა","ყვითელი","ნარინჯისფერი","წითელი","ვარდისფერი","იისფერი","ინდიგო","ლურჯი","ცისფერი","მწვანე","ღია მწვანე","შეეხეთ მუხლს მის მოსანიშნად ან განმარტების გასახსნელად."],
+  ru: ["Выделить стих","Убрать выделение","Толкование и ИИ","Закрыть","Жёлтый","Оранжевый","Красный","Розовый","Фиолетовый","Индиго","Синий","Голубой","Зелёный","Салатовый","Нажмите на стих, чтобы выделить его или открыть толкование."],
+  kmr: ["Ayêtê nîşan bike","Nîşanê rake","Şîrove û AI","Bigire","Zer","Porteqalî","Sor","Pembe","Mor","Îndîgo","Şîn","Şîna vekirî","Kesk","Keska vekirî","Li ayêtê bitikîne da ku nîşan bikî an şîrove bixwînî."]
+};
+function readHighlights() {
+  try { const saved=JSON.parse(localStorage.getItem(highlightStorageKey)||"{}"); return saved && typeof saved==="object" && !Array.isArray(saved)?saved:{}; } catch { return {}; }
+}
 export function BibleReader({ t, language }) {
   const cms = useEditorial(),
     w = useEditorialWords(language);
@@ -202,6 +214,18 @@ export function BibleReader({ t, language }) {
   const [studyMode, setStudyMode] = useState(true);
   const [readerMenu,setReaderMenu]=useState(false);
   const [markedVerse,setMarkedVerse]=useState(null);
+  const [highlights,setHighlights]=useState(readHighlights);
+  const hw=highlightWords[language]||highlightWords.en;
+  const highlightKey=verse=>[reading.translation,reading.book,reading.chapter,verse].join(":");
+  function colorVerse(verse,color){
+    setHighlights(previous=>{
+      const updated={...previous};
+      if(color) updated[highlightKey(verse)]=color;
+      else delete updated[highlightKey(verse)];
+      return updated;
+    });
+  }
+  useEffect(()=>{try{localStorage.setItem(highlightStorageKey,JSON.stringify(highlights));}catch{}},[highlights]);
   const videoWords=({ru:["Перед чтением","Читайте вместе со святыми отцами.","Красные номера стихов с точкой обозначают наличие святоотеческого текста. Нажмите на стих, чтобы прочитать толкование.","Настройки чтения","Выделить стих"],en:["Before you read","Read with the Fathers.","Red verse numbers with a dot indicate available patristic texts. Tap a verse to read its commentary.","Reader options","Highlight verse"],ckb:["پێش خوێندنەوە","لەگەڵ باوکانی کڵێسا بخوێنەوە.","ژمارە سوورەکانی ئایەتەکان کە خاڵێکیان لە تەنیشتە، دەقی باوکانی کڵێسایان بۆ بەردەستە. دەست لە ئایەتەکە بدە بۆ خوێندنەوەی ڕوونکردنەوەکە.","هەڵبژاردەکانی خوێندنەوە","دیاریکردنی ئایەت"],ka:["კითხვის წინ","წაიკითხეთ ეკლესიის მამებთან ერთად.","წითელი მუხლის ნომერი წერტილით მიუთითებს ხელმისაწვდომ პატრისტიკულ ტექსტზე. შეეხეთ მუხლს კომენტარის წასაკითხად.","კითხვის პარამეტრები","მუხლის მონიშვნა"]})[language]||["Before you read","Read with the Fathers.","Red verse numbers with a dot indicate available patristic texts. Tap a verse to read its commentary.","Reader options","Highlight verse"];
   const labels = ({ru:["Выбрать отрывок","Поиск книг","Чтение","Изучение","Закрыть","Выбрать главу"],en:["Choose passage","Search books","Reading","Study","Close","Select chapter"],ckb:["بەشێک هەڵبژێرە","گەڕان بەدوای کتێبەکان","خوێندنەوە","لێکۆڵینەوە","داخستن","بەش هەڵبژێرە"],ka:["აირჩიეთ მონაკვეთი","წიგნების ძიება","კითხვა","შესწავლა","დახურვა","აირჩიეთ თავი"],kmr:["Beşê hilbijêre","Li pirtûkan bigere","Xwendin","Lêkolîn","Bigire","Beşê hilbijêre"]})[language] || ["Choose passage","Search books","Reading","Study","Close","Select chapter"];
   const studyWords = ({ru:{kicker:"СВЯЩЕННОЕ ПИСАНИЕ · ПРАВОСЛАВНОЕ ПРЕДАНИЕ",editions:"Издания Библии",change:"Сменить издание",choose:"Выберите издание Библии",read:"Священное Писание",comment:"Читайте Священное Писание вместе со святыми отцами.",end:"Конец главы"},en:{kicker:"SCRIPTURE · THE ORTHODOX TRADITION",editions:"Bible editions",change:"Change edition",choose:"Choose a Bible edition",read:"Sacred Scripture",comment:"Read the Scriptures with the Church Fathers.",end:"End of chapter"},ckb:{kicker:"نووسراوە پیرۆزەکان · نەریتی ئۆرتۆدۆکس",editions:"وەشانەکانی کتێبی پیرۆز",change:"گۆڕینی وەشان",choose:"وەشانێک هەڵبژێرە",read:"کتێبی پیرۆز",comment:"کتێبی پیرۆز لەگەڵ باوکانی کڵێسا بخوێنەوە.",end:"کۆتایی بەش"},ka:{kicker:"წმინდა წერილი · მართლმადიდებლური ტრადიცია",editions:"ბიბლიის გამოცემები",change:"გამოცემის შეცვლა",choose:"აირჩიეთ ბიბლიის გამოცემა",read:"წმინდა წერილი",comment:"წაიკითხეთ წმინდა წერილი ეკლესიის მამებთან ერთად.",end:"თავის დასასრული"}})[language] || {kicker:"SCRIPTURE · THE ORTHODOX TRADITION",editions:"Bible editions",change:"Change edition",choose:"Choose a Bible edition",read:"Sacred Scripture",comment:"Read the Scriptures with the Church Fathers.",end:"End of chapter"};
@@ -305,7 +329,7 @@ export function BibleReader({ t, language }) {
   const bookLabel = b => cms.text(`bible.book.${b.id}`,edition.language,b.name);
   const filteredBooks = edition.books.filter(b=>`${bookLabel(b)} ${b.id}`.toLocaleLowerCase().includes(bookSearch.trim().toLocaleLowerCase()));
   function openPassagePicker(){setDraftBook(book.id);setBookSearch("");setEditionPicker(false);setPassagePicker(v=>!v);}
-  useEffect(()=>{const dismiss=e=>{if(e.key==="Escape"){setPassagePicker(false);setEditionPicker(false);}};window.addEventListener("keydown",dismiss);return()=>window.removeEventListener("keydown",dismiss);},[]);
+  useEffect(()=>{const dismiss=e=>{if(e.key==="Escape"){setPassagePicker(false);setEditionPicker(false);setMarkedVerse(null);setReaderMenu(false);}};window.addEventListener("keydown",dismiss);return()=>window.removeEventListener("keydown",dismiss);},[]);
   if (cms.ready && !available.length)
     return (
       <div className="page">
@@ -322,17 +346,20 @@ export function BibleReader({ t, language }) {
       </div>
       {language==="kmr" && <p className="reader-language-note">{t.kurmanjiPending}</p>}
       <header className="video-chapter-header">
+        <div className="reader-identity"><img src="/kurdistan-cross-transparent.svg" alt="" width="34" height="34"/><span>{studyWords.read}</span></div>
         <h1 dir={edition.direction}>{bookName}</h1>
-        <button className="video-chapter-select" type="button" aria-expanded={passagePicker} aria-controls="reading-passage-panel" onClick={openPassagePicker}>{t.chapter} <bdi>{reading.chapter}</bdi><ChevronDown size={15}/></button>
+        <div className="reader-controls-row">
+        <button className="video-chapter-select" type="button" aria-expanded={passagePicker} aria-controls="reading-passage-panel" onClick={openPassagePicker}><BookOpen size={17}/>{t.chapter} <bdi>{reading.chapter}</bdi><ChevronDown size={15}/></button>
         <div className="study-edition-control">
-            <button className="video-edition-select" type="button" aria-expanded={editionPicker} aria-controls="study-edition-options" title={editionTitle(edition)} onClick={()=>{setPassagePicker(false);setEditionPicker(v=>!v)}}><bdi>{editionShort(edition)}</bdi><ChevronDown size={13}/></button>
+            <button className="video-edition-select" type="button" aria-expanded={editionPicker} aria-controls="study-edition-options" title={editionTitle(edition)} onClick={()=>{setPassagePicker(false);setEditionPicker(v=>!v)}}><bdi>{editionShort(edition)}</bdi><span>{studyWords.editions}</span><ChevronDown size={15}/></button>
             <div id="study-edition-options" className="study-edition-options" hidden={!editionPicker}>
-              <p>{studyWords.choose}</p>
+              <div className="reading-picker-head"><strong>{studyWords.choose}</strong><button type="button" onClick={()=>setEditionPicker(false)} aria-label={hw[3]}><X size={18}/></button></div>
               {available.map(e=><button key={e.id} className="study-edition-option" type="button" aria-pressed={reading.translation===e.id} onClick={()=>{navigate({...reading,translation:e.id,verse:undefined});setEditionPicker(false);setDraftBook(null)}}>
                 <span className="study-edition-code" dir="ltr">{editionShort(e)}</span><span><strong>{editionTitle(e)}</strong><small>{({en:"English",ckb:"کوردی (سۆرانی)",ka:"ქართული",ru:"Русский"})[e.language]}</small></span><span className="study-edition-check" aria-hidden="true">{reading.translation===e.id?"✓":""}</span>
               </button>)}
 
             </div>
+        </div>
         </div>
           <section className="reading-passage-panel" id="reading-passage-panel" hidden={!passagePicker}>
             <div className="reading-picker-head"><strong>{labels[0]}</strong><button type="button" onClick={()=>setPassagePicker(false)} aria-label={labels[4]}><X size={18}/></button></div>
@@ -347,7 +374,7 @@ export function BibleReader({ t, language }) {
       </header>
       <div className="video-reader-divider" aria-hidden="true"/>
       <details className="video-before-read"><summary>{videoWords[0]}<ChevronDown size={15}/></summary><p>{studyWords.comment}</p><p>{editionTitle(edition)}</p></details>
-      {studyMode&&<p className="video-reader-hint"><strong>{videoWords[1]}</strong> {videoWords[2]}</p>}
+      {studyMode&&<p className="video-reader-hint"><strong>{videoWords[1]}</strong> {hw[14]}</p>}
       <div className="reading-room-main">
       <div aria-live="polite" aria-busy={loading}>
         {loading ? (
@@ -391,18 +418,25 @@ export function BibleReader({ t, language }) {
                 );
                 const editorialRows=(editorial.path===editorialPath?editorial.data?.explanations:null)||[];
                 const hasText=editorialRows.some(x=>x.verse_start<=row.number&&x.verse_end>=row.number&&[x.body_en,x.body_ckb,x.body_ka,x.body_kmr].some(Boolean))||patristicSources(reading.book,reading.chapter,row.number).some(s=>s.excerpt||localHomilies.includes(s.author+"-"+s.number));
+                const savedColor=highlights[highlightKey(row.number)];
+                const color=highlightColors.includes(savedColor)?savedColor:null;
                 return (
                   <React.Fragment
                     key={`${reading.book}-${reading.chapter}-${row.number}`}
                   >
                     <div
                       id={`scripture-verse-${row.number}`}
-                      className={`scripture-verse${studyMode&&hasText?" has-patristic":""}${markedVerse===row.number?" video-marked":""}`}
+                      className={`scripture-verse${studyMode&&hasText?" has-patristic":""}${color?" video-marked":""}${markedVerse===row.number?" verse-action-selected":""}`} style={color?{"--verse-color":color}:undefined}
                     >
-                      <button className="scripture-verse-trigger" type="button" aria-expanded={openVerse === row.number} aria-controls={`explanation-${reading.book}-${reading.chapter}-${row.number}`} onClick={() => { setMarkedVerse(row.number); if(studyMode) setOpenVerse(row.number); }}>
+                      <button className="scripture-verse-trigger" type="button" aria-expanded={markedVerse === row.number} aria-controls={`verse-palette-${row.number}`} onClick={() => { setOpenVerse(null); setMarkedVerse(current=>current===row.number?null:row.number); }}>
                         <sup>{row.number}{studyMode&&hasText&&<i aria-hidden="true"/>}</sup>
                         <span>{override ? override.text : row.text || (edition.language === "ka" ? t.sourceVerseMissing : "")}</span>
                       </button>
+                      {markedVerse===row.number && <div className="verse-palette" id={`verse-palette-${row.number}`} role="group" aria-label={hw[0]} lang={language} dir={language==="ckb"?"rtl":"ltr"}>
+                        <div className="verse-palette-heading"><strong>{hw[0]} · <bdi>{reading.chapter}:{row.number}</bdi></strong><button type="button" className="verse-palette-close" aria-label={hw[3]} onClick={()=>setMarkedVerse(null)}><X size={18}/></button></div>
+                        <div className="verse-swatches">{highlightColors.map((shade,i)=><button type="button" key={shade} title={hw[i+4]} aria-label={hw[i+4]} aria-pressed={color===shade} style={{"--swatch":shade}} onClick={()=>colorVerse(row.number,shade)}><span aria-hidden="true">{color===shade?"✓":""}</span></button>)}</div>
+                        <div className="verse-palette-actions"><button type="button" disabled={!color} onClick={()=>colorVerse(row.number,null)}>{hw[1]}</button>{studyMode&&<button type="button" onClick={()=>{setMarkedVerse(null);setOpenVerse(row.number)}}><BookOpen size={16}/>{hw[2]}</button>}</div>
+                      </div>}
                     </div>
                     {override && (
                       <BibleRevision
