@@ -255,22 +255,22 @@ export function OrthodoxHome({ t, language, journey, onEditJourney }) {
           <div className="home-sacred-backdrop" aria-hidden="true"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/8/84/Tampereen_ortodoksinen_kirkko_sis%C3%A4lt%C3%A4_10_ikonostaasi.JPG/1280px-Tampereen_ortodoksinen_kirkko_sis%C3%A4lt%C3%A4_10_ikonostaasi.JPG" alt="" width="1280" height="853" fetchPriority="high" decoding="async" referrerPolicy="no-referrer" onError={e=>{e.currentTarget.style.display="none";}} /></div>
           <div className="heritage-hero-copy">
             {cms.visible("heroArt") && <div className="home-cross-stage"><img className="home-cross-emblem" src={crossImage} alt="" width="300" height="300" fetchPriority="high" /></div>}
+            <div className="home-bible-front"><a href="/bible/"><BookOpen size={23}/><span>{t.bible}</span><ArrowUpRight size={17}/></a></div>
             <div className="home-chapter-label"><span>{identity("line")}</span></div>
             <h1>{identity("name")}</h1>
             {language !== "en" && <div className="home-english-brand" lang="en" dir="ltr">Orthodoxy in Kurdistan</div>}
             <div className="home-cover-rule" aria-hidden="true"><span>✣</span></div>
             <p className="editorial-verbatim">{identity("intro")}</p>
             <div className="hero-actions">
-              <a className="button gold" href="/bible/"><BookOpen size={18} />{w.begin}</a>
               <a className="button secondary" href="/discover/">{identity("explore")}<ArrowUpRight size={16} /></a>
             </div>
             <div className="home-hero-rail"><a href="/saints/">{w.saints}</a><a href="/fathers/">{t.fathers}</a><a href="/prayers/">{w.prayerTitle}</a></div>
           </div>
         </section>
       )}
+      {cms.visible("daily") && <DailyVerse t={t} language={language} compact />}
       <JourneyDaily language={language} journey={journey} onEdit={onEditJourney}/>
       {cms.visible("paths") && <TodayReading language={language} />}
-      {cms.visible("daily") && <DailyVerse t={t} language={language} compact />}
       {cms.visible("prayers") && <TodayPrayers language={language} />}
       {cms.visible("saints") && <TodaySaint language={language} />}
       {cms.visible("paths") && (
