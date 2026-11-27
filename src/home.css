@@ -340,3 +340,49 @@
  #root .home-shortcut-list a>svg:first-child{width:18px}
  #root .home-shortcut-list a>svg:last-child{width:14px}
 }
+
+/* Restrained candlelight accents and historic icon diptych. */
+#root .header > .brand .brand-cross{
+ filter:drop-shadow(0 0 13px color-mix(in srgb,var(--gold) 36%,transparent));
+}
+#root .home-cross-cover .home-cross-stage{isolation:isolate}
+#root .home-cross-cover .home-cross-stage::before{
+ display:block;content:"";position:absolute;inset:-40%;z-index:-1;border:0;border-radius:50%;
+ background:radial-gradient(ellipse,color-mix(in srgb,var(--gold) 22%,transparent),transparent 68%);pointer-events:none;
+}
+#root .today-home .daily-verse{
+ background:radial-gradient(ellipse at 50% 40%,color-mix(in srgb,var(--gold) 10%,transparent),transparent 72%);
+}
+#root .today-home .daily-verse .daily-topline .eyebrow svg{
+ filter:drop-shadow(0 0 9px color-mix(in srgb,var(--gold) 44%,transparent));
+}
+#root .today-home .journey-daily-quote{
+ position:relative;isolation:isolate;
+}
+#root .today-home .journey-daily-quote::before{
+ content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+ background:radial-gradient(ellipse at 50% 45%,color-mix(in srgb,var(--gold) 12%,transparent),transparent 73%);
+}
+#root .today-home .today-reading-with-icons{
+ display:grid;grid-template-columns:minmax(0,1fr) minmax(110px,31%);align-items:center;gap:clamp(12px,3vw,28px);
+ background:radial-gradient(ellipse at 85% 50%,color-mix(in srgb,var(--gold) 8%,transparent),transparent 58%),var(--surface);
+}
+#root .today-reading-copy{min-width:0}
+#root .today-reading-copy .today-pill{white-space:normal;gap:7px}
+#root .today-reading-copy .today-pill svg{flex-shrink:0}
+#root .today-reading-icons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:center;gap:6px;min-width:0}
+#root .today-reading-icons a{display:block;min-width:0;padding:3px;border:1px solid color-mix(in srgb,var(--gold) 45%,var(--line));background:color-mix(in srgb,var(--gold) 6%,var(--surface));border-radius:3px}
+#root .today-reading-icons a[hidden]{display:none}
+#root .today-reading-icons img{width:100%;height:auto;display:block;object-fit:contain}
+@media(max-width:600px){
+ #root .today-home .today-reading-with-icons{grid-template-columns:minmax(0,1fr) minmax(96px,32%);gap:10px;padding:15px 12px}
+ #root .today-reading-icons{gap:4px}
+ #root .today-reading-icons a{padding:2px}
+ #root .today-home .today-reading-copy h2{font-size:1.13rem}
+ #root .today-reading-copy .today-pill{padding:7px 10px;font-size:.82rem}
+ #root .today-reading-copy .today-card-kicker{font-size:.74rem;gap:4px}
+}
+@media(max-width:340px){
+ #root .today-home .today-reading-with-icons{grid-template-columns:1fr}
+ #root .today-reading-icons{width:125px;justify-self:center}
+}
