@@ -238,48 +238,6 @@ function App() {
         {t.skip}
       </a>
       <header className="header">
-        <a href="/" className="brand">
-          {page === "discover" ? <h1 className="discover-header-title">{cms.text("discover.title", language, discoverWords(language).title)}</h1> : <>
-          {(cms.text("general.brandImage", language, "/kurdistan-cross-transparent.svg") || "").replace("/kurdistan-cross.jpg", "/kurdistan-cross-transparent.svg") && (
-            <img
-              className="brand-cross"
-              src={(cms.text(
-                "general.brandImage",
-                language,
-                "/kurdistan-cross-transparent.svg",
-              ) || "").replace("/kurdistan-cross.jpg", "/kurdistan-cross-transparent.svg")}
-              alt=""
-              width="42"
-              height="42"
-            />
-          )}
-          <span>
-            {t.name}
-            <small lang="en" dir="ltr">
-              {cms.text(
-                "general.brandEnglish",
-                language,
-                "Rum Orthodoxy In Kurdistan",
-              )}
-            </small>
-          </span>
-          </>}
-        </a>
-        <nav
-          aria-label={t.home}
-          className={menu ? "navigation open" : "navigation"}
-        >
-          {nav.map(([id, label]) => (
-            <a
-              key={id}
-              href={publicHref(id)}
-              className={page === id || (id === "saints" && page === "saint") ? "active" : ""}
-              aria-current={page === id || (id === "saints" && page === "saint") ? "page" : undefined}
-            >
-              {label}
-            </a>
-          ))}
-        </nav>
         <div className="header-actions">
           <a
             className="icon-button theme-toggle"
@@ -337,6 +295,46 @@ function App() {
             {menu ? <X /> : <Menu />}
           </button>
         </div>
+        <a href="/" className="brand">
+          {(cms.text("general.brandImage", language, "/kurdistan-cross-transparent.svg") || "").replace("/kurdistan-cross.jpg", "/kurdistan-cross-transparent.svg") && (
+            <img
+              className="brand-cross"
+              src={(cms.text(
+                "general.brandImage",
+                language,
+                "/kurdistan-cross-transparent.svg",
+              ) || "").replace("/kurdistan-cross.jpg", "/kurdistan-cross-transparent.svg")}
+              alt=""
+              width="42"
+              height="42"
+            />
+          )}
+          <span>
+            {t.name}
+            <small lang="en" dir="ltr">
+              {cms.text(
+                "general.brandEnglish",
+                language,
+                "Rum Orthodoxy In Kurdistan",
+              )}
+            </small>
+          </span>
+        </a>
+        <nav
+          aria-label={t.home}
+          className={menu ? "navigation open" : "navigation"}
+        >
+          {nav.map(([id, label]) => (
+            <a
+              key={id}
+              href={publicHref(id)}
+              className={page === id || (id === "saints" && page === "saint") ? "active" : ""}
+              aria-current={page === id || (id === "saints" && page === "saint") ? "page" : undefined}
+            >
+              {label}
+            </a>
+          ))}
+        </nav>
       </header>
       {journeyStorageError && <p className="journey-storage-alert" role="status">{journeyWords(language).storage}</p>}
       <main id="main" tabIndex={-1}>
@@ -368,7 +366,7 @@ function App() {
         ) : page === "home" ? (
           <OrthodoxHome t={t} language={language} journey={journey} onEditJourney={()=>setJourneyOpen(true)} />
         ) : page === "discover" ? (
-          <DiscoverPage language={language} hideHeading />
+          <DiscoverPage language={language} />
         ) : page === "reading" ? (
           <ReadingLibrary language={language} />
         ) : page === "history" ? (
