@@ -251,8 +251,8 @@ export function OrthodoxHome({ t, language, journey, onEditJourney }) {
   return (
     <div className="heritage-home today-home">
       {cms.visible("hero") && (
-        <section className="heritage-hero home-centered-cover home-sacred-cover">
-          <div className="home-sacred-backdrop" aria-hidden="true"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/8/84/Tampereen_ortodoksinen_kirkko_sis%C3%A4lt%C3%A4_10_ikonostaasi.JPG/1280px-Tampereen_ortodoksinen_kirkko_sis%C3%A4lt%C3%A4_10_ikonostaasi.JPG" alt="" width="1280" height="853" fetchPriority="high" decoding="async" referrerPolicy="no-referrer" onError={e=>{e.currentTarget.style.display="none";}} /></div>
+        <section className="heritage-hero home-centered-cover home-cross-cover">
+          <div className="home-cover-ornaments" aria-hidden="true" />
           <div className="heritage-hero-copy">
             {cms.visible("heroArt") && <div className="home-cross-stage"><img className="home-cross-emblem" src={crossImage} alt="" width="300" height="300" fetchPriority="high" /></div>}
             <div className="home-bible-front"><a href="/bible/"><BookOpen size={23}/><span>{t.bible}</span><ArrowUpRight size={17}/></a></div>
