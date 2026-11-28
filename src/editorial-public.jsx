@@ -1,3 +1,5 @@
+import { isClimacus, withFullClimacusBiography, climacusBiographySources, climacusBiographyTitle } from "./climacus-full-life.js";
+import "./climacus-full-life.css";
 import { saintThumbnail } from "./localized-saint-names.js";
 import { saintScriptureQuotes, mergeSaintQuotes, saintQuoteLabel } from "./saint-scripture-quotes.js";
 import { withVerifiedIcon } from "./saint-icons-2026.js";
@@ -337,7 +339,7 @@ export function AuthorProfile({ language, route }) {
   const resource = useEditorialResource(
       "/authors/" + encodeURIComponent(identifier), { enabled: !localAuthor },
     ),
-    a = withVerifiedIcon(localAuthor || withRemainingBiography(withExpandedBiography(withClimacusContent(resource.data?.author))));
+    a = withFullClimacusBiography(withVerifiedIcon(localAuthor || withRemainingBiography(withExpandedBiography(withClimacusContent(resource.data?.author)))));
   const [saved, setSaved] = useState(false);
   useEffect(() => {
     if (!a) return;
@@ -481,7 +483,10 @@ export function AuthorProfile({ language, route }) {
         </div>
       ) : (
         <div className="profile-body saint-biography">
-          {[
+          {isClimacus(a) ? <section className="climacus-life" lang={language} dir={language === "ckb" ? "rtl" : "ltr"}>
+            <h2>{climacusBiographyTitle[language] || w.biography}</h2>
+            {textFor(a, "biography", language).split(/\n\n+/).filter(Boolean).map((paragraph,index)=><p key={index} className="climacus-life-paragraph">{paragraph}</p>)}
+          </section> : [
             [w.biography, "biography"],
             [w.historyText, "history"],
             [w.contributions, "contributions"],
@@ -511,10 +516,11 @@ export function AuthorProfile({ language, route }) {
           ))}
         </section>
       )}
-      {(a.source_reference || a.source_url || extraSaintSources(a).length > 0) && (
+      {(a.source_reference || a.source_url || extraSaintSources(a).length > 0 || isClimacus(a)) && (
         <details className="profile-sources source-disclosure">
           <summary>{w.source}</summary>
           <p className="editorial-verbatim">{metadataFor(a, "source_reference", language)}</p>
+          {isClimacus(a) && climacusBiographySources.map(([label,url])=><p key={url}><a className="text-link" href={url} target="_blank" rel="noreferrer">{label} ↗</a></p>)}
           {extraSaintSources(a).map(url => <p key={url}><a className="text-link" href={url} target="_blank" rel="noreferrer">{new URL(url).hostname} ↗</a></p>)}
           {a.source_url && (
             <a href={a.source_url} target="_blank" rel="noreferrer">
